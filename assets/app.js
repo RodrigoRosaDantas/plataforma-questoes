@@ -468,7 +468,7 @@ function renderResolver(){
   const opts=answerOptions(q); const chosen=s.answers[q.id]; const confirmed=!!s.confirmed[q.id];
   const isBinary=q.formato==='Certo / Errado' || ['Certo','Errado'].includes(q.gabarito);
   $('#answers').innerHTML=opts.map(([key,text])=>{let cls='answer'; if(chosen===key)cls+=' selected'; if(confirmed&&s.mode==='training'){if(key===q.gabarito)cls+=' correct';else if(chosen===key)cls+=' wrong';} const answerKey=isBinary?String(key).slice(0,1):key; return `<button type="button" class="${cls}" data-answer="${escapeHtml(key)}" ${confirmed?'disabled':''} aria-label="${escapeHtml(text)}"><span class="answer-key">${escapeHtml(answerKey)}</span><span class="answer-copy">${escapeHtml(text)}</span></button>`;}).join('');
-  $('#answers [data-answer]').forEach(b=>b.addEventListener('click',()=>{s.answers[q.id]=b.dataset.answer;persistActive();renderResolver();}));
+  $$('#answers [data-answer]').forEach(b=>b.addEventListener('click',()=>{s.answers[q.id]=b.dataset.answer;persistActive();renderResolver();}));
   const feedback=$('#feedback'); feedback.classList.toggle('hidden',!(confirmed&&s.mode==='training')); if(confirmed&&s.mode==='training') feedback.innerHTML=feedbackHtml(q,chosen);
   $('#confirmAnswer').classList.toggle('hidden',confirmed); $('#nextQuestion').classList.toggle('hidden',!confirmed||s.index===s.items.length-1); $('#finishSession').classList.toggle('hidden',!confirmed||s.index!==s.items.length-1);
   $('#prevQuestion').disabled=s.index===0; const marked=!!p.marked[q.id]; $('#markQuestion').textContent=marked?'★ Marcada':'☆ Marcar'; renderQuestionMap();
