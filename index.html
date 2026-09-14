@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <meta name="theme-color" content="#0f172a" />
-  <meta name="description" content="Plataforma de Questões — banco, provas, simulados, revisão e desempenho." />
+  <meta name="theme-color" content="#11182c" />
+  <meta name="description" content="Plataforma de Questões — pratique, revise e acompanhe seu desempenho." />
   <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="stylesheet" href="./assets/styles.css" />
   <title>Plataforma de Questões</title>
@@ -14,10 +14,10 @@
   <div class="app-shell">
     <aside class="sidebar" id="sidebar" aria-label="Navegação principal">
       <div class="brand">
-        <div class="brand-mark" aria-hidden="true">PQ</div>
-        <div>
+        <img class="brand-logo" src="./assets/logo.svg" alt="" aria-hidden="true" />
+        <div class="brand-copy">
           <strong>Plataforma de Questões</strong>
-          <span>GitHub · Notion editorial</span>
+          <span>Pratique · revise · avance</span>
         </div>
       </div>
       <nav class="nav" id="nav"></nav>
@@ -30,6 +30,10 @@
     <div class="workspace">
       <header class="topbar">
         <button id="menuButton" class="icon-button mobile-only" type="button" aria-label="Abrir menu">☰</button>
+        <button class="mobile-brand" data-go="home" type="button" aria-label="Ir para o início">
+          <img src="./assets/logo.svg" alt="" aria-hidden="true" />
+          <span>Questões</span>
+        </button>
         <div class="search-wrap">
           <label class="sr-only" for="globalSearch">Buscar no acervo</label>
           <input id="globalSearch" type="search" placeholder="Buscar no acervo" autocomplete="off" />
@@ -41,14 +45,20 @@
       <main id="main" tabindex="-1">
         <section class="view" data-view="home">
           <div class="hero">
-            <div>
+            <div class="hero-copy">
               <p class="eyebrow">BANCO DE QUESTÕES · EDITAIS · REVISÃO</p>
               <h1>Abra, escolha o recorte e comece a resolver.</h1>
-              <p class="lede">Conteúdo editorial vem do Notion; o site consome apenas uma release JSON validada. O progresso do navegador fica separado do banco editorial.</p>
+              <p class="lede">Questões organizadas para você estudar com foco, revisar os pontos fracos e transformar cada sessão em progresso.</p>
             </div>
-            <div class="hero-actions">
-              <button class="primary" data-go="questions">Abrir banco de questões</button>
-              <button class="secondary" data-go="review">Revisar pendências</button>
+            <div class="hero-side">
+              <div class="hero-emblem" aria-hidden="true">
+                <img src="./assets/logo.svg" alt="" />
+                <span>RESOLVA<br />REVISE<br />AVANCE</span>
+              </div>
+              <div class="hero-actions">
+                <button class="primary" data-go="questions">Abrir banco de questões</button>
+                <button class="secondary" data-go="review">Revisar pendências</button>
+              </div>
             </div>
           </div>
 
