@@ -1,6 +1,8 @@
 name: Sincronizar Banco Mestre do Notion
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '17 */6 * * *'
 permissions:
   contents: write
 jobs:
