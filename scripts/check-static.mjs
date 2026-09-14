@@ -7,5 +7,7 @@ for(const marker of ['Banco de questões','Provas aplicadas','Simulados','Revisa
 for(const marker of ['finishSession','ProgressStore','applyFilters','renderQuestionMap']) if(!js.includes(marker)) throw new Error(`Contrato JS ausente: ${marker}`);
 if(js.includes('NOTION_TOKEN')||html.includes('NOTION_TOKEN')) throw new Error('Segredo do Notion não pode existir no frontend.');
 if(!sw.includes('plataforma-questoes-v2')) throw new Error('Cache PWA não versionado.');
+if(!sw.includes('./assets/logo.svg')||!html.includes('./assets/logo.svg')) throw new Error('Logo não incluída no shell público/PWA.');
+if(!html.includes('class="mobile-brand"')) throw new Error('Marca móvel ausente.');
 if(!html.includes('id="finishSession"')) throw new Error('Fluxo explícito de finalização ausente.');
 console.log('OK: shell, navegação, persistência abstrata, finalização e PWA presentes.');
