@@ -14,6 +14,7 @@ if(!js.includes('answer-copy')||!js.includes('const isBinary=')) throw new Error
 if(!html.includes('data-refresh-release')) throw new Error('Atualização manual da release ausente.');
 if(!html.includes('editalStatus')) throw new Error('Status do edital verticalizado ausente.');
 if(!js.includes('disciplina:discipline')) throw new Error('Filtro de tópico não referencia a disciplina correta.');
+if(!js.includes('data-topic-cargo')||!js.includes("setQuestionFilter('filterCargo',cargo)")) throw new Error('Filtro de tópico não preserva o cargo.');
 if(!js.includes('tjdft-provas')) throw new Error('Catálogo TJDFT não é carregado pelo frontend.');
 if(!sw.includes('./data/tjdft-provas.json')) throw new Error('Catálogo TJDFT não está no shell do PWA.');
 if(!html.includes('Provas oficiais e materiais')) throw new Error('Tela de provas oficiais ausente.');

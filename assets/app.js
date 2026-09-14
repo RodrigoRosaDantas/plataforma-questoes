@@ -107,15 +107,20 @@ function questionBelongsTo(q,competitionId){
 function buildVerticalizedEditais(){
   return state.editais.map(config=>{
     const pool=state.questions.filter(q=>questionBelongsTo(q,config.competitionId));
+    const cargoValues=[...new Set(pool.map(q=>String(q.cargo||'').trim()).filter(Boolean))];
+    const splitByCargo=cargoValues.length>1;
     const byDiscipline=new Map();
     pool.forEach(q=>{
       const discipline=String(q.disciplina||'Sem disciplina').trim()||'Sem disciplina';
+      const cargo=String(q.cargo||'Sem cargo').trim()||'Sem cargo';
       const assunto=String(q.assunto||'').trim();
-      if(!byDiscipline.has(discipline)) byDiscipline.set(discipline,{label:discipline,questionCount:0,unmappedCount:0,topics:new Map(),orgao:q.orgao||''});
-      const axis=byDiscipline.get(discipline); axis.questionCount++;
+      const axisKey=splitByCargo?cargo+'::'+discipline:discipline;
+      if(!byDiscipline.has(axisKey)) byDiscipline.set(axisKey,{label:splitByCargo?cargo+' · '+discipline:discipline,questionCount:0,unmappedCount:0,topics:new Map(),orgao:q.orgao||'',cargo:splitByCargo?cargo:''});
+      const axis=byDiscipline.get(axisKey); axis.questionCount++;
       if(!assunto){axis.unmappedCount++;return;}
-      if(!axis.topics.has(assunto)) axis.topics.set(assunto,{label:assunto,questionCount:0,subassuntos:new Set(),filter:{orgao:q.orgao||axis.orgao,disciplina:discipline,assunto}});
-      const topic=axis.topics.get(assunto); topic.questionCount++;
+      const topicKey=splitByCargo?cargo+'::'+assunto:assunto;
+      if(!axis.topics.has(topicKey)) axis.topics.set(topicKey,{label:assunto,questionCount:0,subassuntos:new Set(),filter:{orgao:q.orgao||axis.orgao,cargo:splitByCargo?cargo:'',disciplina,assunto}});
+      const topic=axis.topics.get(topicKey); topic.questionCount++;
       const subassunto=String(q.subassunto||'').trim(); if(subassunto) topic.subassuntos.add(subassunto);
     });
     const axes=[...byDiscipline.values()].sort((a,b)=>a.label.localeCompare(b.label,'pt-BR',{numeric:true})).map(axis=>({
@@ -123,13 +128,13 @@ function buildVerticalizedEditais(){
       topics:[...axis.topics.values()].sort((a,b)=>a.label.localeCompare(b.label,'pt-BR',{numeric:true})).map(topic=>({...topic,subassuntos:[...topic.subassuntos].sort((a,b)=>a.localeCompare(b,'pt-BR',{numeric:true}))}))
     }));
     const mappedQuestionCount=axes.reduce((sum,axis)=>sum+axis.topics.reduce((inner,topic)=>inner+topic.questionCount,0),0);
-    return {...config,questionCount:pool.length,mappedQuestionCount,unmappedQuestionCount:pool.length-mappedQuestionCount,axisCount:axes.length,axes,questionFilter:{orgao:pool[0]?.orgao||''},mappingNote:pool.length?'Tópicos derivados da taxonomia publicada de disciplina e assunto.':'Ainda não há questões desta trilha na release publicada.'};
+    return {...config,questionCount:pool.length,mappedQuestionCount,unmappedQuestionCount:pool.length-mappedQuestionCount,axisCount:axes.length,axes,questionFilter:{orgao:pool[0]?.orgao||''},mappingNote:pool.length?'Tópicos derivados da taxonomia publicada de disciplina e assunto'+(splitByCargo?' e separados por cargo.':'.'):'Ainda não há questões desta trilha na release publicada.'};
   });
 }
 
 function bindGlobal(){
   document.addEventListener('click', e=>{
-    const topic=e.target.closest('[data-topic-orgao]'); if(topic){openTopic(topic.dataset.topicOrgao,topic.dataset.topicDisciplina,topic.dataset.topicAssunto);return;}
+    const topic=e.target.closest('[data-topic-orgao]'); if(topic){openTopic(topic.dataset.topicOrgao,topic.dataset.topicDisciplina,topic.dataset.topicAssunto,topic.dataset.topicCargo);return;}
     const edital=e.target.closest('[data-edital-filter]'); if(edital){openCompetition(edital.dataset.editalFilter);return;}
     const quick=e.target.closest('[data-quick-filter]'); if(quick){openQuickFilter(quick.dataset.quickFilter);return;}
     const refresh=e.target.closest('[data-refresh-release]'); if(refresh){refreshRelease();return;}
@@ -179,9 +184,9 @@ function setQuestionFilter(id,value){
   const el=$('#'+id); if(!el)return;
   el.value=[...el.options].some(option=>option.value===value)?value:'';
 }
-function openTopic(orgao,disciplina,assunto){
+function openTopic(orgao,disciplina,assunto,cargo){
   navigate('questions'); resetQuestionFilters();
-  setQuestionFilter('filterOrgao',orgao); setQuestionFilter('filterDisciplina',disciplina); setQuestionFilter('filterAssunto',assunto);
+  setQuestionFilter('filterOrgao',orgao); setQuestionFilter('filterCargo',cargo); setQuestionFilter('filterDisciplina',disciplina); setQuestionFilter('filterAssunto',assunto);
   applyFilters();
   if(state.filtered.length){ startSessionFromFilters(); }
   else toast('Nenhuma questão encontrada neste tópico.');
@@ -293,7 +298,7 @@ function renderEditais(){
       const topics=axis.topics.length?`<div class='topic-list'>${axis.topics.map(topic=>{
         const visibleSubs=topic.subassuntos.slice(0,3).join(' · ');
         const detail=visibleSubs?`Subassuntos: ${escapeHtml(visibleSubs)}${topic.subassuntos.length>3?' · …':''}`:'Taxonomia do banco publicada';
-        return `<button type='button' class='topic-row' data-topic-orgao='${escapeHtml(topic.filter.orgao)}' data-topic-disciplina='${escapeHtml(topic.filter.disciplina)}' data-topic-assunto='${escapeHtml(topic.filter.assunto)}' aria-label='Fazer ${fmt(topic.questionCount)} questões de ${escapeHtml(topic.label)}'><span class='topic-copy'><strong>${escapeHtml(topic.label)}</strong><small>${detail}</small></span><span class='topic-action'><b>${fmt(topic.questionCount)}</b><small>Fazer questões →</small></span></button>`;
+        return `<button type='button' class='topic-row' data-topic-orgao='${escapeHtml(topic.filter.orgao)}' data-topic-cargo='${escapeHtml(topic.filter.cargo||'')}' data-topic-disciplina='${escapeHtml(topic.filter.disciplina)}' data-topic-assunto='${escapeHtml(topic.filter.assunto)}' aria-label='Fazer ${fmt(topic.questionCount)} questões de ${escapeHtml(topic.label)}'><span class='topic-copy'><strong>${escapeHtml(topic.label)}</strong><small>${detail}</small></span><span class='topic-action'><b>${fmt(topic.questionCount)}</b><small>Fazer questões →</small></span></button>`;
       }).join('')}</div>`:`<div class='topic-empty'>Ainda não há assuntos cadastrados nesta disciplina.</div>`;
       return `<section class='edital-axis'><div class='edital-axis-head'><div><span class='kicker'>${fmt(axis.topics.length)} TÓPICOS</span><h3>${escapeHtml(axis.label)}</h3></div><span class='axis-count'>${fmt(axis.questionCount)} questões</span></div>${topics}${axis.unmappedCount?`<p class='axis-note'>${fmt(axis.unmappedCount)} questões desta disciplina ainda sem assunto cadastrado.</p>`:''}</section>`;
     }).join('')}</div>`:`<div class='edital-empty'><strong>Este verticalizado ainda não tem questões mapeadas.</strong><span>Quando a trilha entrar na release do Notion, os tópicos aparecerão aqui automaticamente.</span><button type='button' class='secondary' data-edital-filter='${escapeHtml(e.competitionId)}'>Abrir banco da trilha</button></div>`;
