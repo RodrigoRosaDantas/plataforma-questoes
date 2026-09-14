@@ -119,7 +119,7 @@ function buildVerticalizedEditais(){
       const axis=byDiscipline.get(axisKey); axis.questionCount++;
       if(!assunto){axis.unmappedCount++;return;}
       const topicKey=splitByCargo?cargo+'::'+assunto:assunto;
-      if(!axis.topics.has(topicKey)) axis.topics.set(topicKey,{label:assunto,questionCount:0,subassuntos:new Set(),filter:{orgao:q.orgao||axis.orgao,cargo:splitByCargo?cargo:'',disciplina,assunto}});
+      if(!axis.topics.has(topicKey)) axis.topics.set(topicKey,{label:assunto,questionCount:0,subassuntos:new Set(),filter:{orgao:q.orgao||axis.orgao,cargo:splitByCargo?cargo:'',disciplina:discipline,assunto}});
       const topic=axis.topics.get(topicKey); topic.questionCount++;
       const subassunto=String(q.subassunto||'').trim(); if(subassunto) topic.subassuntos.add(subassunto);
     });
