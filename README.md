@@ -1,1 +1,104 @@
-IyBQbGF0YWZvcm1hIGRlIFF1ZXN0w7VlcwoKTm92YSBiYXNlIEdpdEh1YiBkYSBwbGF0YWZvcm1hIGRlIHJlc29sdcOnw6NvIGRlIHF1ZXN0w7Vlcy4gTyBwcm9kdXRvIMOpICoqZ2Vuw6lyaWNvIHBhcmEgY29uY3Vyc29zKio6IGNvbmN1cnNvcyBtdWRhbTsgYSBhcnF1aXRldHVyYSBkYSBwbGF0YWZvcm1hIG7Do28uCgojIyBBcnF1aXRldHVyYQoKYGBgdGV4dApOb3Rpb24g4oCUIEJhbmNvIE1lc3RyZSBlZGl0b3JpYWwKICAgICAgICDihpMgd29ya2Zsb3cgY29tIE5PVElPTl9UT0tFTiAoc2VydmVyLXNpZGUpCnJlbGVhc2UgSlNPTiB2YWxpZGFkYSBubyBHaXRIdWIKICAgICAgICDihpMKR2l0SHViIFBhZ2VzIC8gUFdBCiAgICAgICAg4oaTCmFkYXB0YWRvciBkZSBwcm9ncmVzc28gZG8gdXN1w6FyaW8KYGBgCgpPIG5hdmVnYWRvciAqKm51bmNhIHJlY2ViZSBvIHRva2VuIGRvIE5vdGlvbioqLiBPIGNvbnRlw7pkbyBlZGl0b3JpYWwgZSBvIHByb2dyZXNzbyBkbyB1c3XDoXJpbyBzw6NvIGRvbcOtbmlvcyBzZXBhcmFkb3MuCgojIyBFc3RhZG8gZGVzdGEgVjEKCkEgaW50ZXJmYWNlIGZvaSByZWNvbnN0cnXDrWRhIGEgcGFydGlyIGRvIGludmVudMOhcmlvIGZ1bmNpb25hbCBlIGRvIHNuYXBzaG90IG1haXMgcmVjZW50ZSBkbyBwcm9qZXRvIG5vIFdvcmsuIE7Do28gw6kgdW1hIGPDs3BpYSBsaXRlcmFsIGRvIGPDs2RpZ28tZm9udGUgZG8gV29yazogbyBjw7NkaWdvLWZvbnRlIGludGVybm8gZG8gV29yayBuw6NvIGVzdGF2YSBleHBvc3RvIG5lc3RhIHNlc3PDo28uIEEgVjEgaW1wbGVtZW50YSB1bWEgYXJxdWl0ZXR1cmEgbGltcGEsIHNlbSBjYXJyZWdhciBvIGxlZ2FkbyB0w6ljbmljbyBkbyByZXBvc2l0w7NyaW8gU0VERVMvREYgZXhjbHXDrWRvLgoKQSByZWxlYXNlIGluY2x1w61kYSBubyBwYWNvdGUgZXN0w6EgZW0gKiptb2RvIGRlIGFtb3N0cmEqKiwgY29tIHVtYSBxdWVzdMOjbyByZWFsIGRvIEJhbmNvIE1lc3RyZSwgYXBlbmFzIHBhcmEgdmFsaWRhciBhIGludGVyZmFjZS4gTyB3b3JrZmxvdyBgU2luY3Jvbml6YXIgQmFuY28gTWVzdHJlIGRvIE5vdGlvbmAgc3Vic3RpdHVpIGVzc2EgYW1vc3RyYSBwZWxhIHJlbGVhc2UgY29tcGxldGEuCgojIyBGdW5jaW9uYWxpZGFkZXMgVjEKCi0gSG9tZSBvcmllbnRhZGEgw6AgcHLDs3hpbWEgYcOnw6NvOwotIEJhbmNvIGUgZWRpdGFpczsKLSBCYW5jbyBkZSBxdWVzdMO1ZXM7Ci0gZmlsdHJvcyBwb3Igw7NyZ8OjbywgY2FyZ28sIGJhbmNhLCBhbm8sIGRpc2NpcGxpbmEsIGFzc3VudG8gZSBmb3JtYXRvOwotIGNvbnRhZ2VtIGRpc3BvbsOtdmVsIGVtIHRlbXBvIHJlYWw7Ci0gZXNjb2xoYSBkbyB0YW1hbmhvIGRhIGJhdGVyaWE7Ci0gZW1iYXJhbGhhbWVudG87Ci0gdHJlaW5vIGNvbWVudGFkbyBlIG1vZG8gcHJvdmE7Ci0gY3JvbsO0bWV0cm87Ci0gbWFwYSBkYSBiYXRlcmlhOwotIG1hcmNhw6fDtWVzOwotIHJlc3VsdGFkbyBjb20gcGVyY2VudHVhbCBlIHByZWNpc8OjbyBzZXBhcmFkb3M7Ci0gY2FkZXJubyBkZSBlcnJvczsKLSBEMC9ENy9EMjAgc2ltcGxpZmljYWRvOwotIGhpc3TDs3JpY28gZSBkZXNlbXBlbmhvOwotIHJldG9tYWRhIGRlIHNlc3PDo287Ci0gaW1wb3J0YcOnw6NvIEpTT04gYXBlbmFzIHBhcmEgcHLDqS12YWxpZGHDp8OjbzsKLSBQV0EgZSBjYWNoZSBvZmZsaW5lIGRvIHNoZWxsOwotIHJlc3BvbnNpdmlkYWRlIG1vYmlsZS90YWJsZXQvZGVza3RvcDsKLSB3b3JrZmxvd3MgZGUgdmFsaWRhw6fDo28sIHN5bmMgZG8gTm90aW9uIGUgR2l0SHViIFBhZ2VzLgoKIyMgQmFuY28gTWVzdHJlIGF1ZGl0YWRvIGVtIDE0LzA5LzIwMjYKCi0gMy41MjUgcmVnaXN0cm9zOwotIDIuMzgwIENlcnRvL0VycmFkbzsKLSA5MzcgbcO6bHRpcGxhIGVzY29saGEgQeKAk0U7Ci0gMjA2IHNlbSBmb3JtYXRvIGV4cGzDrWNpdG87Ci0gMiBkaXNjdXJzaXZhczsKLSAwIHNlbSBlbnVuY2lhZG87Ci0gMiBzZW0gZ2FiYXJpdG87Ci0gMCBzZW0gZGlzY2lwbGluYTsKLSAxMjUgc2VtIGFzc3VudG87Ci0gMCBzZW0gY2FyZ287Ci0gMCBzZW0gZm9udGUvYmFuY2EuCgpPIHNpbmNyb25pemFkb3IgcHJlc2VydmEgYGZvcm1hdG9PcmlnaW5hbGAgZSBjcmlhIHVtIGBmb3JtYXRvYCBkZXJpdmFkbyBhcGVuYXMgcXVhbmRvIG8gY2FtcG8gZXN0w6EgdmF6aW8uIEVsZSBuw6NvIGFsdGVyYSBvIE5vdGlvbi4KCiMjIENvbmZpZ3VyYcOnw6NvIGRvIEdpdEh1YgoKMS4gQ3JpZSB1bSByZXBvc2l0w7NyaW8gY2hhbWFkbyBgcGxhdGFmb3JtYS1xdWVzdG9lc2AuCjIuIEVudmllIG8gY29udGXDumRvIGRlc3RlIHBhY290ZSBwYXJhIGEgYG1haW5gLgozLiBFbSAqKlNldHRpbmdzIOKGkiBTZWNyZXRzIGFuZCB2YXJpYWJsZXMg4oaSIEFjdGlvbnMqKiBjcmllOgogICAtIFNlY3JldDogYE5PVElPTl9UT0tFTmAKICAgLSBWYXJpYWJsZTogYE5PVElPTl9EQVRBX1NPVVJDRV9JRGAgPSBgNzg0MjM0YWUtZGVjYS00NTE0LWI2MGQtMTk1MjRlMTIyYTg5YAo0LiBHYXJhbnRhIHF1ZSBvIEJhbmNvIE1lc3RyZSBlc3RlamEgY29tcGFydGlsaGFkbyBjb20gYSBpbnRlZ3Jhw6fDo28gY29ycmVzcG9uZGVudGUgYW8gdG9rZW4uCjUuIEVtICoqQWN0aW9ucyoqLCBleGVjdXRlIGBTaW5jcm9uaXphciBCYW5jbyBNZXN0cmUgZG8gTm90aW9uYC4KNi4gRW0gKipTZXR0aW5ncyDihpIgUGFnZXMqKiwgc2VsZWNpb25lICoqR2l0SHViIEFjdGlvbnMqKiBjb21vIG9yaWdlbSBkZSBwdWJsaWNhw6fDo28uCgojIyBHYXRlcyBlZGl0b3JpYWlzIGRvIHN5bmMKClVtYSBxdWVzdMOjbyBuw6NvIGVudHJhIG5hIHJlbGVhc2UgcXVhbmRvOgoKLSBuw6NvIHRlbSBlbnVuY2lhZG87Ci0gbsOjbyB0ZW0gZ2FiYXJpdG87Ci0gZXN0w6EgbWFyY2FkYSBjb21vIGR1cGxpY2FkYTsKLSBwb3NzdWkgYmxvcXVlaW8gbWFudWFsIGRlIHB1YmxpY2HDp8OjbzsKLSBgQXVkaXRvcmlhIGRlIGNvbnRlw7pkbyA9IE7Do28gYXByb3ZhZGFgLgoKUXVlc3TDtWVzIGFudWxhZGFzIHBlcm1hbmVjZW0gY29tbyBlc3RhZG8gZXhwbMOtY2l0bzsgbsOjbyBzw6NvIHNpbGVuY2lvc2FtZW50ZSBjb252ZXJ0aWRhcyBlbSBxdWVzdMO1ZXMgbm9ybWFpcy4KCiMjIFBlcnNpc3TDqm5jaWEKCkEgVjEgdXNhIGBQcm9ncmVzc1N0b3JlYCBjb20gYXJtYXplbmFtZW50byBsb2NhbCBwYXJhIHF1ZSBhIHBsYXRhZm9ybWEgc2VqYSBmdW5jaW9uYWwgc2VtIGJhY2tlbmQuIElzc28gw6kgdW0gKiphZGFwdGFkb3IqKiwgbsOjbyB1bWEgZGVjaXPDo28gYXJxdWl0ZXR1cmFsIGRlZmluaXRpdmEuIEEgcHLDs3hpbWEgY2FtYWRhIHBvZGUgaW1wbGVtZW50YXIgY29udGEvc2luY3Jvbml6YcOnw6NvIGVtIG51dmVtIHNlbSB0cm9jYXIgb3MgSURzIGRhcyBxdWVzdMO1ZXMgbmVtIG1pc3R1cmFyIGVzdGFkbyBkbyB1c3XDoXJpbyBjb20gbyBCYW5jbyBNZXN0cmUuCgojIyBEZXNlbnZvbHZpbWVudG8KCmBgYGJhc2gKbnBtIHJ1biB2YWxpZGF0ZQpucG0gcnVuIGJ1aWxkCmBgYAoKUGFyYSBzaW5jcm9uaXphciBvIE5vdGlvbiBsb2NhbG1lbnRlOgoKYGBgYmFzaApOT1RJT05fVE9LRU49Jy4uLicgTk9USU9OX0RBVEFfU09VUkNFX0lEPSc3ODQyMzRhZS1kZWNhLTQ1MTQtYjYwZC0xOTUyNGUxMjJhODknIG5wbSBydW4gc3luYzpub3Rpb24KYGBgCgpOdW5jYSB2ZXJzaW9uZSBvIHRva2VuLgo=
+# Plataforma de Questões
+
+Nova base GitHub da plataforma de resolução de questões. O produto é **genérico para concursos**: concursos mudam; a arquitetura da plataforma não.
+
+## Arquitetura
+
+```text
+Notion — Banco Mestre editorial
+        ↓ workflow com NOTION_TOKEN (server-side)
+release JSON validada no GitHub
+        ↓
+GitHub Pages / PWA
+        ↓
+adaptador de progresso do usuário
+```
+
+O navegador **nunca recebe o token do Notion**. O conteúdo editorial e o progresso do usuário são domínios separados.
+
+## Estado desta V1
+
+A interface foi reconstruída a partir do inventário funcional e do snapshot mais recente do projeto no Work. Não é uma cópia literal do código-fonte do Work: o código-fonte interno do Work não estava exposto nesta sessão. A V1 implementa uma arquitetura limpa, sem carregar o legado técnico do repositório SEDES/DF excluído.
+
+A release incluída no pacote está em **modo de amostra**, com uma questão real do Banco Mestre, apenas para validar a interface. O workflow `Sincronizar Banco Mestre do Notion` substitui essa amostra pela release completa.
+
+## Funcionalidades V1
+
+- Home orientada à próxima ação;
+- Banco e editais;
+- Banco de questões;
+- filtros por órgão, cargo, banca, ano, disciplina, assunto e formato;
+- contagem disponível em tempo real;
+- escolha do tamanho da bateria;
+- embaralhamento;
+- treino comentado e modo prova;
+- cronômetro;
+- mapa da bateria;
+- marcações;
+- resultado com percentual e precisão separados;
+- caderno de erros;
+- D0/D7/D20 simplificado;
+- histórico e desempenho;
+- retomada de sessão;
+- importação JSON apenas para pré-validação;
+- PWA e cache offline do shell;
+- responsividade mobile/tablet/desktop;
+- workflows de validação, sync do Notion e GitHub Pages.
+
+## Banco Mestre auditado em 14/09/2026
+
+- 3.525 registros;
+- 2.380 Certo/Errado;
+- 937 múltipla escolha A–E;
+- 206 sem formato explícito;
+- 2 discursivas;
+- 0 sem enunciado;
+- 2 sem gabarito;
+- 0 sem disciplina;
+- 125 sem assunto;
+- 0 sem cargo;
+- 0 sem fonte/banca.
+
+O sincronizador preserva `formatoOriginal` e cria um `formato` derivado apenas quando o campo está vazio. Ele não altera o Notion.
+
+## Configuração do GitHub
+
+1. Crie um repositório chamado `plataforma-questoes`.
+2. Envie o conteúdo deste pacote para a `main`.
+3. Em **Settings → Secrets and variables → Actions** crie:
+   - Secret: `NOTION_TOKEN`
+   - Variable: `NOTION_DATA_SOURCE_ID` = `784234ae-deca-4514-b60d-19524e122a89`
+4. Garanta que o Banco Mestre esteja compartilhado com a integração correspondente ao token.
+5. Em **Actions**, execute `Sincronizar Banco Mestre do Notion`.
+6. Em **Settings → Pages**, selecione **GitHub Actions** como origem de publicação.
+
+## Gates editoriais do sync
+
+Uma questão não entra na release quando:
+
+- não tem enunciado;
+- não tem gabarito;
+- está marcada como duplicada;
+- possui bloqueio manual de publicação;
+- `Auditoria de conteúdo = Não aprovada`.
+
+Questões anuladas permanecem como estado explícito; não são silenciosamente convertidas em questões normais.
+
+## Persistência
+
+A V1 usa `ProgressStore` com armazenamento local para que a plataforma seja funcional sem backend. Isso é um **adaptador**, não uma decisão arquitetural definitiva. A próxima camada pode implementar conta/sincronização em nuvem sem trocar os IDs das questões nem misturar estado do usuário com o Banco Mestre.
+
+## Desenvolvimento
+
+```bash
+npm run validate
+npm run build
+```
+
+Para sincronizar o Notion localmente:
+
+```bash
+NOTION_TOKEN='...' NOTION_DATA_SOURCE_ID='784234ae-deca-4514-b60d-19524e122a89' npm run sync:notion
+```
+
+Nunca versione o token.
