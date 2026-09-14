@@ -1,4 +1,5 @@
 import fs from 'node:fs/promises';
+import {spawnSync} from 'node:child_process';
 const html=await fs.readFile('index.html','utf8');
 const js=await fs.readFile('assets/app.js','utf8');
 const sw=await fs.readFile('service-worker.js','utf8');
@@ -23,3 +24,5 @@ console.log('OK: shell, navegação, persistência abstrata, finalização e PWA
 if(!js.includes("cloud-progress.js")||!js.includes("syncCloudProgress")) throw new Error('Sincronização de progresso ausente.');
 if(!html.includes('id="cloudEmail"')||!html.includes('id="performanceCharts"')) throw new Error('Controles de conta/desempenho ausentes.');
 if(/service_role|sb_secret_/i.test(html+'\n'+js+'\n'+sw)) throw new Error('Segredo do Supabase não pode existir no frontend.');
+
+for(const file of ['assets/app.js','assets/cloud-progress.js']){const syntax=spawnSync(process.execPath,['--check',file],{encoding:'utf8'});if(syntax.status!==0)throw new Error('JavaScript inválido em '+file+'\n'+(syntax.stderr||syntax.stdout));}
