@@ -19,3 +19,7 @@ if(!js.includes('tjdft-provas')) throw new Error('Catálogo TJDFT não é carreg
 if(!sw.includes('./data/tjdft-provas.json')) throw new Error('Catálogo TJDFT não está no shell do PWA.');
 if(!html.includes('Provas oficiais e materiais')) throw new Error('Tela de provas oficiais ausente.');
 console.log('OK: shell, navegação, persistência abstrata, finalização e PWA presentes.');
+
+if(!js.includes("cloud-progress.js")||!js.includes("syncCloudProgress")) throw new Error('Sincronização de progresso ausente.');
+if(!html.includes('id="cloudEmail"')||!html.includes('id="performanceCharts"')) throw new Error('Controles de conta/desempenho ausentes.');
+if(/service_role|sb_secret_/i.test(html+'\n'+js+'\n'+sw)) throw new Error('Segredo do Supabase não pode existir no frontend.');

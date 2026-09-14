@@ -1,3 +1,4 @@
+import { cloudProgress } from './cloud-progress.js';
 const ROUTES = [
   ['home','<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1Z"/></svg>','Início'],
   ['edits','<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 5.5A2.5 2.5 0 0 1 7.5 3H20v16H7.5A2.5 2.5 0 0 0 5 21.5v-16ZM5 5.5v16M8 7h8M8 11h7"/></svg>','Banco e editais'],
@@ -12,7 +13,7 @@ const ROUTES = [
 
 const state = {
   questions: [], meta: {}, competitions: [], editais: [], officialExams: [], filtered: [],
-  session: null, timer: null, startedAt: null, currentView: 'home', hiddenAt: null, syncLabel: 'Release publicada'
+  session: null, timer: null, startedAt: null, currentView: 'home', hiddenAt: null, syncLabel: 'Release publicada', cloud: {status:'loading',email:'',profileId:'',message:''}
 };
 
 const $ = (s, root=document) => root.querySelector(s);
@@ -65,6 +66,7 @@ async function boot(){
     state.syncLabel=state.meta.sampleMode?'Amostra local':'Release publicada';
     renderNav(); bindGlobal(); populateFilters(); applyFilters(); renderAll();
     const progress=store.load(); if(progress.activeSession) hydrateSession(progress.activeSession);
+    void initCloudProgress();
     if('serviceWorker' in navigator) navigator.serviceWorker.register('./service-worker.js').catch(()=>{});
   }catch(err){
     document.body.innerHTML='<main style="padding:32px"><h1>Não foi possível carregar a release.</h1><p>'+escapeHtml(err.message)+'</p></main>';
@@ -92,6 +94,77 @@ async function refreshRelease(){
     const currentStatus=$('#syncStatus'); if(currentStatus) currentStatus.textContent=state.syncLabel;
   }
 }
+
+function saveHistoryIfChanged(history){
+  const next=Array.isArray(history)?history:[];
+  const current=store.load().history;
+  if(JSON.stringify(current)!==JSON.stringify(next))store.mutate(progress=>{progress.history=next;});
+}
+async function syncCloudProgress(options={}){
+  const cloud=cloudProgress.snapshot;
+  if(!cloud.authenticated)return;
+  const result=await cloudProgress.syncLocal(store.load().history);
+  if(result.history)saveHistoryIfChanged(result.history);
+  if(!result.synced)return;
+  try{
+    const remote=await cloudProgress.loadCloudHistory();
+    saveHistoryIfChanged(cloudProgress.mergeHistory(store.load().history,remote));
+    if(!options.silent)toast('Progresso sincronizado entre os aparelhos.');
+  }catch{
+    if(!options.silent)toast('Progresso salvo localmente; tente sincronizar novamente.');
+  }
+}
+function renderCloudAccount(){
+  const cloud=state.cloud||cloudProgress.snapshot;
+  const statusLabels={loading:'Conectando…',signed_out:'Modo local',pending:'Link enviado',authenticated:'Sincronizado',syncing:'Sincronizando…',error:'Indisponível'};
+  const statusEl=$('#cloudStatus'); if(statusEl)statusEl.textContent=statusLabels[cloud.status]||'Modo local';
+  const description=$('#cloudDescription');
+  if(description){
+    const defaultText=cloud.status==='signed_out'?'Entre com seu e-mail para levar tentativas e desempenho para outro aparelho.':cloud.status==='pending'?'Abra o link recebido por e-mail para concluir o acesso.':cloud.status==='authenticated'?'Sua conta está conectada. O conteúdo continua público no GitHub; somente seu progresso vai para o Supabase.':cloud.status==='syncing'?'Enviando tentativas e sessões recentes…':'Sincronização temporariamente indisponível. O progresso local continua salvo.';
+    description.textContent=cloud.message||defaultText;
+  }
+  const signedIn=Boolean(cloud.profileId)&&['authenticated','syncing','error'].includes(cloud.status);
+  $('#cloudSignedOut')?.classList.toggle('hidden',signedIn);
+  $('#cloudSignedIn')?.classList.toggle('hidden',!signedIn);
+  const email=$('#cloudAccountEmail'); if(email)email.textContent=cloud.email||'';
+}
+async function requestCloudAccess(){
+  const input=$('#cloudEmail'), button=$('#cloudSignIn');
+  try{
+    if(button)button.disabled=true;
+    await cloudProgress.requestMagicLink(input?.value||'');
+    toast('Link de acesso enviado. Confira seu e-mail.');
+  }catch(error){toast(error.message||'Não foi possível enviar o link.');}
+  finally{if(button)button.disabled=false;renderCloudAccount();}
+}
+async function initCloudProgress(){
+  cloudProgress.subscribe(cloud=>{state.cloud=cloud;renderCloudAccount();});
+  try{
+    await cloudProgress.init();
+    if(cloudProgress.snapshot.authenticated)await syncCloudProgress({silent:true});
+  }catch{renderCloudAccount();}
+}
+function enrichAnswer(answer){
+  const question=state.questions.find(item=>item.id===answer.questionId);
+  return Object.assign({},answer,{
+    disciplina:answer.disciplina||question?.disciplina||'',
+    assunto:answer.assunto||question?.assunto||'',
+    correctAnswer:answer.correctAnswer||question?.gabarito||null
+  });
+}
+function trendChart(points){
+  if(!points.length)return '<div class="empty-state">Conclua uma sessão para ver a evolução.</div>';
+  const width=720,height=250,left=42,right=18,top=20,bottom=38;
+  const innerWidth=width-left-right,innerHeight=height-top-bottom;
+  const x=index=>points.length===1?left+innerWidth/2:left+(innerWidth*index/(points.length-1));
+  const y=value=>top+innerHeight-(Math.max(0,Math.min(100,value))*innerHeight/100);
+  const grid=[0,25,50,75,100].map(value=>'<line x1="'+left+'" x2="'+(width-right)+'" y1="'+y(value)+'" y2="'+y(value)+'" class="chart-grid-line"/><text x="4" y="'+(y(value)+4)+'" class="chart-axis-label">'+value+'%</text>').join('');
+  const line=points.map((point,index)=>x(index)+','+y(point.value)).join(' ');
+  const dots=points.map((point,index)=>'<circle cx="'+x(index)+'" cy="'+y(point.value)+'" r="5" class="chart-dot"><title>'+escapeHtml(point.label)+': '+point.value.toFixed(1)+'%</title></circle>').join('');
+  const labels=points.map((point,index)=>index===0||index===points.length-1?'<text x="'+x(index)+'" y="'+(height-10)+'" text-anchor="'+(index===0?'start':'end')+'" class="chart-axis-label">'+escapeHtml(point.label)+'</text>':'').join('');
+  return '<svg class="trend-chart" viewBox="0 0 '+width+' '+height+'" role="img" aria-label="Evolução da precisão por sessão">'+grid+'<polyline points="'+line+'" class="chart-line"/>'+dots+labels+'</svg>';
+}
+
 function renderNav(){
   $('#nav').innerHTML=ROUTES.map(([id,icon,label])=>`<button type="button" data-go="${id}" class="${id==='home'?'active':''}"><span class="nav-icon" aria-hidden="true">${icon}</span><span>${label}</span></button>`).join('');
 }
@@ -160,6 +233,11 @@ function bindGlobal(){
   $('#importFile').addEventListener('change',validateImport);
   $('#exportProgress').addEventListener('click',exportProgress);
   $('#resetProgress').addEventListener('click',resetProgress);
+  $('#cloudSignIn')?.addEventListener('click',requestCloudAccess);
+  $('#cloudEmail')?.addEventListener('keydown',event=>{if(event.key==='Enter')requestCloudAccess();});
+  $('#cloudSync')?.addEventListener('click',()=>syncCloudProgress());
+  $('#cloudSignOut')?.addEventListener('click',async()=>{await cloudProgress.signOut();toast('Conta desconectada.');renderCloudAccount();});
+  window.addEventListener('online',()=>syncCloudProgress({silent:true}));
   document.addEventListener('visibilitychange',handleVisibilityChange);
   window.addEventListener('pagehide',pauseSessionForExit);
   window.addEventListener('pageshow',resumeSessionAfterReturn);
@@ -237,7 +315,7 @@ function renderQuestionPreview(){
 const chip = v => v?`<span class="chip">${escapeHtml(v)}</span>`:'';
 
 function renderAll(){
-  renderHome(); renderCompetitions(); renderEditais(); renderMaterials(); renderRelease(); renderReview(); renderPerformance();
+  renderHome(); renderCompetitions(); renderEditais(); renderMaterials(); renderRelease(); renderReview(); renderPerformance(); renderCloudAccount();
 }
 
 function renderHome(){
@@ -408,22 +486,40 @@ function toggleMarked(){ const q=currentQuestion(); if(!q)return; store.mutate(p
 
 function finishSession(){
   saveQuestionTime(); clearInterval(state.timer); const s=state.session; if(!s)return;
-  const answers=s.items.map(id=>{const q=state.questions.find(x=>x.id===id);const given=s.answers[id]||null;return {questionId:id,given,correctAnswer:q?.gabarito||null,isCorrect:given===q?.gabarito,blank:!given,time:s.questionTimes[id]||0,disciplina:q?.disciplina||'',assunto:q?.assunto||''};});
+  const answers=s.items.map(id=>{const q=state.questions.find(x=>x.id===id);const given=s.answers[id]||null;return {questionId:id,given,correctAnswer:q?.gabarito||null,isCorrect:given===q?.gabarito,blank:!given,time:s.questionTimes[id]||0,disciplina:q?.disciplina||'',assunto:q?.assunto||'',clientEventId:crypto.randomUUID?.()||('evt-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2))};});
   const correct=answers.filter(a=>a.isCorrect).length, wrong=answers.filter(a=>a.given&&!a.isCorrect).length, blank=answers.filter(a=>a.blank).length;
   const record={id:s.id,finishedAt:Date.now(),startedAt:s.startedAt,mode:s.mode,total:s.items.length,correct,wrong,blank,elapsedMs:elapsedMs(s),answers};
   store.mutate(p=>{p.history.unshift(record);p.activeSession=null;answers.forEach(a=>{if(a.isCorrect){if(p.errors[a.questionId])p.errors[a.questionId].lastCorrect=Date.now();const r=p.reviews[a.questionId];if(r){r.stage=r.stage==='D0'?'D7':r.stage==='D7'?'D20':'Dominada';r.dueAt=r.stage==='D7'?Date.now()+7*864e5:r.stage==='D20'?Date.now()+20*864e5:null;}}else if(a.given){p.errors[a.questionId]={count:(p.errors[a.questionId]?.count||0)+1,lastError:Date.now()};p.reviews[a.questionId]={stage:'D0',dueAt:Date.now()};}});});
-  state.hiddenAt=null; state.session=null; renderResult(record); navigate('result');
+  state.hiddenAt=null; state.session=null; renderResult(record); navigate('result'); void syncCloudProgress({silent:true});
 }
 function renderResult(r){ const answered=r.correct+r.wrong, precision=answered?r.correct/answered*100:0, percent=r.total?r.correct/r.total*100:0, elapsed=seconds(r.elapsedMs??(r.finishedAt-r.startedAt)); $('#resultMetrics').innerHTML=[['Corretas',r.correct],['Erradas',r.wrong],['Em branco',r.blank],['Percentual',`${percent.toFixed(1)}%`],['Precisão',`${precision.toFixed(1)}%`],['Tempo',clock(elapsed)],['Média/questão',clock(r.total?Math.round(elapsed/r.total):0)],['Total',r.total]].map(metricHtml).join(''); const by=aggregateBy(r.answers,'disciplina'); $('#resultBreakdown').innerHTML=Object.entries(by).map(([k,v])=>`<article class="card"><h2>${escapeHtml(k||'Sem disciplina')}</h2><p>${v.correct}/${v.total} corretas · ${Math.round(v.correct/v.total*100)}%</p></article>`).join('')||'<div class="card empty-state">Sem dados.</div>'; }
 function redoErrors(){ const h=store.load().history[0]; if(!h)return; const qs=h.answers.filter(a=>!a.isCorrect&&a.given).map(a=>state.questions.find(q=>q.id===a.questionId)).filter(q=>q&&answerOptions(q).length); if(!qs.length){toast('Não há erradas objetivas nessa sessão.');return;} createSession(qs,'training'); }
 
 function renderReview(){ const p=store.load(); const ids=uniq([...Object.keys(p.errors||{}),...Object.keys(p.marked||{}),...Object.keys(p.reviews||{})]); const root=$('#reviewList'); if(!ids.length){root.innerHTML='<div class="card empty-state">Nenhuma questão em revisão ainda.</div>';return;} root.innerHTML=ids.map(id=>{const q=state.questions.find(x=>x.id===id);if(!q)return'';const e=p.errors[id],r=p.reviews[id],m=p.marked[id];return `<article class="card"><div class="chips">${e?chip(`${e.count} erro(s)`):''}${r?chip(r.stage):''}${m?chip('Marcada'):''}</div><h2>${escapeHtml(q.disciplina||'Questão')}</h2><p>${escapeHtml(q.enunciado)}</p><button class="secondary" data-review-one="${escapeHtml(id)}">Resolver agora</button></article>`;}).join(''); $$('[data-review-one]').forEach(b=>b.addEventListener('click',()=>{const q=state.questions.find(x=>x.id===b.dataset.reviewOne);if(q)createSession([q],'training');})); }
-function renderPerformance(){ const h=store.load().history, all=h.flatMap(x=>x.answers||[]); const total=all.length, correct=all.filter(a=>a.isCorrect).length, precision=total?correct/total*100:0, avg=total?all.reduce((s,a)=>s+(a.time||0),0)/total:0; $('#performanceMetrics').innerHTML=[['Respondidas',total],['Acertos',correct],['Precisão',`${precision.toFixed(1)}%`],['Tempo médio',clock(Math.round(avg))]].map(metricHtml).join(''); const by=aggregateBy(all,'disciplina'); const entries=Object.entries(by).sort((a,b)=>a[1].correct/a[1].total-b[1].correct/b[1].total); $('#performanceBreakdown').innerHTML=entries.length?entries.map(([k,v])=>`<article class="card"><span class="kicker">${v.total} RESPOSTAS</span><h2>${escapeHtml(k||'Sem disciplina')}</h2><p>${Math.round(v.correct/v.total*100)}% de precisão</p></article>`).join(''):'<div class="card empty-state">Conclua uma bateria para gerar desempenho.</div>'; }
-function aggregateBy(arr,key){return arr.reduce((m,a)=>{const k=a[key]||'Sem classificação';m[k]??={total:0,correct:0};m[k].total++;if(a.isCorrect)m[k].correct++;return m;},{});}
+function renderPerformance(){
+  const history=store.load().history;
+  const all=history.flatMap(record=>(record.answers||[]).map(enrichAnswer));
+  const total=all.length,attempted=all.filter(answer=>!answer.blank),correct=all.filter(answer=>answer.isCorrect).length;
+  const precision=attempted.length?correct/attempted.length*100:0;
+  const avg=total?all.reduce((sum,answer)=>sum+(answer.time||0),0)/total:0;
+  const best=history.length?Math.max(...history.map(record=>{const answered=(record.correct||0)+(record.wrong||0);return answered?record.correct/answered*100:0;})):0;
+  $('#performanceMetrics').innerHTML=[['Respondidas',total],['Acertos',correct],['Precisão',precision.toFixed(1)+'%'],['Tempo médio',clock(Math.round(avg))],['Sessões',history.length],['Melhor sessão',best.toFixed(1)+'%']].map(metricHtml).join('');
+  const sessions=[...history].sort((a,b)=>(a.finishedAt||0)-(b.finishedAt||0)).slice(-12);
+  const trend=sessions.map((record,index)=>{const answered=(record.correct||0)+(record.wrong||0);return {value:answered?record.correct/answered*100:0,label:new Date(record.finishedAt||Date.now()).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})+' · '+(index+1)};});
+  const by=aggregateBy(all,'disciplina');
+  const entries=Object.entries(by).sort((a,b)=>{
+    const pa=a[1].correct/Math.max(1,a[1].total-a[1].blank),pb=b[1].correct/Math.max(1,b[1].total-b[1].blank);
+    return pa-pb||b[1].total-a[1].total;
+  });
+  const chartRoot=$('#performanceCharts');
+  if(chartRoot)chartRoot.innerHTML='<div class="chart-grid"><article class="card chart-card"><div class="chart-head"><div><span class="kicker">EVOLUÇÃO</span><h2>Precisão por sessão</h2></div><span class="chart-caption">Últimas '+sessions.length+'</span></div><div class="chart-scroll">'+trendChart(trend)+'</div></article><article class="card chart-card"><div class="chart-head"><div><span class="kicker">FOCO</span><h2>Precisão por disciplina</h2></div><span class="chart-caption">'+entries.length+' áreas</span></div><div class="bar-chart">'+(entries.length?entries.slice(0,10).map(([key,value])=>{const percent=value.correct/Math.max(1,value.total-value.blank)*100;return '<div class="bar-row"><div class="bar-label"><span>'+escapeHtml(key||'Sem disciplina')+'</span><strong>'+percent.toFixed(0)+'%</strong></div><div class="bar-track"><span class="bar-fill" style="width:'+Math.max(0,Math.min(100,percent))+'%"></span></div><small>'+value.total+' respostas · '+value.blank+' em branco</small></div>';}).join(''):'<div class="empty-state">Responda questões para ver seus pontos fortes e fracos.</div>')+'</div></article></div>';
+  $('#performanceBreakdown').innerHTML=entries.length?entries.map(([key,value])=>{const answered=value.total-value.blank;const percent=answered?value.correct/answered*100:0;return '<article class="card"><span class="kicker">'+value.total+' RESPOSTAS</span><h2>'+escapeHtml(key||'Sem disciplina')+'</h2><p>'+percent.toFixed(1)+'% de precisão · '+value.blank+' em branco</p></article>';}).join(''):'<div class="card empty-state">Conclua uma bateria para gerar desempenho.</div>';
+}
+function aggregateBy(arr,key){return arr.reduce((m,a)=>{const k=a[key]||'Sem classificação';m[k]??={total:0,correct:0,blank:0};m[k].total++;if(a.blank)m[k].blank++;else if(a.isCorrect)m[k].correct++;return m;},{});}
 
 async function validateImport(e){ const file=e.target.files[0]; if(!file)return; try{const data=JSON.parse(await file.text());const arr=Array.isArray(data)?data:data.questions;if(!Array.isArray(arr))throw new Error('Esperado array de questões ou {questions:[...]}.');const missing=arr.filter(q=>!q.enunciado||!q.gabarito).length;$('#importReport').textContent=`Arquivo válido\nRegistros: ${arr.length}\nSem enunciado/gabarito: ${missing}\n\nPré-validação apenas: nada foi publicado nem enviado ao Notion.`;}catch(err){$('#importReport').textContent=`Arquivo inválido: ${err.message}`;}}
 function exportProgress(){ const blob=new Blob([JSON.stringify(store.load(),null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`plataforma-questoes-progresso-${new Date().toISOString().slice(0,10)}.json`;a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},1000); }
-function resetProgress(){ if(!confirm('Zerar somente o progresso deste navegador? O banco de questões não será alterado.'))return;store.clear();state.session=null;state.hiddenAt=null;clearInterval(state.timer);renderAll();navigate('home');toast('Progresso local zerado.');}
+function resetProgress(){ if(!confirm('Zerar somente o progresso deste aparelho? O banco de questões e o progresso sincronizado na nuvem não serão alterados.'))return;store.clear();state.session=null;state.hiddenAt=null;clearInterval(state.timer);renderAll();navigate('home');toast('Progresso local zerado.');}
 function toast(msg){ const t=$('#toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200); }
 
 boot();
