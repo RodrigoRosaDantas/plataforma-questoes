@@ -1,6 +1,15 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-14T22:16:02.784Z",
+  "generatedAt": "2026-09-14T22:35:57.700Z",
+  "releaseSnapshotId": "8c404ab4eb23b96b3a979d760a163f7ab1ce48d78b16632a5da2f9b4e88c4e0d",
+  "scoringPolicy": {
+    "version": 1,
+    "blankCountsAsWrong": false,
+    "negativeMarking": 0,
+    "annulledExcluded": true,
+    "precisionDenominator": "answered",
+    "feedback": "after-confirmation"
+  },
   "source": "Notion Banco Mestre — conteúdo editorial de questões",
   "dataSourceId": "784234ae-deca-4514-b60d-19524e122a89",
   "notionApiVersion": "2026-03-11",
@@ -28,14 +37,5 @@
       "cargo": 0,
       "fonte": 0
     }
-  },
-  "releaseSnapshotId": "8c404ab4eb23b96b3a979d760a163f7ab1ce48d78b16632a5da2f9b4e88c4e0d",
-  "scoringPolicy": {
-    "version": 1,
-    "blankCountsAsWrong": false,
-    "negativeMarking": 0,
-    "annulledExcluded": true,
-    "precisionDenominator": "answered",
-    "feedback": "after-confirmation"
   }
 }
