@@ -183,7 +183,8 @@ function openTopic(orgao,disciplina,assunto){
   navigate('questions'); resetQuestionFilters();
   setQuestionFilter('filterOrgao',orgao); setQuestionFilter('filterDisciplina',disciplina); setQuestionFilter('filterAssunto',assunto);
   applyFilters();
-  toast(state.filtered.length?fmt(state.filtered.length)+' questões neste tópico.':'Nenhuma questão encontrada neste tópico.');
+  if(state.filtered.length){ startSessionFromFilters(); }
+  else toast('Nenhuma questão encontrada neste tópico.');
 }
 function openCompetition(competitionId){
   const sample=state.questions.find(q=>questionBelongsTo(q,competitionId));
