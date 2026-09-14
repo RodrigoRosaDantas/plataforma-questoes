@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-14T19:17:29.076Z",
+  "generatedAt": "2026-09-14T21:50:22.893Z",
   "source": "Notion Banco Mestre — conteúdo editorial de questões",
   "dataSourceId": "784234ae-deca-4514-b60d-19524e122a89",
   "notionApiVersion": "2026-03-11",
@@ -22,7 +22,7 @@
     },
     "missing": {
       "enunciado": 0,
-      "gabarito": 5,
+      "gabarito": 8,
       "disciplina": 0,
       "assunto": 125,
       "cargo": 0,
