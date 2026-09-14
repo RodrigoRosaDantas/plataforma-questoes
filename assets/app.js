@@ -12,7 +12,7 @@ const ROUTES = [
 
 const state = {
   questions: [], meta: {}, competitions: [], editais: [], filtered: [],
-  session: null, timer: null, startedAt: null, currentView: 'home', hiddenAt: null
+  session: null, timer: null, startedAt: null, currentView: 'home', hiddenAt: null, syncLabel: 'Release publicada'
 };
 
 const $ = (s, root=document) => root.querySelector(s);
@@ -48,30 +48,92 @@ class ProgressStore {
 }
 const store = new ProgressStore();
 
+async function loadRelease(){
+  const stamp=Date.now();
+  const names=['questions','metadata','competitions','editais'];
+  const payloads=await Promise.all(names.map(name=>fetch('./data/'+name+'.json?refresh='+stamp,{cache:'no-store'}).then(response=>{
+    if(!response.ok) throw new Error('Falha ao carregar '+name+'.json');
+    return response.json();
+  })));
+  return payloads;
+}
+
 async function boot(){
   try{
-    const [q,m,c,e] = await Promise.all([
-      fetch('./data/questions.json',{cache:'no-store'}).then(r=>r.json()),
-      fetch('./data/metadata.json',{cache:'no-store'}).then(r=>r.json()),
-      fetch('./data/competitions.json',{cache:'no-store'}).then(r=>r.json()),
-      fetch('./data/editais.json',{cache:'no-store'}).then(r=>r.json())
-    ]);
+    const [q,m,c,e]=await loadRelease();
     state.questions=q; state.meta=m; state.competitions=c; state.editais=e; state.filtered=[...q];
+    state.syncLabel=state.meta.sampleMode?'Amostra local':'Release publicada';
     renderNav(); bindGlobal(); populateFilters(); applyFilters(); renderAll();
     const progress=store.load(); if(progress.activeSession) hydrateSession(progress.activeSession);
     if('serviceWorker' in navigator) navigator.serviceWorker.register('./service-worker.js').catch(()=>{});
   }catch(err){
-    document.body.innerHTML=`<main style="padding:32px"><h1>Não foi possível carregar a release.</h1><p>${escapeHtml(err.message)}</p></main>`;
+    document.body.innerHTML='<main style="padding:32px"><h1>Não foi possível carregar a release.</h1><p>'+escapeHtml(err.message)+'</p></main>';
   }
 }
 
+async function refreshRelease(){
+  const buttons=$$('[data-refresh-release]');
+  buttons.forEach(button=>{button.disabled=true;button.classList.add('is-refreshing');});
+  const label=$('#refreshLabel'); if(label) label.textContent='Atualizando…';
+  state.syncLabel='Consultando release…';
+  const status=$('#syncStatus'); if(status) status.textContent=state.syncLabel;
+  try{
+    const [q,m,c,e]=await loadRelease();
+    state.questions=q; state.meta=m; state.competitions=c; state.editais=e; state.filtered=[...q];
+    state.syncLabel='Atualizada · '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+    populateFilters(); applyFilters(); renderAll();
+    toast('Release atualizada: '+fmt(q.length)+' questões disponíveis.');
+  }catch(err){
+    state.syncLabel='Atualização indisponível';
+    toast('Não foi possível atualizar a release publicada.');
+  }finally{
+    buttons.forEach(button=>{button.disabled=false;button.classList.remove('is-refreshing');});
+    if(label) label.textContent='Atualizar';
+    const currentStatus=$('#syncStatus'); if(currentStatus) currentStatus.textContent=state.syncLabel;
+  }
+}
 function renderNav(){
   $('#nav').innerHTML=ROUTES.map(([id,icon,label])=>`<button type="button" data-go="${id}" class="${id==='home'?'active':''}"><span class="nav-icon" aria-hidden="true">${icon}</span><span>${label}</span></button>`).join('');
 }
 
+function questionBelongsTo(q,competitionId){
+  const hay=[q.orgao,q.cargo,q.nomeMaterial].filter(Boolean).join(' ');
+  if(competitionId==='seedf') return /SEEDF/i.test(hay);
+  if(competitionId==='tjdft') return /TJDFT|Tribunal de Justiça do Distrito Federal/i.test(hay);
+  if(competitionId==='sedes-df-2026') return /SEDES/i.test(hay);
+  return false;
+}
+
+function buildVerticalizedEditais(){
+  return state.editais.map(config=>{
+    const pool=state.questions.filter(q=>questionBelongsTo(q,config.competitionId));
+    const byDiscipline=new Map();
+    pool.forEach(q=>{
+      const discipline=String(q.disciplina||'Sem disciplina').trim()||'Sem disciplina';
+      const assunto=String(q.assunto||'').trim();
+      if(!byDiscipline.has(discipline)) byDiscipline.set(discipline,{label:discipline,questionCount:0,unmappedCount:0,topics:new Map(),orgao:q.orgao||''});
+      const axis=byDiscipline.get(discipline); axis.questionCount++;
+      if(!assunto){axis.unmappedCount++;return;}
+      if(!axis.topics.has(assunto)) axis.topics.set(assunto,{label:assunto,questionCount:0,subassuntos:new Set(),filter:{orgao:q.orgao||axis.orgao,disciplina,assunto}});
+      const topic=axis.topics.get(assunto); topic.questionCount++;
+      const subassunto=String(q.subassunto||'').trim(); if(subassunto) topic.subassuntos.add(subassunto);
+    });
+    const axes=[...byDiscipline.values()].sort((a,b)=>a.label.localeCompare(b.label,'pt-BR',{numeric:true})).map(axis=>({
+      ...axis,
+      topics:[...axis.topics.values()].sort((a,b)=>a.label.localeCompare(b.label,'pt-BR',{numeric:true})).map(topic=>({...topic,subassuntos:[...topic.subassuntos].sort((a,b)=>a.localeCompare(b,'pt-BR',{numeric:true}))}))
+    }));
+    const mappedQuestionCount=axes.reduce((sum,axis)=>sum+axis.topics.reduce((inner,topic)=>inner+topic.questionCount,0),0);
+    return {...config,questionCount:pool.length,mappedQuestionCount,unmappedQuestionCount:pool.length-mappedQuestionCount,axisCount:axes.length,axes,questionFilter:{orgao:pool[0]?.orgao||''},mappingNote:pool.length?'Tópicos derivados da taxonomia publicada de disciplina e assunto.':'Ainda não há questões desta trilha na release publicada.'};
+  });
+}
+
 function bindGlobal(){
   document.addEventListener('click', e=>{
-    const go=e.target.closest('[data-go]'); if(go){ navigate(go.dataset.go); }
+    const topic=e.target.closest('[data-topic-orgao]'); if(topic){openTopic(topic.dataset.topicOrgao,topic.dataset.topicDisciplina,topic.dataset.topicAssunto);return;}
+    const edital=e.target.closest('[data-edital-filter]'); if(edital){openCompetition(edital.dataset.editalFilter);return;}
+    const quick=e.target.closest('[data-quick-filter]'); if(quick){openQuickFilter(quick.dataset.quickFilter);return;}
+    const refresh=e.target.closest('[data-refresh-release]'); if(refresh){refreshRelease();return;}
+    const go=e.target.closest('[data-go]'); if(go){navigate(go.dataset.go);}
   });
   $('#menuButton').addEventListener('click',()=>$('#sidebar').classList.toggle('open'));
   $('#themeButton').addEventListener('click',()=>{
@@ -109,6 +171,31 @@ function navigate(view){
   if(view==='review') renderReview(); if(view==='performance') renderPerformance();
 }
 
+function resetQuestionFilters(){
+  ['filterOrgao','filterCargo','filterBanca','filterAno','filterDisciplina','filterAssunto','filterFormato'].forEach(id=>{const el=$('#'+id);if(el)el.value='';});
+  $('#filterText').value=''; $('#globalSearch').value='';
+}
+function setQuestionFilter(id,value){
+  const el=$('#'+id); if(!el)return;
+  el.value=[...el.options].some(option=>option.value===value)?value:'';
+}
+function openTopic(orgao,disciplina,assunto){
+  navigate('questions'); resetQuestionFilters();
+  setQuestionFilter('filterOrgao',orgao); setQuestionFilter('filterDisciplina',disciplina); setQuestionFilter('filterAssunto',assunto);
+  applyFilters();
+  toast(state.filtered.length?fmt(state.filtered.length)+' questões neste tópico.':'Nenhuma questão encontrada neste tópico.');
+}
+function openCompetition(competitionId){
+  const sample=state.questions.find(q=>questionBelongsTo(q,competitionId));
+  navigate('questions'); resetQuestionFilters();
+  if(sample) setQuestionFilter('filterOrgao',sample.orgao);
+  applyFilters();
+  toast(sample?fmt(state.filtered.length)+' questões nesta trilha.':'Ainda não há questões publicadas nesta trilha.');
+}
+function openQuickFilter(quickFilter){
+  if(quickFilter==='seedf'){openCompetition('seedf');return;}
+  navigate('questions'); resetQuestionFilters(); applyFilters();
+}
 function populateSelect(id, values, label='Todos'){
   const el=$('#'+id), old=el.value; el.innerHTML=`<option value="">${label}</option>`+uniq(values).map(v=>`<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join('');
   if([...el.options].some(o=>o.value===old)) el.value=old;
@@ -151,6 +238,9 @@ function renderHome(){
   const p=store.load(), hist=p.history; const answered=hist.reduce((s,h)=>s+(h.answers?.length||0),0), correct=hist.reduce((s,h)=>s+(h.correct||0),0);
   const precision=answered?Math.round(correct/answered*100):0;
   $('#homeMetrics').innerHTML=[['Questões na release',state.questions.length],['Sessões concluídas',hist.length],['Respondidas',answered],['Precisão',`${precision}%`]].map(metricHtml).join('');
+  const focusCounts=[['homeSeedfCount','seedf'],['homeTjdftCount','tjdft'],['homeSedesCount','sedes-df-2026']];
+  focusCounts.forEach(([id,competitionId])=>{const el=$('#'+id);if(el)el.textContent=fmt(state.questions.filter(q=>questionBelongsTo(q,competitionId)).length);});
+  const syncStatus=$('#syncStatus'); if(syncStatus) syncStatus.textContent=state.syncLabel;
   const heroReleaseCount=$('#heroReleaseCount');
   if(heroReleaseCount) heroReleaseCount.textContent=fmt(state.questions.length);
   $('#datasetStamp').textContent=`${state.meta.sampleMode?'Amostra local':'Release'} · ${state.meta.generatedAt?new Date(state.meta.generatedAt).toLocaleString('pt-BR'):''}`;
@@ -185,10 +275,30 @@ function metricHtml([label,value], index=0){
 }
 
 function renderCompetitions(){
-  $('#competitionCards').innerHTML=state.competitions.map(c=>`<div class="competition-card"><span class="status">${escapeHtml(c.status.toUpperCase())}</span><h3>${escapeHtml(c.name)}</h3><p>${escapeHtml(c.description)}</p><small>${escapeHtml(c.mappingStatus)}</small></div>`).join('');
+  $('#competitionCards').innerHTML=state.competitions.map(c=>{
+    const count=state.questions.filter(q=>questionBelongsTo(q,c.id)).length;
+    const status=count?fmt(count)+' questões no acervo':String(c.mappingStatus||'Sem questões carregadas');
+    const action=count?`<button type='button' class='text-button' data-edital-filter='${escapeHtml(c.id)}'>Abrir questões →</button>`:`<button type='button' class='text-button' data-go='edits'>Ver verticalizado →</button>`;
+    return `<article class='competition-card'><span class='status'>${escapeHtml(String(c.status||'ativo').toUpperCase())}</span><h3>${escapeHtml(c.name)}</h3><p>${escapeHtml(c.description)}</p><div class='competition-count'><strong>${fmt(count)}</strong><span>questões associadas</span></div><small>${escapeHtml(status)}</small>${action}</article>`;
+  }).join('');
 }
 function renderEditais(){
-  $('#editalList').innerHTML=state.editais.map(e=>`<article class="card"><span class="kicker">${escapeHtml(e.competitionId.toUpperCase())}</span><h2>${escapeHtml(e.title)}</h2><p>${escapeHtml(e.status)}</p><small>Fonte: ${escapeHtml(e.source)}</small></article>`).join('');
+  const editais=buildVerticalizedEditais();
+  const totalQuestions=editais.reduce((sum,e)=>sum+e.questionCount,0);
+  const editalStatus=$('#editalStatus'); if(editalStatus) editalStatus.textContent=fmt(totalQuestions)+' questões mapeadas na release';
+  $('#editalList').innerHTML=editais.map(e=>{
+    const axes=e.axes||[];
+    const axisMarkup=axes.length?`<div class='edital-axis-list'>${axes.map(axis=>{
+      const topics=axis.topics.length?`<div class='topic-list'>${axis.topics.map(topic=>{
+        const visibleSubs=topic.subassuntos.slice(0,3).join(' · ');
+        const detail=visibleSubs?`Subassuntos: ${escapeHtml(visibleSubs)}${topic.subassuntos.length>3?' · …':''}`:'Taxonomia do banco publicada';
+        return `<button type='button' class='topic-row' data-topic-orgao='${escapeHtml(topic.filter.orgao)}' data-topic-disciplina='${escapeHtml(topic.filter.disciplina)}' data-topic-assunto='${escapeHtml(topic.filter.assunto)}' aria-label='Fazer ${fmt(topic.questionCount)} questões de ${escapeHtml(topic.label)}'><span class='topic-copy'><strong>${escapeHtml(topic.label)}</strong><small>${detail}</small></span><span class='topic-action'><b>${fmt(topic.questionCount)}</b><small>Fazer questões →</small></span></button>`;
+      }).join('')}</div>`:`<div class='topic-empty'>Ainda não há assuntos cadastrados nesta disciplina.</div>`;
+      return `<section class='edital-axis'><div class='edital-axis-head'><div><span class='kicker'>${fmt(axis.topics.length)} TÓPICOS</span><h3>${escapeHtml(axis.label)}</h3></div><span class='axis-count'>${fmt(axis.questionCount)} questões</span></div>${topics}${axis.unmappedCount?`<p class='axis-note'>${fmt(axis.unmappedCount)} questões desta disciplina ainda sem assunto cadastrado.</p>`:''}</section>`;
+    }).join('')}</div>`:`<div class='edital-empty'><strong>Este verticalizado ainda não tem questões mapeadas.</strong><span>Quando a trilha entrar na release do Notion, os tópicos aparecerão aqui automaticamente.</span><button type='button' class='secondary' data-edital-filter='${escapeHtml(e.competitionId)}'>Abrir banco da trilha</button></div>`;
+    const status=e.questionCount?`<span class='status-badge status-live'>Mapeamento disponível</span>`:`<span class='status-badge status-empty'>Aguardando questões</span>`;
+    return `<article class='card edital-card'><div class='edital-card-head'><div><span class='kicker'>${escapeHtml(String(e.competitionId||'').toUpperCase())}</span><h2>${escapeHtml(e.title)}</h2><p>${escapeHtml(e.mappingNote)}</p></div><div class='edital-count'><strong>${fmt(e.questionCount)}</strong><span>questões no recorte</span></div></div><div class='edital-summary'>${status}<span>${fmt(e.mappedQuestionCount)} em tópicos · ${fmt(e.axisCount)} disciplinas</span></div><p class='edital-note'>Escolha um tópico para abrir o banco já filtrado e começar a responder somente aquele conteúdo.</p>${axisMarkup}<div class='edital-footer'><small>Fonte: ${escapeHtml(e.source||'Release publicada')}</small>${e.questionCount?`<button type='button' class='secondary' data-edital-filter='${escapeHtml(e.competitionId)}'>Abrir todas as questões</button>`:''}</div></article>`;
+  }).join('');
 }
 function renderMaterials(){
   const grouped=(type)=>{
@@ -198,6 +308,7 @@ function renderMaterials(){
   $('#proofList').innerHTML=cards(grouped('prova')); $('#simulationList').innerHTML=cards(grouped('simulado'));
 }
 function renderRelease(){
+  const releaseStatus=$('#releaseStatus'); if(releaseStatus) releaseStatus.textContent=state.syncLabel;
   const m=state.meta; $('#releaseDetails').innerHTML=[['Schema',m.schemaVersion],['Gerado em',m.generatedAt?new Date(m.generatedAt).toLocaleString('pt-BR'):'—'],['Fonte',m.source],['Data source',m.dataSourceId],['Questões',m.questionCount],['Modo',m.sampleMode?'amostra':'publicado']].map(([k,v])=>`<dt>${escapeHtml(k)}</dt><dd>${escapeHtml(v??'—')}</dd>`).join('');
 }
 
