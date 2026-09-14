@@ -1,0 +1,11 @@
+{
+  "name": "Plataforma de Questões",
+  "short_name": "Questões",
+  "description": "Banco de questões, provas, simulados, revisão e desempenho para concursos.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f6f7fb",
+  "theme_color": "#0f172a",
+  "icons": []
+}
