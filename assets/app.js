@@ -180,7 +180,8 @@ const metricHints = {
 function metricHtml([label,value], index=0){
   const glyph=metricGlyphs[index%metricGlyphs.length];
   const hint=metricHints[label] || 'Indicador atualizado';
-  return `<div class="metric"><div class="metric-top"><span class="metric-label"><span class="metric-symbol" aria-hidden="true">${glyph}</span>${escapeHtml(label)}</span><span class="metric-index">${String(index+1).padStart(2,'0')}</span></div><strong>${escapeHtml(value)}</strong><small>${escapeHtml(hint)}</small></div>`;
+  const displayValue=typeof value==='number'?fmt(value):value;
+  return `<div class="metric"><div class="metric-top"><span class="metric-label"><span class="metric-symbol" aria-hidden="true">${glyph}</span>${escapeHtml(label)}</span><span class="metric-index">${String(index+1).padStart(2,'0')}</span></div><strong>${escapeHtml(displayValue)}</strong><small>${escapeHtml(hint)}</small></div>`;
 }
 
 function renderCompetitions(){
