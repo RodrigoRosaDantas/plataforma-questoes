@@ -57,6 +57,10 @@ function value(prop) {
   }
 }
 function get(p, name) { return value(p[name]); }
+function usableGabarito(value) {
+  const normalized = String(value || '').trim().toLowerCase();
+  return normalized && !['anulada','sem gabarito'].includes(normalized);
+}
 function normalizeFormat(original, gabarito, alternatives) {
   if (original) return original;
   if (['Certo','Errado'].includes(gabarito)) return 'Certo / Errado';
@@ -111,8 +115,11 @@ function transform(page) {
   };
 }
 function publishable(q) {
-  if (!q.enunciado || !q.gabarito) return false;
-  if (q.duplicada || q.bloqueioManual) return false;
+  if (!q.id || !q.enunciado || !usableGabarito(q.gabarito)) return false;
+  if (!q.disciplina || !q.cargo || !q.banca) return false;
+  if (q.anulada || q.duplicada || q.bloqueioManual) return false;
+  if (q.formato === 'Discursiva') return false;
+  if (q.formato !== 'Certo / Errado' && Object.values(q.alternativas).filter(v => String(v || '').trim()).length < 2) return false;
   if (String(q.auditoria).toLowerCase() === 'não aprovada') return false;
   return true;
 }
@@ -132,7 +139,7 @@ const excluded = transformed.length - questions.length;
 const formats = Object.fromEntries([...questions.reduce((m,q)=>m.set(q.formato,(m.get(q.formato)||0)+1),new Map())]);
 const missing = {
   enunciado: transformed.filter(q=>!q.enunciado).length,
-  gabarito: transformed.filter(q=>!q.gabarito).length,
+  gabarito: transformed.filter(q=>!usableGabarito(q.gabarito)).length,
   disciplina: transformed.filter(q=>!q.disciplina).length,
   assunto: transformed.filter(q=>!q.assunto).length,
   cargo: transformed.filter(q=>!q.cargo).length,
@@ -144,6 +151,12 @@ const metadata = {
   source: 'Notion Banco Mestre — conteúdo editorial de questões',
   dataSourceId,
   notionApiVersion: apiVersion,
+  releasePolicy: {
+    excludesAnuladas: true,
+    excludesSemGabarito: true,
+    excludesDiscursivas: true,
+    requiresEssentialFields: true
+  },
   sampleMode: false,
   questionCount: questions.length,
   sourceAudit: { records: transformed.length, published: questions.length, excluded, formats, missing }
