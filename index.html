@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#11182c" />
   <meta name="description" content="Plataforma de Questões — pratique, revise e acompanhe seu desempenho." />
   <link rel="manifest" href="./manifest.webmanifest" />
-  <link rel="stylesheet" href="./assets/styles.css?v=tjdft-provas8" />
+  <link rel="stylesheet" href="./assets/styles.css?v=tjdft-provas9" />
   <title>Plataforma de Questões</title>
 </head>
 <body>
@@ -201,6 +201,14 @@
               <div id="questionText" class="question-text"></div>
               <div id="answers" class="answers"></div>
               <div id="feedback" class="feedback hidden"></div>
+              <section class="question-notes" aria-labelledby="questionNoteTitle">
+                <div class="card-head">
+                  <div><span class="kicker">ANOTAÇÃO</span><h2 id="questionNoteTitle">Minha anotação</h2></div>
+                  <span id="questionNoteStatus" class="note-status">Ainda não salva</span>
+                </div>
+                <textarea id="questionNote" rows="4" maxlength="4000" placeholder="Registre uma dúvida, regra ou lembrete para revisar depois."></textarea>
+                <div class="note-actions"><small id="questionNoteCounter">0/4000</small><button id="saveQuestionNote" class="secondary" type="button">Salvar anotação</button></div>
+              </section>
               <div class="resolver-actions">
                 <button id="prevQuestion" class="secondary">← Anterior</button>
                 <button id="confirmAnswer" class="primary">Confirmar resposta</button>
@@ -262,7 +270,7 @@
                 <p><strong id="cloudAccountEmail"></strong></p>
                 <div class="release-actions"><button id="cloudSync" type="button" class="secondary">Sincronizar agora</button><button id="cloudSignOut" type="button" class="danger">Sair</button></div>
               </div>
-              <p class="release-note">A nuvem guarda apenas sessões, tentativas e desempenho. As questões e os gabaritos continuam publicados no GitHub.</p>
+              <p class="release-note">A nuvem guarda somente o estado do seu estudo — sessões, respostas, marcações, revisões e anotações. As questões continuam no GitHub.</p>
             </article>
             <article class="card"><h2>Dados neste aparelho</h2><p>O conteúdo não é alterado por estes comandos. Exporte uma cópia local ou zere somente os dados deste aparelho.</p><button id="exportProgress" class="secondary">Exportar progresso</button> <button id="resetProgress" class="danger">Zerar este aparelho</button></article>
           </div>
@@ -272,6 +280,6 @@
   </div>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
-  <script type="module" src="./assets/app.js?v=tjdft-provas8"></script>
+  <script type="module" src="./assets/app.js?v=tjdft-provas9"></script>
 </body>
 </html>

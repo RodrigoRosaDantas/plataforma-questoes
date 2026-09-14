@@ -1,6 +1,7 @@
 const SUPABASE_URL='https://fqqkkyusnzhuuizahkww.supabase.co';
 const SUPABASE_KEY='sb_publishable_GfoaAPKtYuSu_UY6wE8jMg_XsVjdWU7';
 const SESSION_KEY='plataforma.questoes.supabase.session.v1';
+const DEVICE_KEY='plataforma.questoes.device.v1';
 
 let session=null;
 let user=null;
@@ -21,6 +22,15 @@ function emit(){const value=snapshot();listeners.forEach(listener=>listener(valu
 function setStatus(next,text=''){status=next;message=text;emit();}
 function uuid(){
   return globalThis.crypto?.randomUUID?.()||('evt-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2));
+}
+function deviceId(){
+  try{
+    const saved=localStorage.getItem(DEVICE_KEY);
+    if(saved)return saved;
+    const next=uuid();
+    localStorage.setItem(DEVICE_KEY,next);
+    return next;
+  }catch{return uuid();}
 }
 function saveSession(next){
   session=next;
@@ -233,6 +243,19 @@ async function loadCloudHistory(){
     return {id,finishedAt,startedAt,mode:'training',total:answers.length,correct,wrong,blank,elapsedMs,answers,source:'supabase'};
   }).sort((a,b)=>b.finishedAt-a.finishedAt);
 }
+
+async function loadCloudState(){
+  if(!snapshot().authenticated||!profileId)return null;
+  const rows=await request('/rest/v1/student_progress_states?select=state,state_version,updated_at,device_id&profile_id=eq.'+encodeURIComponent(profileId)+'&limit=1');
+  return Array.isArray(rows)?rows[0]||null:null;
+}
+async function saveCloudState(stateValue,stateVersion=1){
+  if(!snapshot().authenticated||!profileId)return {saved:false};
+  const updatedAt=new Date().toISOString();
+  const row={profile_id:profileId,state:stateValue&&typeof stateValue==='object'?stateValue:{},state_version:Math.max(1,Number(stateVersion)||1),device_id:deviceId(),updated_at:updatedAt};
+  await request('/rest/v1/student_progress_states?on_conflict=profile_id',{method:'POST',headers:{Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify(row)});
+  return {saved:true,updatedAt};
+}
 function mergeHistory(localHistory,remoteHistory){
   const merged=new Map();
   (Array.isArray(localHistory)?localHistory:[]).forEach(record=>merged.set(String(record.id),record));
@@ -253,5 +276,7 @@ export const cloudProgress={
   signOut,
   syncLocal,
   loadCloudHistory,
+  loadCloudState,
+  saveCloudState,
   mergeHistory
 };

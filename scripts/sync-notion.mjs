@@ -1,5 +1,6 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { createHash } from 'node:crypto';
 
 const token = process.env.NOTION_TOKEN;
 const dataSourceId = process.env.NOTION_DATA_SOURCE_ID || '784234ae-deca-4514-b60d-19524e122a89';
@@ -9,6 +10,45 @@ if (!token) throw new Error('NOTION_TOKEN não configurado. Use um GitHub Action
 const endpoint = `https://api.notion.com/v1/data_sources/${dataSourceId}/query`;
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
+
+function stableStringify(value) {
+  if (value === undefined) return 'null';
+  if (value === null || typeof value !== 'object') return JSON.stringify(value);
+  if (Array.isArray(value)) return '[' + value.map(stableStringify).join(',') + ']';
+  return '{' + Object.keys(value).sort().map(key => JSON.stringify(key) + ':' + stableStringify(value[key])).join(',') + '}';
+}
+function canonicalQuestion(question) {
+  return {
+    id: question.id,
+    enunciado: question.enunciado,
+    textoBase: question.textoBase,
+    alternativas: question.alternativas,
+    gabarito: question.gabarito,
+    disciplina: question.disciplina,
+    assunto: question.assunto,
+    subassunto: question.subassunto,
+    formato: question.formato,
+    banca: question.banca,
+    cargo: question.cargo,
+    concurso: question.concurso,
+    edital: question.edital,
+    topicoEdital: question.topicoEdital,
+    comentarioGeral: question.comentarioGeral,
+    fundamentoLegal: question.fundamentoLegal,
+    pegadinha: question.pegadinha
+  };
+}
+function contentHash(question) {
+  return createHash('sha256').update(stableStringify(canonicalQuestion(question))).digest('hex');
+}
+async function readPreviousQuestions() {
+  try {
+    const previous = JSON.parse(await fs.readFile('data/questions.json', 'utf8'));
+    return Array.isArray(previous) ? previous : [];
+  } catch {
+    return [];
+  }
+}
 async function request(cursor = null, attempt = 0) {
   const body = { page_size: 100, result_type: 'page' };
   if (cursor) body.start_cursor = cursor;
@@ -134,7 +174,29 @@ do {
 process.stdout.write('\n');
 
 const transformed = raw.map(transform);
+const previousById = new Map((await readPreviousQuestions()).map(question => [String(question.id), question]));
+for (const question of transformed) {
+  const hash = contentHash(question);
+  const previous = previousById.get(String(question.id));
+  const previousVersion = Number(previous?.contentVersion) || 0;
+  question.contentHash = hash;
+  question.contentVersion = String(previous?.contentHash || '') === hash
+    ? Math.max(1, previousVersion)
+    : Math.max(1, previousVersion + 1);
+  question.sourceSnapshot = {
+    dataSourceId,
+    pageId: question.notionPageId || null,
+    lastEditedAt: question.updatedAt || null,
+    contentHash: hash
+  };
+}
 const questions = transformed.filter(publishable);
+const releaseSnapshotId = createHash('sha256')
+  .update(stableStringify(questions.map(question => ({ id: question.id, contentHash: question.contentHash })).sort((a,b) => String(a.id).localeCompare(String(b.id)))))
+  .digest('hex');
+questions.forEach(question => {
+  question.sourceSnapshot.releaseId = releaseSnapshotId;
+});
 const excluded = transformed.length - questions.length;
 const formats = Object.fromEntries([...questions.reduce((m,q)=>m.set(q.formato,(m.get(q.formato)||0)+1),new Map())]);
 const missing = {
@@ -146,8 +208,17 @@ const missing = {
   fonte: transformed.filter(q=>!q.banca).length
 };
 const metadata = {
-  schemaVersion: 1,
+  schemaVersion: 2,
   generatedAt: new Date().toISOString(),
+  releaseSnapshotId,
+  scoringPolicy: {
+    version: 1,
+    blankCountsAsWrong: false,
+    negativeMarking: 0,
+    annulledExcluded: true,
+    precisionDenominator: 'answered',
+    feedback: 'after-confirmation'
+  },
   source: 'Notion Banco Mestre — conteúdo editorial de questões',
   dataSourceId,
   notionApiVersion: apiVersion,

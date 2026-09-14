@@ -105,3 +105,13 @@ NOTION_TOKEN='...' NOTION_DATA_SOURCE_ID='784234ae-deca-4514-b60d-19524e122a89' 
 ```
 
 Nunca versione o token.
+
+## Estado técnico atual
+
+A release publicada usa metadata schema 2 e um `releaseSnapshotId` determinístico. Cada questão traz hash/versionamento editorial para que o histórico de respostas continue ligado à versão que foi resolvida.
+
+O botão **Atualizar release** recarrega os arquivos publicados com cache-busting. O verticalizado abre uma bateria já filtrada pelo órgão, cargo, disciplina e assunto do tópico escolhido.
+
+O modo local guarda o estudo no navegador. Ao entrar por link de e-mail, o Supabase sincroniza o estado do estudo entre aparelhos; não armazena o banco editorial. O acesso é protegido por RLS e o frontend usa apenas a chave publicável.
+
+A política atual de pontuação é explícita: sem penalidade, branco fora do denominador de precisão e gabarito/feedback somente após confirmar. Como a página é estática, o gabarito ainda pode ser inspecionado por quem examinar os arquivos; correção autoritativa no servidor é necessária para uma aplicação de prova segura.
