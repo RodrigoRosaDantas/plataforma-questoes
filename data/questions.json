@@ -1,0 +1,35 @@
+[
+  {
+    "id": "CONSOL-AS01-165",
+    "notionPageId": "3accf5a2-6731-8100-81bb-d646d579eaad",
+    "orgao": "SEDES/DF",
+    "cargo": "TDAS — Técnico Administrativo",
+    "codigoCargo": "202",
+    "banca": "Emília Adelino",
+    "ano": 2026,
+    "disciplina": "Assistência Social / SUAS / LOAS",
+    "materia": "Assistência Social / SUAS / LOAS",
+    "assunto": "Fundamentos da assistência social",
+    "subassunto": "PAIF",
+    "formato": "Múltipla escolha A–E",
+    "formatoOriginal": "Múltipla escolha A–E",
+    "tipoMaterial": "Simulado",
+    "nomeMaterial": "Simulado AS01 — PNAS/2004 e organização da assistência social",
+    "enunciado": "Sobre o financiamento da assistência social, assinale a alternativa correta.",
+    "alternativas": {
+      "A": "A PNAS/2004, isoladamente, definiu toda a disciplina atual dos blocos de financiamento.",
+      "B": "O repasse fundo a fundo depende sempre de convênio.",
+      "C": "Critérios de partilha podem ignorar diagnósticos e pactuações.",
+      "D": "O SUAS utiliza transferências regulares e automáticas entre fundos, conforme a LOAS e a regulamentação posterior, com critérios pactuados, deliberados e sujeitos ao controle social.",
+      "E": "Os recursos federais são pagos diretamente aos usuários pelos conselhos."
+    },
+    "gabarito": "D",
+    "comentarioGeral": "A PNAS estruturou o modelo, e sua disciplina operacional foi detalhada por normas posteriores.",
+    "fundamentoLegal": "",
+    "pegadinha": "",
+    "anulada": false,
+    "auditoria": "Ajustada",
+    "sourceUrl": "https://app.notion.com/p/3aacf5a2673181c2b3adced17a394249",
+    "notionUrl": "https://app.notion.com/p/3accf5a26731810081bbd646d579eaad"
+  }
+]
