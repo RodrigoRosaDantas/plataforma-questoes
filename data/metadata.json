@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-14T18:05:47.943Z",
+  "generatedAt": "2026-09-14T19:17:29.076Z",
   "source": "Notion Banco Mestre — conteúdo editorial de questões",
   "dataSourceId": "784234ae-deca-4514-b60d-19524e122a89",
   "notionApiVersion": "2026-03-11",
@@ -11,13 +11,13 @@
     "requiresEssentialFields": true
   },
   "sampleMode": false,
-  "questionCount": 3643,
+  "questionCount": 3696,
   "sourceAudit": {
-    "records": 3705,
-    "published": 3643,
-    "excluded": 62,
+    "records": 3765,
+    "published": 3696,
+    "excluded": 69,
     "formats": {
-      "Múltipla escolha A–E": 1115,
+      "Múltipla escolha A–E": 1168,
       "Certo / Errado": 2528
     },
     "missing": {
