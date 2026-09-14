@@ -74,6 +74,9 @@ function transform(page) {
   return {
     id: codigo,
     notionPageId: page.id,
+    concurso: get(p,'Concurso') || '',
+    edital: get(p,'Edital') || '',
+    topicoEdital: get(p,'Tópico do edital') || '',
     orgao: get(p,'Órgão') || '',
     cargo: get(p,'Cargo') || '',
     codigoCargo: get(p,'Código do cargo') || '',
