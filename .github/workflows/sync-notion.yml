@@ -1,4 +1,5 @@
 name: Sincronizar Banco Mestre do Notion
+# Disparado para publicar auditorias editoriais do Banco Mestre.
 on:
   workflow_dispatch:
   push:
