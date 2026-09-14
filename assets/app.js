@@ -19,8 +19,23 @@ const clock = sec => `${String(Math.floor(sec/60)).padStart(2,'0')}:${String(sec
 
 class ProgressStore {
   constructor(){ this.key='plataforma.questoes.progress.v1'; }
-  load(){ try { return JSON.parse(localStorage.getItem(this.key)) || this.empty(); } catch { return this.empty(); } }
+  load(){ try { return this.normalize(JSON.parse(localStorage.getItem(this.key))); } catch { return this.empty(); } }
   empty(){ return {history:[], marked:{}, errors:{}, reviews:{}, notes:{}, activeSession:null, version:1}; }
+  normalize(raw){
+    const base=this.empty();
+    if(!raw || typeof raw!=='object' || Array.isArray(raw)) return base;
+    const objectOrEmpty=value=>value&&typeof value==='object'&&!Array.isArray(value)?value:{};
+    return {
+      ...base,
+      version:Number.isFinite(raw.version)?raw.version:1,
+      history:Array.isArray(raw.history)?raw.history.filter(x=>x&&typeof x==='object'):[],
+      marked:objectOrEmpty(raw.marked),
+      errors:objectOrEmpty(raw.errors),
+      reviews:objectOrEmpty(raw.reviews),
+      notes:objectOrEmpty(raw.notes),
+      activeSession:raw.activeSession&&typeof raw.activeSession==='object'&&!Array.isArray(raw.activeSession)?raw.activeSession:null
+    };
+  }
   save(data){ localStorage.setItem(this.key, JSON.stringify(data)); window.dispatchEvent(new CustomEvent('progress:changed')); }
   mutate(fn){ const d=this.load(); fn(d); this.save(d); return d; }
   clear(){ localStorage.removeItem(this.key); }
@@ -73,6 +88,8 @@ function bindGlobal(){
   $('#exportProgress').addEventListener('click',exportProgress);
   $('#resetProgress').addEventListener('click',resetProgress);
   document.addEventListener('visibilitychange',handleVisibilityChange);
+  window.addEventListener('pagehide',pauseSessionForExit);
+  window.addEventListener('pageshow',resumeSessionAfterReturn);
   window.addEventListener('progress:changed',()=>renderAll());
 }
 
@@ -130,7 +147,7 @@ function renderHome(){
   $('#homeMetrics').innerHTML=[['Questões na release',state.questions.length],['Sessões concluídas',hist.length],['Respondidas',answered],['Precisão',`${precision}%`]].map(metricHtml).join('');
   $('#datasetStamp').textContent=`${state.meta.sampleMode?'Amostra local':'Release'} · ${state.meta.generatedAt?new Date(state.meta.generatedAt).toLocaleString('pt-BR'):''}`;
   $('#connectionBadge').textContent=state.meta.sampleMode?'Amostra — sincronize Notion':'Release publicada';
-  const banner=$('#sampleBanner'); banner.classList.toggle('hidden',!state.meta.sampleMode); if(state.meta.sampleMode) banner.innerHTML=`<strong>Modo de amostra.</strong> Esta cópia contém ${state.questions.length} questão para validar a interface. O Banco Mestre auditado possui ${fmt(state.meta.sourceAudit?.records||0)} registros; execute o workflow de sincronização para gerar a release completa.`;
+  const banner=$('#sampleBanner'); banner.classList.toggle('hidden',!state.meta.sampleMode); if(state.meta.sampleMode) banner.innerHTML=`<strong>Modo de amostra.</strong> Esta cópia contém ${fmt(state.questions.length)} ${state.questions.length===1?'questão':'questões'} para validar a interface. O Banco Mestre auditado possui ${fmt(state.meta.sourceAudit?.records||0)} registros; execute o workflow de sincronização para gerar a release completa.`;
   const active=p.activeSession; $('#resumeCard').innerHTML=active?`<p><strong>${active.items.length} questões</strong> · posição ${active.index+1}/${active.items.length}</p><button class="primary" id="resumeNow">Continuar sessão</button>`:'Nenhuma sessão em andamento.';
   $('#resumeNow')?.addEventListener('click',()=>{hydrateSession(active);navigate('resolver');});
   const errs=Object.keys(p.errors||{}).length, marked=Object.keys(p.marked||{}).length, due=Object.values(p.reviews||{}).filter(r=>!r.dueAt||r.dueAt<=Date.now()).length;
@@ -156,8 +173,10 @@ function renderRelease(){
 }
 
 function startSessionFromFilters(){
-  const max=state.filtered.length; if(!max){toast('Nenhuma questão disponível neste recorte.');return;}
-  const size=Math.min(max,Math.max(1,+$('#sessionSize').value||10)); let pool=[...state.filtered]; if($('#shuffleQuestions').checked) pool.sort(()=>Math.random()-.5); pool=pool.slice(0,size);
+  const poolSource=state.filtered.filter(q=>answerOptions(q).length); const max=poolSource.length;
+  if(!max){toast('Nenhuma questão objetiva disponível neste recorte.');return;}
+  if(max!==state.filtered.length) toast('Questões discursivas foram mantidas fora da bateria objetiva.');
+  const size=Math.min(max,Math.max(1,+$('#sessionSize').value||10)); let pool=[...poolSource]; if($('#shuffleQuestions').checked) pool.sort(()=>Math.random()-.5); pool=pool.slice(0,size);
   createSession(pool,$('#sessionMode').value);
 }
 function createSession(items,mode='training'){
@@ -165,16 +184,36 @@ function createSession(items,mode='training'){
   const s={id:crypto.randomUUID?.()||String(now),items:items.map(q=>q.id),index:0,mode,answers:{},confirmed:{},questionTimes:{},startedAt:now,pausedMs:0,currentEnteredAt:now};
   state.session=s; persistActive(); navigate('resolver'); startTimer(); renderResolver();
 }
-function hydrateSession(saved){ state.session=JSON.parse(JSON.stringify(saved)); state.session.pausedMs??=0; state.session.currentEnteredAt=Date.now(); startTimer(); renderResolver(); }
-function currentQuestion(){ const id=state.session?.items[state.session.index]; return state.questions.find(q=>q.id===id); }
-function elapsedMs(s=state.session){ return s?Math.max(0,Date.now()-s.startedAt-(s.pausedMs||0)-(state.hiddenAt?Date.now()-state.hiddenAt:0)):0; }
-function startTimer(){ clearInterval(state.timer); state.timer=setInterval(()=>{ if(!state.session)return; $('#resolverTimer').textContent=clock(seconds(elapsedMs())); },1000); }
-function handleVisibilityChange(){
-  if(!state.session)return;
-  if(document.hidden){ state.hiddenAt=Date.now(); saveQuestionTime(); }
-  else if(state.hiddenAt){ state.session.pausedMs=(state.session.pausedMs||0)+Date.now()-state.hiddenAt; state.hiddenAt=null; state.session.currentEnteredAt=Date.now(); persistActive(); renderResolver(); }
+function sessionMap(value,ids){ const source=value&&typeof value==='object'&&!Array.isArray(value)?value:{}; return Object.fromEntries(ids.filter(id=>Object.prototype.hasOwnProperty.call(source,id)).map(id=>[id,source[id]])); }
+function hydrateSession(saved){
+  if(!saved||!Array.isArray(saved.items)){ store.mutate(p=>p.activeSession=null); state.session=null; return; }
+  const items=saved.items.filter(id=>{const q=state.questions.find(item=>item.id===id);return q&&answerOptions(q).length;});
+  if(!items.length){ store.mutate(p=>p.activeSession=null); state.session=null; return; }
+  const s=JSON.parse(JSON.stringify(saved));
+  s.id=s.id||String(Date.now()); s.items=items; s.index=Math.min(items.length-1,Math.max(0,Number.isInteger(s.index)?s.index:0)); s.mode=s.mode==='exam'?'exam':'training';
+  s.answers=sessionMap(s.answers,items); s.confirmed=sessionMap(s.confirmed,items); s.questionTimes=sessionMap(s.questionTimes,items);
+  s.startedAt=Number.isFinite(s.startedAt)?s.startedAt:Date.now(); s.pausedMs=Math.max(0,Number(s.pausedMs)||0);
+  if(s.pausedAt){ s.pausedMs+=Math.max(0,Date.now()-Number(s.pausedAt)); s.pausedAt=null; }
+  s.currentEnteredAt=Date.now(); state.session=s; state.hiddenAt=null; persistActive(); startTimer(); renderResolver();
 }
-function saveQuestionTime(){ if(!state.session)return; const q=currentQuestion(); if(!q)return; const delta=seconds(Date.now()-state.session.currentEnteredAt-(state.hiddenAt?Date.now()-state.hiddenAt:0)); state.session.questionTimes[q.id]=(state.session.questionTimes[q.id]||0)+delta; state.session.currentEnteredAt=Date.now(); }
+function currentQuestion(){ const id=state.session?.items[state.session.index]; return state.questions.find(q=>q.id===id); }
+function elapsedMs(s=state.session){ if(!s)return 0; const pauseStart=s===state.session&&state.hiddenAt?state.hiddenAt:s.pausedAt; const livePause=pauseStart?Math.max(0,Date.now()-pauseStart):0; return Math.max(0,Date.now()-s.startedAt-(s.pausedMs||0)-livePause); }
+function startTimer(){ clearInterval(state.timer); state.timer=setInterval(()=>{ if(!state.session)return; $('#resolverTimer').textContent=clock(seconds(elapsedMs())); },1000); }
+function handleVisibilityChange(){ if(document.hidden) pauseSessionForExit(); else resumeSessionAfterReturn(); }
+function pauseSessionForExit(){
+  if(!state.session||state.hiddenAt)return;
+  const now=Date.now(); saveQuestionTime(now); state.hiddenAt=now; state.session.pausedAt=now; persistActive();
+}
+function resumeSessionAfterReturn(){
+  if(!state.session)return;
+  const pauseStart=state.hiddenAt||state.session.pausedAt; if(!pauseStart)return;
+  const now=Date.now(); state.session.pausedMs=(state.session.pausedMs||0)+Math.max(0,now-pauseStart); state.session.pausedAt=null; state.hiddenAt=null; state.session.currentEnteredAt=now; persistActive(); renderResolver();
+}
+function saveQuestionTime(now=Date.now()){
+  if(!state.session)return; const q=currentQuestion(); if(!q)return;
+  const entered=Number(state.session.currentEnteredAt)||now; const hiddenDuration=state.hiddenAt?Math.max(0,now-state.hiddenAt):0; const delta=seconds(Math.max(0,now-entered-hiddenDuration));
+  state.session.questionTimes[q.id]=(state.session.questionTimes[q.id]||0)+delta; state.session.currentEnteredAt=now;
+}
 function renderResolver(){
   if(!state.session)return; const q=currentQuestion(); if(!q)return; const s=state.session, p=store.load();
   $('#resolverPosition').textContent=`${s.index+1}/${s.items.length}`; $('#resolverTimer').textContent=clock(seconds(elapsedMs(s)));
@@ -191,11 +230,11 @@ function answerOptions(q){
   return Object.entries(q.alternativas||{}).filter(([,v])=>String(v||'').trim());
 }
 function feedbackHtml(q,chosen){ const ok=chosen===q.gabarito; return `<strong>${ok?'Resposta correta.':'Resposta incorreta.'}</strong> Gabarito: <strong>${escapeHtml(q.gabarito)}</strong>${q.comentarioGeral?`<p>${escapeHtml(q.comentarioGeral)}</p>`:''}${q.fundamentoLegal?`<p><strong>Fundamento:</strong> ${escapeHtml(q.fundamentoLegal)}</p>`:''}${q.pegadinha?`<p><strong>Pegadinha:</strong> ${escapeHtml(q.pegadinha)}</p>`:''}`; }
-function confirmAnswer(){ const q=currentQuestion(), s=state.session; if(!s.answers[q.id]){toast('Selecione uma resposta.');return;} s.confirmed[q.id]=true; persistActive(); renderResolver(); }
-function moveQuestion(delta){ saveQuestionTime(); const s=state.session; s.index=Math.max(0,Math.min(s.items.length-1,s.index+delta)); persistActive(); renderResolver(); }
+function confirmAnswer(){ const q=currentQuestion(), s=state.session; if(!q||!s)return; if(!s.answers[q.id]){toast('Selecione uma resposta.');return;} s.confirmed[q.id]=true; persistActive(); renderResolver(); }
+function moveQuestion(delta){ if(!state.session)return; saveQuestionTime(); const s=state.session; s.index=Math.max(0,Math.min(s.items.length-1,s.index+delta)); persistActive(); renderResolver(); }
 function renderQuestionMap(){ const s=state.session,p=store.load(); $('#questionMap').innerHTML=s.items.map((id,i)=>`<button type="button" data-map="${i}" class="${i===s.index?'current ':''}${s.answers[id]?'answered ':''}${p.marked[id]?'marked':''}">${i+1}</button>`).join(''); $$('#questionMap [data-map]').forEach(b=>b.addEventListener('click',()=>{saveQuestionTime();s.index=+b.dataset.map;s.currentEnteredAt=Date.now();persistActive();renderResolver();})); }
 function persistActive(){ if(!state.session)return; store.mutate(p=>p.activeSession=JSON.parse(JSON.stringify(state.session))); }
-function toggleMarked(){ const q=currentQuestion(); store.mutate(p=>{if(p.marked[q.id]) delete p.marked[q.id]; else p.marked[q.id]={at:Date.now()};}); renderResolver(); }
+function toggleMarked(){ const q=currentQuestion(); if(!q)return; store.mutate(p=>{if(p.marked[q.id]) delete p.marked[q.id]; else p.marked[q.id]={at:Date.now()};}); renderResolver(); }
 
 function finishSession(){
   saveQuestionTime(); clearInterval(state.timer); const s=state.session; if(!s)return;
@@ -206,15 +245,15 @@ function finishSession(){
   state.hiddenAt=null; state.session=null; renderResult(record); navigate('result');
 }
 function renderResult(r){ const answered=r.correct+r.wrong, precision=answered?r.correct/answered*100:0, percent=r.total?r.correct/r.total*100:0, elapsed=seconds(r.elapsedMs??(r.finishedAt-r.startedAt)); $('#resultMetrics').innerHTML=[['Corretas',r.correct],['Erradas',r.wrong],['Em branco',r.blank],['Percentual',`${percent.toFixed(1)}%`],['Precisão',`${precision.toFixed(1)}%`],['Tempo',clock(elapsed)],['Média/questão',clock(r.total?Math.round(elapsed/r.total):0)],['Total',r.total]].map(metricHtml).join(''); const by=aggregateBy(r.answers,'disciplina'); $('#resultBreakdown').innerHTML=Object.entries(by).map(([k,v])=>`<article class="card"><h2>${escapeHtml(k||'Sem disciplina')}</h2><p>${v.correct}/${v.total} corretas · ${Math.round(v.correct/v.total*100)}%</p></article>`).join('')||'<div class="card empty-state">Sem dados.</div>'; }
-function redoErrors(){ const h=store.load().history[0]; if(!h)return; const qs=h.answers.filter(a=>!a.isCorrect&&a.given).map(a=>state.questions.find(q=>q.id===a.questionId)).filter(Boolean); if(!qs.length){toast('Não há erradas nessa sessão.');return;} createSession(qs,'training'); }
+function redoErrors(){ const h=store.load().history[0]; if(!h)return; const qs=h.answers.filter(a=>!a.isCorrect&&a.given).map(a=>state.questions.find(q=>q.id===a.questionId)).filter(q=>q&&answerOptions(q).length); if(!qs.length){toast('Não há erradas objetivas nessa sessão.');return;} createSession(qs,'training'); }
 
 function renderReview(){ const p=store.load(); const ids=uniq([...Object.keys(p.errors||{}),...Object.keys(p.marked||{}),...Object.keys(p.reviews||{})]); const root=$('#reviewList'); if(!ids.length){root.innerHTML='<div class="card empty-state">Nenhuma questão em revisão ainda.</div>';return;} root.innerHTML=ids.map(id=>{const q=state.questions.find(x=>x.id===id);if(!q)return'';const e=p.errors[id],r=p.reviews[id],m=p.marked[id];return `<article class="card"><div class="chips">${e?chip(`${e.count} erro(s)`):''}${r?chip(r.stage):''}${m?chip('Marcada'):''}</div><h2>${escapeHtml(q.disciplina||'Questão')}</h2><p>${escapeHtml(q.enunciado)}</p><button class="secondary" data-review-one="${escapeHtml(id)}">Resolver agora</button></article>`;}).join(''); $$('[data-review-one]').forEach(b=>b.addEventListener('click',()=>{const q=state.questions.find(x=>x.id===b.dataset.reviewOne);if(q)createSession([q],'training');})); }
 function renderPerformance(){ const h=store.load().history, all=h.flatMap(x=>x.answers||[]); const total=all.length, correct=all.filter(a=>a.isCorrect).length, precision=total?correct/total*100:0, avg=total?all.reduce((s,a)=>s+(a.time||0),0)/total:0; $('#performanceMetrics').innerHTML=[['Respondidas',total],['Acertos',correct],['Precisão',`${precision.toFixed(1)}%`],['Tempo médio',clock(Math.round(avg))]].map(metricHtml).join(''); const by=aggregateBy(all,'disciplina'); const entries=Object.entries(by).sort((a,b)=>a[1].correct/a[1].total-b[1].correct/b[1].total); $('#performanceBreakdown').innerHTML=entries.length?entries.map(([k,v])=>`<article class="card"><span class="kicker">${v.total} RESPOSTAS</span><h2>${escapeHtml(k||'Sem disciplina')}</h2><p>${Math.round(v.correct/v.total*100)}% de precisão</p></article>`).join(''):'<div class="card empty-state">Conclua uma bateria para gerar desempenho.</div>'; }
 function aggregateBy(arr,key){return arr.reduce((m,a)=>{const k=a[key]||'Sem classificação';m[k]??={total:0,correct:0};m[k].total++;if(a.isCorrect)m[k].correct++;return m;},{});}
 
 async function validateImport(e){ const file=e.target.files[0]; if(!file)return; try{const data=JSON.parse(await file.text());const arr=Array.isArray(data)?data:data.questions;if(!Array.isArray(arr))throw new Error('Esperado array de questões ou {questions:[...]}.');const missing=arr.filter(q=>!q.enunciado||!q.gabarito).length;$('#importReport').textContent=`Arquivo válido\nRegistros: ${arr.length}\nSem enunciado/gabarito: ${missing}\n\nPré-validação apenas: nada foi publicado nem enviado ao Notion.`;}catch(err){$('#importReport').textContent=`Arquivo inválido: ${err.message}`;}}
-function exportProgress(){ const blob=new Blob([JSON.stringify(store.load(),null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`plataforma-questoes-progresso-${new Date().toISOString().slice(0,10)}.json`;a.click();URL.revokeObjectURL(a.href); }
-function resetProgress(){ if(!confirm('Zerar somente o progresso deste navegador? O banco de questões não será alterado.'))return;store.clear();state.session=null;clearInterval(state.timer);renderAll();navigate('home');toast('Progresso local zerado.');}
+function exportProgress(){ const blob=new Blob([JSON.stringify(store.load(),null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`plataforma-questoes-progresso-${new Date().toISOString().slice(0,10)}.json`;a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},1000); }
+function resetProgress(){ if(!confirm('Zerar somente o progresso deste navegador? O banco de questões não será alterado.'))return;store.clear();state.session=null;state.hiddenAt=null;clearInterval(state.timer);renderAll();navigate('home');toast('Progresso local zerado.');}
 function toast(msg){ const t=$('#toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200); }
 
 boot();
