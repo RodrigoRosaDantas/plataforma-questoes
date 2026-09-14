@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-14T00:00:00-03:00",
+  "source": "Notion Banco Mestre — conteúdo editorial de questões",
+  "dataSourceId": "784234ae-deca-4514-b60d-19524e122a89",
+  "sampleMode": true,
+  "questionCount": 1,
+  "sourceAudit": {
+    "records": 3525,
+    "formats": {
+      "Certo / Errado": 2380,
+      "Múltipla escolha A–E": 937,
+      "Sem formato": 206,
+      "Discursiva": 2
+    },
+    "missing": {
+      "enunciado": 0,
+      "gabarito": 2,
+      "disciplina": 0,
+      "assunto": 125,
+      "cargo": 0,
+      "fonte": 0
+    }
+  }
+}
