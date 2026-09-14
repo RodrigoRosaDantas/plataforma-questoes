@@ -12,4 +12,5 @@ if(!html.includes('class="mobile-brand"')) throw new Error('Marca móvel ausente
 if(!html.includes('id="finishSession"')) throw new Error('Fluxo explícito de finalização ausente.');
 if(!html.includes('data-refresh-release')) throw new Error('Atualização manual da release ausente.');
 if(!html.includes('editalStatus')) throw new Error('Status do edital verticalizado ausente.');
+if(!js.includes('disciplina:discipline')) throw new Error('Filtro de tópico não referencia a disciplina correta.');
 console.log('OK: shell, navegação, persistência abstrata, finalização e PWA presentes.');
