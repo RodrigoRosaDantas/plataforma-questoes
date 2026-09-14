@@ -20,7 +20,7 @@ O navegador **nunca recebe o token do Notion**. O conteúdo editorial e o progre
 
 A interface foi reconstruída a partir do inventário funcional e do snapshot mais recente do projeto no Work. Não é uma cópia literal do código-fonte do Work: o código-fonte interno do Work não estava exposto nesta sessão. A V1 implementa uma arquitetura limpa, sem carregar o legado técnico do repositório SEDES/DF excluído.
 
-A release incluída no pacote está em **modo de amostra**, com uma questão real do Banco Mestre, apenas para validar a interface. O workflow `Sincronizar Banco Mestre do Notion` substitui essa amostra pela release completa.
+A `main` do repositório já contém a release completa derivada do Banco Mestre. O workflow `Sincronizar Banco Mestre do Notion` recompõe essa release automaticamente; snapshots locais de bootstrap podem continuar em modo de amostra para validar a interface sem expor o banco inteiro.
 
 ## Funcionalidades V1
 
@@ -78,11 +78,14 @@ Uma questão não entra na release quando:
 
 - não tem enunciado;
 - não tem gabarito;
+- não tem disciplina, cargo ou banca;
+- possui gabarito `Anulada` ou `Sem gabarito`;
 - está marcada como duplicada;
 - possui bloqueio manual de publicação;
-- `Auditoria de conteúdo = Não aprovada`.
+- `Auditoria de conteúdo = Não aprovada`;
+- é discursiva ou não possui alternativas objetivas suficientes para o fluxo da V1.
 
-Questões anuladas permanecem como estado explícito; não são silenciosamente convertidas em questões normais.
+Questões anuladas e questões com gabarito `Anulada` ou `Sem gabarito` permanecem fora da release. Questões discursivas também ficam preservadas no Notion até existir um fluxo próprio de resposta e correção; nenhum desses estados é silenciosamente convertido em questão objetiva.
 
 ## Persistência
 
