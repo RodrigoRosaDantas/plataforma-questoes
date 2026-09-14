@@ -40,6 +40,8 @@ O `id` da questão deriva de `Código`; se ausente, usa `Questão`; só em últi
 
 O Notion pode conter itens históricos, bloqueados ou em revisão. A release pública é derivada e passa por gates. A plataforma não altera automaticamente o Banco Mestre durante a publicação.
 
+Questões anuladas, sem gabarito utilizável ou discursivas permanecem no Notion, mas não entram no fluxo objetivo da V1 até haver suporte específico para seu formato.
+
 ## Mapeamento do Work para V1
 
 - Banco e editais → `edits`
