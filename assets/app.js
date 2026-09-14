@@ -1,7 +1,13 @@
 const ROUTES = [
-  ['home','⌂','Início'],['edits','▤','Banco e editais'],['questions','BQ','Banco de questões'],
-  ['proofs','PA','Provas aplicadas'],['simulations','SI','Simulados'],['review','RV','Revisar'],
-  ['performance','DE','Desempenho'],['import','＋','Importar provas'],['settings','AJ','Ajustes e dados']
+  ['home','<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1Z"/></svg>','Início'],
+  ['edits','<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 5.5A2.5 2.5 0 0 1 7.5 3H20v16H7.5A2.5 2.5 0 0 0 5 21.5v-16ZM5 5.5v16M8 7h8M8 11h7"/></svg>','Banco e editais'],
+  ['questions','<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5v-16ZM8 7h8M8 11h6M8 15h4"/></svg>','Banco de questões'],
+  ['proofs','<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 3h9l4 4v14H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2ZM15 3v5h5M8 14l2 2 5-5"/></svg>','Provas aplicadas'],
+  ['simulations','<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3a9 9 0 1 0 9 9M12 7v5l3 2M12 3v4"/></svg>','Simulados'],
+  ['review','<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a8 8 0 1 0 2 5M20 11V5M20 11h-6"/></svg>','Revisar'],
+  ['performance','<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 19V5M4 19h16M8 16v-4M12 16V8M16 16v-6"/></svg>','Desempenho'],
+  ['import','<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 16V4M8 8l4-4 4 4M5 14v5h14v-5"/></svg>','Importar provas'],
+  ['settings','<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 6h16M4 12h16M4 18h16M9 4v4M15 10v4M11 16v4"/></svg>','Ajustes e dados']
 ];
 
 const state = {
@@ -60,7 +66,7 @@ async function boot(){
 }
 
 function renderNav(){
-  $('#nav').innerHTML=ROUTES.map(([id,icon,label])=>`<button type="button" data-go="${id}" class="${id==='home'?'active':''}"><span class="nav-icon">${icon}</span><span>${label}</span></button>`).join('');
+  $('#nav').innerHTML=ROUTES.map(([id,icon,label])=>`<button type="button" data-go="${id}" class="${id==='home'?'active':''}"><span class="nav-icon" aria-hidden="true">${icon}</span><span>${label}</span></button>`).join('');
 }
 
 function bindGlobal(){
@@ -145,6 +151,7 @@ function renderHome(){
   const p=store.load(), hist=p.history; const answered=hist.reduce((s,h)=>s+(h.answers?.length||0),0), correct=hist.reduce((s,h)=>s+(h.correct||0),0);
   const precision=answered?Math.round(correct/answered*100):0;
   $('#homeMetrics').innerHTML=[['Questões na release',state.questions.length],['Sessões concluídas',hist.length],['Respondidas',answered],['Precisão',`${precision}%`]].map(metricHtml).join('');
+  $('#heroReleaseCount')?.textContent=fmt(state.questions.length);
   $('#datasetStamp').textContent=`${state.meta.sampleMode?'Amostra local':'Release'} · ${state.meta.generatedAt?new Date(state.meta.generatedAt).toLocaleString('pt-BR'):''}`;
   $('#connectionBadge').textContent=state.meta.sampleMode?'Amostra — sincronize Notion':'Release publicada';
   const banner=$('#sampleBanner'); banner.classList.toggle('hidden',!state.meta.sampleMode); if(state.meta.sampleMode) banner.innerHTML=`<strong>Modo de amostra.</strong> Esta cópia contém ${fmt(state.questions.length)} ${state.questions.length===1?'questão':'questões'} para validar a interface. O Banco Mestre auditado possui ${fmt(state.meta.sourceAudit?.records||0)} registros; execute o workflow de sincronização para gerar a release completa.`;
@@ -153,7 +160,27 @@ function renderHome(){
   const errs=Object.keys(p.errors||{}).length, marked=Object.keys(p.marked||{}).length, due=Object.values(p.reviews||{}).filter(r=>!r.dueAt||r.dueAt<=Date.now()).length;
   $('#reviewSummary').innerHTML=errs||marked||due?`<p><strong>${errs}</strong> erradas · <strong>${marked}</strong> marcadas · <strong>${due}</strong> revisões pendentes</p><button class="secondary" data-go="review">Abrir revisão</button>`:'Sem revisões pendentes.';
 }
-function metricHtml([label,value]){return `<div class="metric"><span>${label}</span><strong>${escapeHtml(value)}</strong></div>`;}
+const metricGlyphs = ['✦','◒','✓','◔'];
+const metricHints = {
+  'Questões na release':'Acervo pronto para prática',
+  'Sessões concluídas':'Sessões salvas neste navegador',
+  'Respondidas':'Respostas registradas',
+  'Precisão':'Aproveitamento acumulado',
+  'Corretas':'Acertos na sessão',
+  'Erradas':'Pontos para revisar',
+  'Em branco':'Questões sem resposta',
+  'Percentual':'Resultado da sessão',
+  'Tempo':'Tempo investido',
+  'Média/questão':'Ritmo médio da bateria',
+  'Total':'Questões na sessão',
+  'Acertos':'Acertos registrados',
+  'Tempo médio':'Ritmo médio das sessões'
+};
+function metricHtml([label,value], index=0){
+  const glyph=metricGlyphs[index%metricGlyphs.length];
+  const hint=metricHints[label] || 'Indicador atualizado';
+  return `<div class="metric"><div class="metric-top"><span class="metric-label"><span class="metric-symbol" aria-hidden="true">${glyph}</span>${escapeHtml(label)}</span><span class="metric-index">${String(index+1).padStart(2,'0')}</span></div><strong>${escapeHtml(value)}</strong><small>${escapeHtml(hint)}</small></div>`;
+}
 
 function renderCompetitions(){
   $('#competitionCards').innerHTML=state.competitions.map(c=>`<div class="competition-card"><span class="status">${escapeHtml(c.status.toUpperCase())}</span><h3>${escapeHtml(c.name)}</h3><p>${escapeHtml(c.description)}</p><small>${escapeHtml(c.mappingStatus)}</small></div>`).join('');

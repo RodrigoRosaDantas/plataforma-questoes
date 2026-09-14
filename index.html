@@ -20,6 +20,7 @@
           <span>Pratique · revise · avance</span>
         </div>
       </div>
+      <p class="nav-label">Área de estudo</p>
       <nav class="nav" id="nav"></nav>
       <div class="sidebar-footer">
         <span id="connectionBadge" class="status-badge">Dados locais</span>
@@ -39,6 +40,11 @@
           <input id="globalSearch" type="search" placeholder="Buscar no acervo" autocomplete="off" />
           <kbd>⌘ K</kbd>
         </div>
+        <div class="topbar-context" aria-label="Status da release">
+          <span class="live-dot" aria-hidden="true"></span>
+          <span>Acervo auditado</span>
+          <strong>V1</strong>
+        </div>
         <button id="themeButton" class="icon-button" type="button" aria-label="Alternar tema">◐</button>
       </header>
 
@@ -46,14 +52,26 @@
         <section class="view" data-view="home">
           <div class="hero">
             <div class="hero-copy">
-              <p class="eyebrow">BANCO DE QUESTÕES · EDITAIS · REVISÃO</p>
+              <div class="hero-kicker-row">
+                <p class="eyebrow">BANCO DE QUESTÕES · EDITAIS · REVISÃO</p>
+                <span class="release-pill"><span class="live-dot" aria-hidden="true"></span>RELEASE VALIDADA</span>
+              </div>
               <h1>Abra, escolha o recorte e comece a resolver.</h1>
               <p class="lede">Questões organizadas para você estudar com foco, revisar os pontos fracos e transformar cada sessão em progresso.</p>
+              <div class="hero-tags" aria-label="Trilhas em destaque">
+                <span>SEEDF</span>
+                <span>TJDFT</span>
+                <span>SEDES/DF · histórico</span>
+              </div>
             </div>
             <div class="hero-side">
               <div class="hero-emblem" aria-hidden="true">
                 <img src="./assets/logo.svg" alt="" />
                 <span>RESOLVA<br />REVISE<br />AVANCE</span>
+              </div>
+              <div class="hero-quick-stats" aria-label="Resumo do acervo">
+                <div><strong id="heroReleaseCount">—</strong><span>questões válidas</span></div>
+                <div><strong>02</strong><span>trilhas foco</span></div>
               </div>
               <div class="hero-actions">
                 <button class="primary" data-go="questions">Abrir banco de questões</button>
