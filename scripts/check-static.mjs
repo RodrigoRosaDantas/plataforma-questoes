@@ -10,6 +10,7 @@ if(!/plataforma-questoes-v\d+/.test(sw)) throw new Error('Cache PWA não version
 if(!sw.includes('./assets/logo.svg')||!html.includes('./assets/logo.svg')) throw new Error('Logo não incluída no shell público/PWA.');
 if(!html.includes('class="mobile-brand"')) throw new Error('Marca móvel ausente.');
 if(!html.includes('id="finishSession"')) throw new Error('Fluxo explícito de finalização ausente.');
+if(!js.includes('answer-copy')||!js.includes('const isBinary=')) throw new Error('Renderização das alternativas binárias ausente.');
 if(!html.includes('data-refresh-release')) throw new Error('Atualização manual da release ausente.');
 if(!html.includes('editalStatus')) throw new Error('Status do edital verticalizado ausente.');
 if(!js.includes('disciplina:discipline')) throw new Error('Filtro de tópico não referencia a disciplina correta.');
