@@ -146,41 +146,41 @@ function normalizedHistory(history){
     }))
   }));
 }
+function chunks(values,size){const result=[];for(let i=0;i<values.length;i+=size)result.push(values.slice(i,i+size));return result;}
 async function syncLocal(history){
   const normalized=normalizedHistory(history);
   if(!snapshot().authenticated)return {synced:false,history:normalized,count:0};
   setStatus('syncing','Sincronizando progresso…');
   try{
-    for(const record of normalized){
-      await request('/rest/v1/study_sessions?on_conflict=profile_id,activity_id',{
-        method:'POST',
-        headers:{Prefer:'resolution=merge-duplicates,return=minimal'},
-        body:JSON.stringify([{
-          profile_id:profileId,
-          activity_type:'question_set',
-          activity_id:String(record.id),
-          started_at:iso(record.startedAt),
-          ended_at:iso(record.finishedAt),
-          duration_ms:Math.max(0,Number(record.elapsedMs)||0)
-        }])
-      });
-      const rows=record.answers.map(answer=>({
-        profile_id:profileId,
-        question_id:String(answer.questionId),
-        question_set_id:String(record.id),
-        answer:answer.given||null,
-        is_correct:answer.blank?null:Boolean(answer.isCorrect),
-        duration_ms:Math.max(0,Number(answer.time)||0)*1000,
-        attempt_number:1,
-        answered_at:iso(record.finishedAt),
-        client_event_id:answer.clientEventId
-      }));
-      if(rows.length)await request('/rest/v1/question_attempts',{
-        method:'POST',
-        headers:{Prefer:'resolution=ignore-duplicates,return=minimal'},
-        body:JSON.stringify(rows)
-      });
-    }
+    const sessionRows=normalized.map(record=>({
+      profile_id:profileId,
+      activity_type:'question_set',
+      activity_id:String(record.id),
+      started_at:iso(record.startedAt),
+      ended_at:iso(record.finishedAt),
+      duration_ms:Math.max(0,Number(record.elapsedMs)||0)
+    }));
+    for(const batch of chunks(sessionRows,50))await request('/rest/v1/study_sessions?on_conflict=profile_id,activity_id',{
+      method:'POST',
+      headers:{Prefer:'resolution=merge-duplicates,return=minimal'},
+      body:JSON.stringify(batch)
+    });
+    const attemptRows=normalized.flatMap(record=>record.answers.map(answer=>({
+      profile_id:profileId,
+      question_id:String(answer.questionId),
+      question_set_id:String(record.id),
+      answer:answer.given||null,
+      is_correct:answer.blank?null:Boolean(answer.isCorrect),
+      duration_ms:Math.max(0,Number(answer.time)||0)*1000,
+      attempt_number:1,
+      answered_at:iso(record.finishedAt),
+      client_event_id:answer.clientEventId
+    })));
+    for(const batch of chunks(attemptRows,500))await request('/rest/v1/question_attempts',{
+      method:'POST',
+      headers:{Prefer:'resolution=ignore-duplicates,return=minimal'},
+      body:JSON.stringify(batch)
+    });
     setStatus('authenticated','');
     return {synced:true,history:normalized,count:normalized.length};
   }catch(error){
@@ -188,13 +188,23 @@ async function syncLocal(history){
     return {synced:false,history:normalized,count:0,error};
   }
 }
+async function fetchRows(path,maxPages=20){
+  const rows=[];
+  for(let page=0;page<maxPages;page++){
+    const data=await request(path+'&offset='+(page*1000)+'&limit=1000');
+    if(!Array.isArray(data)){if(page===0)return [];break;}
+    rows.push(...data);
+    if(data.length<1000)break;
+  }
+  return rows;
+}
 async function loadCloudHistory(){
   if(!snapshot().authenticated)return [];
-  const sessions=await request('/rest/v1/study_sessions?select=activity_id,started_at,ended_at,duration_ms&activity_type=eq.question_set&activity_id=not.is.null&order=ended_at.desc&limit=300');
-  const attempts=await request('/rest/v1/question_attempts?select=question_set_id,question_id,answer,is_correct,duration_ms,answered_at,client_event_id&question_set_id=not.is.null&order=answered_at.desc&limit=5000');
-  const sessionMap=new Map((Array.isArray(sessions)?sessions:[]).filter(row=>row.activity_id).map(row=>[String(row.activity_id),row]));
+  const sessions=await fetchRows('/rest/v1/study_sessions?select=activity_id,started_at,ended_at,duration_ms&activity_type=eq.question_set&activity_id=not.is.null&order=ended_at.desc');
+  const attempts=await fetchRows('/rest/v1/question_attempts?select=question_set_id,question_id,answer,is_correct,duration_ms,answered_at,client_event_id&question_set_id=not.is.null&order=answered_at.desc');
+  const sessionMap=new Map(sessions.filter(row=>row.activity_id).map(row=>[String(row.activity_id),row]));
   const answerMap=new Map();
-  (Array.isArray(attempts)?attempts:[]).forEach(row=>{
+  attempts.forEach(row=>{
     const key=String(row.question_set_id||'');
     if(!key)return;
     if(!answerMap.has(key))answerMap.set(key,[]);
