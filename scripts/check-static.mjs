@@ -6,6 +6,6 @@ const shell=html+'\n'+js;
 for(const marker of ['Banco de questões','Provas aplicadas','Simulados','Revisar','Desempenho','Importar provas','Ajustes e dados']) if(!shell.includes(marker)) throw new Error(`Navegação ausente: ${marker}`);
 for(const marker of ['finishSession','ProgressStore','applyFilters','renderQuestionMap']) if(!js.includes(marker)) throw new Error(`Contrato JS ausente: ${marker}`);
 if(js.includes('NOTION_TOKEN')||html.includes('NOTION_TOKEN')) throw new Error('Segredo do Notion não pode existir no frontend.');
-if(!sw.includes('plataforma-questoes-v1')) throw new Error('Cache PWA não versionado.');
+if(!sw.includes('plataforma-questoes-v2')) throw new Error('Cache PWA não versionado.');
 if(!html.includes('id="finishSession"')) throw new Error('Fluxo explícito de finalização ausente.');
 console.log('OK: shell, navegação, persistência abstrata, finalização e PWA presentes.');
