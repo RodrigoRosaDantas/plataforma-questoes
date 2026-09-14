@@ -18,4 +18,18 @@ for(const q of questions){
 if(invalid) throw new Error(`${invalid} questões falharam nos campos essenciais.`);
 if(meta.sourceAudit?.published!==undefined && meta.sourceAudit.published!==questions.length) throw new Error('metadata.sourceAudit.published diverge do JSON.');
 if(meta.sourceAudit?.records!==undefined && meta.sourceAudit.published!==undefined && meta.sourceAudit.records!==meta.sourceAudit.published+(meta.sourceAudit.excluded||0)) throw new Error('Auditoria de origem inconsistente: publicados + excluídos não fecha o total.');
-console.log(`OK: ${questions.length} questões, IDs únicos e gates editoriais preservados${meta.sampleMode?' (modo amostra)':''}.`);
+
+const tjdftProvas=JSON.parse(await fs.readFile('data/tjdft-provas.json','utf8'));
+if(!Array.isArray(tjdftProvas)||tjdftProvas.length!==38) throw new Error('Catálogo TJDFT incompleto: esperado 38 cadernos oficiais.');
+const proofIds=new Set(), proofUrls=new Set();
+for(const exam of tjdftProvas){
+  for(const field of ['id','career','level','examType','board','proofUrl','answerKeyUrl','noticeUrl','sourcePageUrl','officialPortalUrl']) if(!exam[field]) throw new Error('Catálogo TJDFT sem '+field+'.');
+  if(exam.competitionId!=='tjdft'||exam.year!==2022||exam.board!=='FGV'||exam.objectiveCount!==60) throw new Error('Metadado TJDFT inconsistente: '+exam.id);
+  if(!/^https:\/\/conhecimento\.fgv\.br\//.test(exam.proofUrl)||!/^https:\/\/conhecimento\.fgv\.br\//.test(exam.answerKeyUrl)||!/^https:\/\/conhecimento\.fgv\.br\//.test(exam.noticeUrl)||!/^https:\/\/conhecimento\.fgv\.br\//.test(exam.sourcePageUrl)) throw new Error('Fonte oficial FGV inválida: '+exam.id);
+  if(!/^https:\/\/www\.tjdft\.jus\.br\//.test(exam.officialPortalUrl)) throw new Error('Portal TJDFT inválido: '+exam.id);
+  if(proofIds.has(exam.id)) throw new Error('ID duplicado no catálogo TJDFT: '+exam.id);
+  if(proofUrls.has(exam.proofUrl)) throw new Error('URL duplicada no catálogo TJDFT: '+exam.proofUrl);
+  proofIds.add(exam.id); proofUrls.add(exam.proofUrl);
+}
+
+console.log(`OK: ${questions.length} questões, IDs únicos e gates editoriais preservados${meta.sampleMode?' (modo amostra)':''}; ${tjdftProvas.length} cadernos oficiais TJDFT catalogados.`);

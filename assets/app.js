@@ -11,7 +11,7 @@ const ROUTES = [
 ];
 
 const state = {
-  questions: [], meta: {}, competitions: [], editais: [], filtered: [],
+  questions: [], meta: {}, competitions: [], editais: [], officialExams: [], filtered: [],
   session: null, timer: null, startedAt: null, currentView: 'home', hiddenAt: null, syncLabel: 'Release publicada'
 };
 
@@ -50,7 +50,7 @@ const store = new ProgressStore();
 
 async function loadRelease(){
   const stamp=Date.now();
-  const names=['questions','metadata','competitions','editais'];
+  const names=['questions','metadata','competitions','editais','tjdft-provas'];
   const payloads=await Promise.all(names.map(name=>fetch('./data/'+name+'.json?refresh='+stamp,{cache:'no-store'}).then(response=>{
     if(!response.ok) throw new Error('Falha ao carregar '+name+'.json');
     return response.json();
@@ -60,8 +60,8 @@ async function loadRelease(){
 
 async function boot(){
   try{
-    const [q,m,c,e]=await loadRelease();
-    state.questions=q; state.meta=m; state.competitions=c; state.editais=e; state.filtered=[...q];
+    const [q,m,c,e,p]=await loadRelease();
+    state.questions=q; state.meta=m; state.competitions=c; state.editais=e; state.officialExams=p; state.filtered=[...q];
     state.syncLabel=state.meta.sampleMode?'Amostra local':'Release publicada';
     renderNav(); bindGlobal(); populateFilters(); applyFilters(); renderAll();
     const progress=store.load(); if(progress.activeSession) hydrateSession(progress.activeSession);
@@ -78,8 +78,8 @@ async function refreshRelease(){
   state.syncLabel='Consultando release…';
   const status=$('#syncStatus'); if(status) status.textContent=state.syncLabel;
   try{
-    const [q,m,c,e]=await loadRelease();
-    state.questions=q; state.meta=m; state.competitions=c; state.editais=e; state.filtered=[...q];
+    const [q,m,c,e,p]=await loadRelease();
+    state.questions=q; state.meta=m; state.competitions=c; state.editais=e; state.officialExams=p; state.filtered=[...q];
     state.syncLabel='Atualizada · '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
     populateFilters(); applyFilters(); renderAll();
     toast('Release atualizada: '+fmt(q.length)+' questões disponíveis.');
@@ -279,7 +279,7 @@ function renderCompetitions(){
   $('#competitionCards').innerHTML=state.competitions.map(c=>{
     const count=state.questions.filter(q=>questionBelongsTo(q,c.id)).length;
     const status=count?fmt(count)+' questões no acervo':String(c.mappingStatus||'Sem questões carregadas');
-    const action=count?`<button type='button' class='text-button' data-edital-filter='${escapeHtml(c.id)}'>Abrir questões →</button>`:`<button type='button' class='text-button' data-go='edits'>Ver verticalizado →</button>`;
+    const action=count?`<button type='button' class='text-button' data-edital-filter='${escapeHtml(c.id)}'>Abrir questões →</button>`:c.id==='tjdft'?`<button type='button' class='text-button' data-go='proofs'>Ver provas oficiais →</button>`:`<button type='button' class='text-button' data-go='edits'>Ver verticalizado →</button>`;
     return `<article class='competition-card'><span class='status'>${escapeHtml(String(c.status||'ativo').toUpperCase())}</span><h3>${escapeHtml(c.name)}</h3><p>${escapeHtml(c.description)}</p><div class='competition-count'><strong>${fmt(count)}</strong><span>questões associadas</span></div><small>${escapeHtml(status)}</small>${action}</article>`;
   }).join('');
 }
@@ -303,14 +303,37 @@ function renderEditais(){
 }
 function renderMaterials(){
   const grouped=(type)=>{
-    const map=new Map(); state.questions.filter(q=>(q.tipoMaterial||'').toLowerCase()===type).forEach(q=>{const k=q.nomeMaterial||'Sem nome'; if(!map.has(k))map.set(k,[]);map.get(k).push(q);}); return [...map.entries()];
+    const map=new Map();
+    state.questions.filter(q=>(q.tipoMaterial||'').toLowerCase()===type).forEach(q=>{
+      const k=q.nomeMaterial||'Sem nome';
+      if(!map.has(k)) map.set(k,[]);
+      map.get(k).push(q);
+    });
+    return [...map.entries()];
   };
-  const cards=entries=>entries.length?entries.map(([name,qs])=>`<article class="card"><span class="kicker">${fmt(qs.length)} QUESTÕES</span><h2>${escapeHtml(name)}</h2><p>${escapeHtml(uniq(qs.map(q=>q.banca)).join(' · '))}</p></article>`).join(''):'<div class="card empty-state">Nenhum item deste tipo na release atual.</div>';
-  $('#proofList').innerHTML=cards(grouped('prova')); $('#simulationList').innerHTML=cards(grouped('simulado'));
+  const cards=entries=>entries.length?entries.map(([name,qs])=>'<article class="card"><span class="kicker">'+fmt(qs.length)+' QUESTÕES</span><h2>'+escapeHtml(name)+'</h2><p>'+escapeHtml(uniq(qs.map(q=>q.banca)).join(' · '))+'</p></article>').join(''):'<div class="card empty-state">Nenhum item deste tipo na release atual.</div>';
+  const officialGroups=new Map();
+  state.officialExams.forEach(exam=>{
+    const key=exam.career||'TJDFT';
+    if(!officialGroups.has(key)) officialGroups.set(key,[]);
+    officialGroups.get(key).push(exam);
+  });
+  const officialMarkup=officialGroups.size?[
+    '<section class="card proof-source-note proof-section-wide"><div class="proof-source-eyebrow"><span class="kicker">FONTE OFICIAL · TJDFT 2022</span><span class="status-badge status-live">'+fmt(state.officialExams.length)+' cadernos</span></div><h2>Provas oficiais do último concurso</h2><p>Os cadernos abaixo são os PDFs originais hospedados pela FGV. Eles permanecem fora do banco interativo até que cada questão seja revisada, classificada e aprovada no Banco Mestre do Notion.</p><div class="release-actions"><a class="secondary" href="'+escapeHtml(state.officialExams[0].sourcePageUrl)+'" target="_blank" rel="noreferrer">Índice oficial FGV →</a><a class="secondary" href="'+escapeHtml(state.officialExams[0].officialPortalUrl)+'" target="_blank" rel="noreferrer">Portal do TJDFT →</a></div></section>',
+    [...officialGroups.entries()].map(([career,exams])=>[
+      '<article class="card official-proof-card"><div class="card-head"><div><span class="kicker">TJDFT · 2022</span><h2>'+escapeHtml(career)+'</h2></div><span class="status-badge status-live">Histórica</span></div><p class="proof-summary">'+escapeHtml(exams[0].level)+' · '+escapeHtml(exams[0].board)+' · '+fmt(exams[0].objectiveCount)+' objetivas · '+escapeHtml(exams[0].discursiveLabel)+' · '+fmt(exams[0].durationMinutes)+' min</p><div class="proof-variants">',
+      exams.map(exam=>'<a class="proof-variant" href="'+escapeHtml(exam.proofUrl)+'" target="_blank" rel="noreferrer"><strong>'+escapeHtml(exam.examType)+'</strong><small>Abrir PDF oficial →</small></a>').join(''),
+      '</div><div class="release-actions"><a class="secondary" href="'+escapeHtml(exams[0].answerKeyUrl)+'" target="_blank" rel="noreferrer">Gabarito definitivo</a><a class="secondary" href="'+escapeHtml(exams[0].noticeUrl)+'" target="_blank" rel="noreferrer">Edital-base</a></div></article>'
+    ].join('')).join('')
+  ].join(''):'';
+  const archive=grouped('prova');
+  const archiveMarkup=archive.length?'<div class="proof-section-wide archive-heading"><p class="eyebrow">QUESTÕES JÁ CATALOGADAS</p><h2>Materiais disponíveis no banco</h2></div>'+cards(archive):'';
+  $('#proofList').innerHTML=(officialMarkup+archiveMarkup)||'<div class="card empty-state">Nenhum item deste tipo na release atual.</div>';
+  $('#simulationList').innerHTML=cards(grouped('simulado'));
 }
 function renderRelease(){
   const releaseStatus=$('#releaseStatus'); if(releaseStatus) releaseStatus.textContent=state.syncLabel;
-  const m=state.meta; $('#releaseDetails').innerHTML=[['Schema',m.schemaVersion],['Gerado em',m.generatedAt?new Date(m.generatedAt).toLocaleString('pt-BR'):'—'],['Fonte',m.source],['Data source',m.dataSourceId],['Questões',m.questionCount],['Modo',m.sampleMode?'amostra':'publicado']].map(([k,v])=>`<dt>${escapeHtml(k)}</dt><dd>${escapeHtml(v??'—')}</dd>`).join('');
+  const m=state.meta; $('#releaseDetails').innerHTML=[['Schema',m.schemaVersion],['Gerado em',m.generatedAt?new Date(m.generatedAt).toLocaleString('pt-BR'):'—'],['Fonte',m.source],['Data source',m.dataSourceId],['Questões',m.questionCount],['Provas oficiais TJDFT',state.officialExams.length],['Modo',m.sampleMode?'amostra':'publicado']].map(([k,v])=>`<dt>${escapeHtml(k)}</dt><dd>${escapeHtml(v??'—')}</dd>`).join('');
 }
 
 function startSessionFromFilters(){
