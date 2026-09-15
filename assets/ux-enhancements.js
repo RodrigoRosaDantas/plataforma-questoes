@@ -1,6 +1,7 @@
 const PROGRESS_KEY='plataforma.questoes.progress.v1';
 let reviewSummaryTimer=null;
 let resultInsightTimer=null;
+let performanceTopicTimer=null;
 
 function readProgress(){
   try{return JSON.parse(localStorage.getItem(PROGRESS_KEY)||'null')||{};}catch{return {};}
@@ -18,6 +19,10 @@ function scheduledReview(item,now=Date.now()){
   return (Number(item.dueAt)||0)>now;
 }
 function activeMark(item){return Boolean(item)&&!item.removed;}
+function normalize(value){return String(value||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().toLowerCase();}
+function escapeHtml(value){
+  return String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+}
 function smartReviewSummaryHtml(){
   const progress=readProgress(),now=Date.now();
   const errors=Object.values(progress.errors||{}).filter(unresolvedError).length;
@@ -102,9 +107,6 @@ function installResolverShortcuts(){
   hint.innerHTML='<span>Atalhos</span><kbd>A–E</kbd><small>ou</small><kbd>1–5</kbd><small>responder</small><kbd>Enter</kbd><small>confirmar/avançar</small><kbd>M</kbd><small>marcar</small><kbd>←</kbd><kbd>→</kbd><small>navegar</small>';
   top.insertAdjacentElement('afterend',hint);
 }
-function escapeHtml(value){
-  return String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
-}
 function latestSession(){
   const history=readProgress().history;
   return Array.isArray(history)&&history.length?history[0]:null;
@@ -172,6 +174,84 @@ function installResultInsight(){
   observer.observe(metrics,{subtree:true,childList:true,characterData:true});
   window.addEventListener('progress:changed',scheduleResultInsight);
 }
+function allAnsweredHistory(){
+  const history=readProgress().history;
+  return (Array.isArray(history)?history:[]).flatMap(record=>(Array.isArray(record.answers)?record.answers:[]).map(answer=>({...answer,sessionFinishedAt:Number(record.finishedAt)||0}))).filter(answer=>!answer.blank&&answer.given!==null&&answer.given!=='');
+}
+function topicPerformance(){
+  const map=new Map();
+  for(const answer of allAnsweredHistory()){
+    const assunto=String(answer.assunto||'').trim();
+    if(!assunto)continue;
+    const disciplina=String(answer.disciplina||'Sem disciplina').trim()||'Sem disciplina';
+    const key=normalize(disciplina)+'::'+normalize(assunto);
+    const row=map.get(key)||{disciplina,assunto,total:0,correct:0,wrong:0,lastAt:0};
+    row.total+=1;
+    if(answer.isCorrect===true)row.correct+=1;else row.wrong+=1;
+    row.lastAt=Math.max(row.lastAt,answer.sessionFinishedAt||0);
+    map.set(key,row);
+  }
+  return [...map.values()].map(row=>({...row,precision:row.total?Math.round(row.correct/row.total*100):0}));
+}
+function priorityTopics(){
+  return topicPerformance().filter(row=>row.total>=2&&row.wrong>0).sort((a,b)=>a.precision-b.precision||b.wrong-a.wrong||b.total-a.total||b.lastAt-a.lastAt).slice(0,8);
+}
+function renderPerformanceTopics(){
+  const charts=document.querySelector('#performanceCharts');
+  if(!charts)return;
+  const view=document.querySelector('[data-view="performance"]');
+  if(!view||view.classList.contains('hidden'))return;
+  let section=document.querySelector('#performanceTopicInsights');
+  if(!section){
+    section=document.createElement('section');
+    section.id='performanceTopicInsights';
+    section.className='performance-topic-section';
+    charts.insertAdjacentElement('afterend',section);
+  }
+  const topics=priorityTopics();
+  if(!topics.length){
+    section.innerHTML='<article class="card"><span class="kicker">ASSUNTOS PRIORITÁRIOS</span><h2>Ainda falta amostra por assunto</h2><p>Depois de pelo menos duas respostas no mesmo assunto e um erro, a plataforma passa a indicar prioridades mais granulares aqui.</p></article>';
+    return;
+  }
+  section.innerHTML=`
+    <div class="section-heading"><span class="kicker">GRANULARIDADE</span><h2>Assuntos que mais pedem reforço</h2><p>Ordenação por menor precisão, quantidade de erros e volume respondido.</p></div>
+    <div class="topic-priority-grid">
+      ${topics.map((topic,index)=>`<article class="card topic-priority-card"><div class="topic-priority-head"><span>PRIORIDADE ${index+1}</span><strong>${topic.precision}%</strong></div><h3>${escapeHtml(topic.assunto)}</h3><p>${escapeHtml(topic.disciplina)}</p><small>${topic.correct}/${topic.total} acertos · ${topic.wrong} erro(s)</small><div class="topic-priority-bar" aria-label="Precisão ${topic.precision}%"><span style="width:${Math.max(0,Math.min(100,topic.precision))}%"></span></div><button type="button" class="text-button" data-ux-topic="${escapeHtml(topic.assunto)}" data-ux-discipline="${escapeHtml(topic.disciplina)}">Praticar este assunto →</button></article>`).join('')}
+    </div>`;
+}
+function schedulePerformanceTopics(){
+  clearTimeout(performanceTopicTimer);
+  performanceTopicTimer=setTimeout(()=>{performanceTopicTimer=null;renderPerformanceTopics();},25);
+}
+function chooseOption(select,value){
+  if(!select||!value)return false;
+  const target=normalize(value);
+  const option=[...select.options].find(item=>normalize(item.value)===target||normalize(item.textContent)===target);
+  if(!option)return false;
+  select.value=option.value;
+  select.dispatchEvent(new Event('change',{bubbles:true}));
+  return true;
+}
+function openTopicFromPerformance(discipline,topic){
+  document.querySelector('[data-go="questions"]')?.click();
+  setTimeout(()=>{
+    chooseOption(document.querySelector('#filterDisciplina'),discipline);
+    chooseOption(document.querySelector('#filterAssunto'),topic);
+    document.querySelector('#startSession')?.focus({preventScroll:true});
+  },80);
+}
+function installPerformanceTopics(){
+  const metrics=document.querySelector('#performanceMetrics');
+  if(!metrics)return;
+  const observer=new MutationObserver(schedulePerformanceTopics);
+  observer.observe(metrics,{subtree:true,childList:true,characterData:true});
+  document.addEventListener('click',event=>{
+    const button=event.target.closest('[data-ux-topic]');
+    if(!button)return;
+    openTopicFromPerformance(button.dataset.uxDiscipline||'',button.dataset.uxTopic||'');
+  });
+  window.addEventListener('progress:changed',schedulePerformanceTopics);
+}
 function installStyles(){
   if(document.querySelector('#uxEnhancementStyles'))return;
   const style=document.createElement('style');
@@ -180,9 +260,10 @@ function installStyles(){
     .resolver-shortcut-hint{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:10px 0 2px;color:inherit;font-size:.74rem;opacity:.72}
     .resolver-shortcut-hint>span{font-weight:800;letter-spacing:.04em;text-transform:uppercase;margin-right:3px}.resolver-shortcut-hint small{font-size:inherit}.resolver-shortcut-hint kbd{font:inherit;font-weight:800;line-height:1;padding:4px 6px;border:1px solid color-mix(in srgb,currentColor 24%,transparent);border-bottom-width:2px;border-radius:6px;background:color-mix(in srgb,currentColor 5%,transparent)}
     .result-session-insight{margin:18px 0}.result-insight-head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px}.result-insight-head p{max-width:760px;margin-bottom:0}.result-reading{white-space:nowrap;padding:7px 10px;border:1px solid currentColor;border-radius:999px;font-size:.78rem;font-weight:850}.result-reading-strong{color:#067647}.result-reading-attention{color:#b54708}.result-reading-priority{color:#b42318}.result-diagnostic-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:20px 0}.result-diagnostic-grid div{display:grid;gap:3px;padding:12px;border:1px solid var(--border,#d9deea);border-radius:12px}.result-diagnostic-grid strong{font-size:1.25rem}.result-diagnostic-grid span{font-size:.76rem;opacity:.7}.result-focus{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 16px;align-items:center;padding-top:16px;border-top:1px solid var(--border,#d9deea)}.result-focus>span{grid-column:1/-1;font-size:.7rem;font-weight:850;letter-spacing:.05em;opacity:.65}.result-focus>strong{font-size:1rem}.result-focus>small{grid-column:1/2;opacity:.72}.result-focus>button{grid-column:2;grid-row:2/4}
-    @media(max-width:760px),(pointer:coarse){.resolver-shortcut-hint{display:none}.result-insight-head{display:grid}.result-reading{justify-self:start}.result-diagnostic-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.result-focus{grid-template-columns:1fr}.result-focus>*{grid-column:1!important;grid-row:auto!important}.result-focus>button{width:100%;margin-top:8px}}
+    .performance-topic-section{margin-top:24px}.performance-topic-section .section-heading p{margin-top:6px}.topic-priority-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.topic-priority-card{display:grid;gap:7px}.topic-priority-card h3{margin:0;font-size:1rem}.topic-priority-card p,.topic-priority-card small{margin:0}.topic-priority-card p{opacity:.72}.topic-priority-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.topic-priority-head span{font-size:.68rem;font-weight:850;letter-spacing:.05em;opacity:.62}.topic-priority-head strong{font-size:1.2rem}.topic-priority-bar{height:6px;border-radius:999px;overflow:hidden;background:color-mix(in srgb,currentColor 9%,transparent);margin:5px 0}.topic-priority-bar span{display:block;height:100%;border-radius:inherit;background:var(--accent,#4656e8)}.topic-priority-card .text-button{justify-self:start;margin-top:4px}
+    @media(max-width:760px),(pointer:coarse){.resolver-shortcut-hint{display:none}.result-insight-head{display:grid}.result-reading{justify-self:start}.result-diagnostic-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.result-focus{grid-template-columns:1fr}.result-focus>*{grid-column:1!important;grid-row:auto!important}.result-focus>button{width:100%;margin-top:8px}.topic-priority-grid{grid-template-columns:1fr}}
   `;
   document.head.appendChild(style);
 }
-function init(){installStyles();installReviewSummarySync();installResolverShortcuts();installResultInsight();}
+function init(){installStyles();installReviewSummarySync();installResolverShortcuts();installResultInsight();installPerformanceTopics();}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
