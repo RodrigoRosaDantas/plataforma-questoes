@@ -337,6 +337,17 @@ function scheduleReviewEnhancement(){
   clearTimeout(reviewEnhanceTimer);
   reviewEnhanceTimer=setTimeout(()=>{reviewEnhanceTimer=null;enhanceReview();},30);
 }
+function reviewMutationIsExternal(mutation){
+  const root=document.querySelector('#reviewList');
+  if(!root||!(mutation.target===root||mutation.target.closest?.('#reviewList')))return false;
+  const relevant=node=>{
+    if(node.nodeType!==Node.ELEMENT_NODE)return false;
+    if(node.matches?.('[data-review-one]'))return true;
+    if(node.matches?.('.empty-state:not(.review-filter-empty)'))return true;
+    return Boolean(node.querySelector?.('[data-review-one]'));
+  };
+  return [...mutation.addedNodes].some(relevant);
+}
 function bindReviewCenter(){
   document.addEventListener('click',event=>{
     const filterButton=event.target.closest('[data-review-filter]');
@@ -354,7 +365,7 @@ function bindReviewCenter(){
     }
   });
   const observer=new MutationObserver(mutations=>{
-    if(mutations.some(mutation=>mutation.target.id==='reviewList'||mutation.target.closest?.('#reviewList')))scheduleReviewEnhancement();
+    if(mutations.some(reviewMutationIsExternal))scheduleReviewEnhancement();
   });
   observer.observe(document.body,{subtree:true,childList:true});
   window.addEventListener('progress:changed',scheduleReviewEnhancement);
