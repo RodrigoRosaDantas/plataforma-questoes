@@ -347,7 +347,7 @@ function renderFacetOptions(){
     }
     select.replaceChildren(fragment);
     if((facetUniverses[config.key]||[]).includes(current))select.value=current;
-    select.dataset.facetManaged='true';
+    select.setAttribute('data-facet-managed','true');
     select.setAttribute('aria-label',`${config.label}. As opções mostram a quantidade disponível no recorte atual.`);
   }
   const status=document.querySelector('#facetStatus');
@@ -404,6 +404,11 @@ async function installFacetedFilters(){
   facetRows=await readFacetDataset(false);
   if(!facetRows.length){status.innerHTML='<strong>Filtros combinados indisponíveis</strong><span>O banco continua funcionando com os filtros padrão.</span>';return;}
   renderFacetOptions();
+  const availableCount=document.querySelector('#availableCount');
+  if(availableCount){
+    const observer=new MutationObserver(()=>scheduleFacetRender(0));
+    observer.observe(availableCount,{subtree:true,childList:true,characterData:true});
+  }
   document.addEventListener('change',event=>{
     const index=FACET_CONFIG.findIndex(config=>config.id===event.target?.id);
     if(index<0)return;
