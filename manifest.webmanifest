@@ -1,18 +1,25 @@
 {
+  "id": "./",
   "name": "Plataforma de Questões",
   "short_name": "Questões",
-  "description": "Banco de questões, provas, simulados, revisão e desempenho para concursos.",
+  "description": "Banco de questões, editais verticalizados, revisão e desempenho para concursos.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#f6f7fb",
-  "theme_color": "#11182c",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+  "orientation": "any",
+  "background_color": "#f4f6fb",
+  "theme_color": "#111936",
+  "categories": ["education", "productivity"],
   "icons": [
-    {
-      "src": "./assets/logo.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
-    }
+    {"src": "./assets/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "./assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+    {"src": "./assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"},
+    {"src": "./assets/logo.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any"}
+  ],
+  "shortcuts": [
+    {"name": "Montar bateria", "short_name": "Questões", "url": "./?view=questions", "icons": [{"src": "./assets/icon-192.png", "sizes": "192x192"}]},
+    {"name": "Revisar erros", "short_name": "Revisar", "url": "./?view=review", "icons": [{"src": "./assets/icon-192.png", "sizes": "192x192"}]},
+    {"name": "Ver desempenho", "short_name": "Desempenho", "url": "./?view=performance", "icons": [{"src": "./assets/icon-192.png", "sizes": "192x192"}]}
   ]
 }
