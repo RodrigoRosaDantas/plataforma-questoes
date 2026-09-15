@@ -313,3 +313,71 @@ main{padding:46px 42px 64px}
 .note-actions small,.note-status{color:var(--muted);font-size:11px;font-weight:700}
 @media(max-width:1100px){.chart-grid{grid-template-columns:1fr}}
 @media(max-width:760px){.section-heading{align-items:flex-start;flex-direction:column;gap:3px}.chart-card{padding:17px}.chart-head{gap:8px}.chart-caption{font-size:10px}.cloud-card .card-head{flex-direction:column}}
+
+/* Responsive refinement — phone, tablet and desktop */
+html { min-width: 0; }
+body { min-width: 0; overflow-x: hidden; }
+button, input, select, textarea { font: inherit; }
+.workspace, main, .view, .bank-main { min-width: 0; }
+.topbar { min-width: 0; }
+.search-wrap { min-width: 0; }
+.hero-copy, .hero-side, .card, .edital-card, .official-proof-card { min-width: 0; }
+.question-text, .question-notes, .feedback, .proof-variant, .topic-row { overflow-wrap: anywhere; }
+
+@media (max-width: 1120px) {
+  main { padding-inline: clamp(20px, 3vw, 40px); }
+  .hero { grid-template-columns: minmax(0, 1.2fr) minmax(260px, .8fr); gap: 24px; }
+  .home-command-grid { grid-template-columns: minmax(0, 1.2fr) minmax(240px, .8fr); }
+  .bank-layout { grid-template-columns: minmax(210px, 240px) minmax(0, 1fr); gap: 18px; }
+  .question-text { font-size: clamp(1.05rem, 1.8vw, 1.3rem); }
+}
+
+@media (max-width: 860px) {
+  .hero, .home-command-grid, .grid.two, .bank-layout { grid-template-columns: 1fr; }
+  .hero-side { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); align-items: center; }
+  .hero-actions { display: grid; grid-template-columns: 1fr 1fr; }
+  .filter-panel { position: static; }
+  .edital-axis-list { grid-template-columns: 1fr; }
+  .official-proof-card .proof-variants { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 640px) {
+  main { padding: 14px; }
+  .topbar { gap: 8px; padding: 10px 14px; flex-wrap: wrap; }
+  .search-wrap { flex: 1 1 calc(100% - 48px); order: 2; }
+  .topbar-context, .topbar > .icon-button:not(.mobile-only) { display: none; }
+  .refresh-button { min-height: 44px; padding-inline: 12px; }
+  .hero { padding: 22px 18px; border-radius: 18px; }
+  .hero h1 { font-size: clamp(2rem, 9vw, 3rem); line-height: 1.04; }
+  .lede { font-size: 1rem; }
+  .hero-side { display: block; }
+  .hero-emblem { display: none; }
+  .hero-actions, .command-actions { grid-template-columns: 1fr; }
+  .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .metrics > * { padding: 14px 12px; }
+  .card { padding: 18px; border-radius: 16px; }
+  .page-head { gap: 14px; }
+  .page-head h1 { font-size: clamp(1.8rem, 8vw, 2.5rem); }
+  .filter-panel { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .filter-panel label:last-of-type, .filter-panel .full { grid-column: 1 / -1; }
+  .session-builder .builder-controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .session-builder .builder-controls button { grid-column: 1 / -1; min-height: 48px; }
+  .official-proof-card .proof-variants { grid-template-columns: 1fr; }
+  .edital-card-head, .edital-axis-head, .resolver-topline { align-items: flex-start; gap: 12px; }
+  .topic-row { min-height: 64px; padding: 12px; }
+  .answers { gap: 10px; }
+  .answers button { min-height: 56px; text-align: left; }
+  .question-text { font-size: 1.1rem; line-height: 1.58; }
+  .question-notes textarea { min-height: 112px; }
+  .resolver-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .resolver-actions #confirmAnswer, .resolver-actions #nextQuestion, .resolver-actions #finishSession { grid-column: 1 / -1; min-height: 48px; }
+  .resolver-actions #prevQuestion { min-height: 48px; }
+}
+
+@media (max-width: 400px) {
+  .metrics { grid-template-columns: 1fr 1fr; }
+  .filter-panel, .session-builder .builder-controls { grid-template-columns: 1fr; }
+  .filter-panel label:last-of-type, .filter-panel .full, .session-builder .builder-controls button { grid-column: auto; }
+  .hero-tags { gap: 6px; }
+  .hero-tags span { font-size: .72rem; }
+}
