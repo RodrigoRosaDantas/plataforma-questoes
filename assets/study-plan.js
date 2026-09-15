@@ -20,18 +20,23 @@ function localDay(value=Date.now()){
 function progressData(){return readJson(PROGRESS_KEY,{});}
 function progressSummary(){
   const progress=progressData();
-  const errors=Object.values(progress.errors||{}).filter(item=>!item?.removed).length;
-  const reviews=Object.values(progress.reviews||{}).filter(item=>!item?.removed).length;
+  const now=Date.now();
+  const unresolvedErrorIds=Object.entries(progress.errors||{}).filter(([,item])=>{
+    const lastError=Number(item?.lastError)||0,lastCorrect=Number(item?.lastCorrect)||0;
+    return lastError>lastCorrect;
+  }).map(([id])=>id);
+  const dueReviewIds=Object.entries(progress.reviews||{}).filter(([,item])=>{
+    if(!item||item.stage==='Dominada')return false;
+    const dueAt=Number(item.dueAt)||0;
+    return !dueAt||dueAt<=now;
+  }).map(([id])=>id);
   const marked=Object.values(progress.marked||{}).filter(item=>!item?.removed).length;
   return {
     progress,
-    errors,
-    reviews,
+    errors:unresolvedErrorIds.length,
+    reviews:dueReviewIds.length,
     marked,
-    pending:new Set([
-      ...Object.entries(progress.errors||{}).filter(([,item])=>!item?.removed).map(([id])=>id),
-      ...Object.entries(progress.reviews||{}).filter(([,item])=>!item?.removed).map(([id])=>id)
-    ]).size,
+    pending:new Set([...unresolvedErrorIds,...dueReviewIds]).size,
     active:Boolean(progress.activeSession)
   };
 }
@@ -97,6 +102,7 @@ function disciplineFocus(progress){
 function activeSessionSize(progress){
   const active=progress.activeSession;
   if(!active||typeof active!=='object')return 0;
+  if(Array.isArray(active.items))return active.items.length;
   if(Array.isArray(active.answers))return active.answers.length;
   if(Array.isArray(active.questions))return active.questions.length;
   return Number(active.total)||0;
@@ -107,8 +113,8 @@ function planSteps(plan,summary,today,focus){
   const first=summary.active
     ? {code:'01',title:'Continuar a bateria em andamento',detail:`Há uma sessão salva${activeSessionSize(summary.progress)?` com ${activeSessionSize(summary.progress)} questão(ões)`:''}. Retome antes de abrir outro bloco.`,action:'resume',button:'Continuar sessão'}
     : reviewCount
-      ? {code:'01',title:`Revisar ${reviewCount} pendência(s)`,detail:`${summary.errors} erro(s), ${summary.reviews} revisão(ões) e ${summary.marked} marcada(s) no seu estado atual.`,action:'review',button:'Abrir revisão'}
-      : {code:'01',title:'Aquecer pelo edital',detail:'Sem revisão urgente agora. Escolha um tópico prioritário antes de abrir questões novas.',action:'edits',button:'Escolher tópico'};
+      ? {code:'01',title:`Revisar ${reviewCount} pendência(s)`,detail:`${summary.errors} erro(s) ainda não recuperado(s), ${summary.reviews} revisão(ões) vencida(s) e ${summary.marked} marcada(s).`,action:'review',button:'Abrir revisão'}
+      : {code:'01',title:'Aquecer pelo edital',detail:'Sem revisão vencida agora. Escolha um tópico prioritário antes de abrir questões novas.',action:'edits',button:'Escolher tópico'};
   let second;
   if(remainingQuestions===0){
     second={code:'02',title:`Meta de ${plan.questions} questões atingida`,detail:`Hoje você já registrou ${today.questions} questão(ões) em ${today.sessions} sessão(ões).`,action:'performance',button:'Analisar resultado'};
@@ -195,7 +201,7 @@ function resumeSession(){
   const trigger=document.querySelector('[data-go="resolver"]');
   if(trigger){trigger.click();return;}
   go('home');
-  setTimeout(()=>document.querySelector('#resumeCard [data-go="resolver"],#resumeCard button')?.click(),80);
+  setTimeout(()=>document.querySelector('#resumeNow')?.click(),80);
 }
 function bindPlan(){
   document.addEventListener('click',event=>{
