@@ -4,12 +4,28 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="theme-color" content="#11182c" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Questões" />
+  <meta name="format-detection" content="telephone=no" />
   <meta name="description" content="Plataforma de Questões — pratique, revise e acompanhe seu desempenho." />
   <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="icon" type="image/png" sizes="192x192" href="./assets/icon-192.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="./assets/icon-180.png" />
   <link rel="stylesheet" href="./assets/styles.css?v=tjdft-provas10" />
+  <link rel="stylesheet" href="./assets/v2.css?v=platform-v2-1" />
   <title>Plataforma de Questões</title>
 </head>
-<body>
+<body aria-busy="true">
+  <div id="appLoading" class="app-loading-screen" role="status" aria-live="polite">
+    <div class="loading-card">
+      <img src="./assets/logo.svg" alt="" aria-hidden="true" />
+      <strong>Preparando sua plataforma</strong>
+      <span>Carregando questões, editais e progresso…</span>
+      <div class="loading-line" aria-hidden="true"></div>
+    </div>
+  </div>
   <a class="skip-link" href="#main">Pular para o conteúdo</a>
   <div class="app-shell">
     <aside class="sidebar" id="sidebar" aria-label="Navegação principal">
@@ -27,10 +43,11 @@
         <small id="datasetStamp">Carregando…</small>
       </div>
     </aside>
+    <button id="sidebarBackdrop" class="sidebar-backdrop hidden" type="button" aria-label="Fechar menu"></button>
 
     <div class="workspace">
       <header class="topbar">
-        <button id="menuButton" class="icon-button mobile-only" type="button" aria-label="Abrir menu">☰</button>
+        <button id="menuButton" class="icon-button mobile-only" type="button" aria-label="Abrir menu" aria-controls="sidebar" aria-expanded="false">☰</button>
         <button class="mobile-brand" data-go="home" type="button" aria-label="Ir para o início">
           <img src="./assets/logo.svg" alt="" aria-hidden="true" />
           <span>Questões</span>
@@ -40,43 +57,49 @@
           <input id="globalSearch" type="search" placeholder="Buscar no acervo" autocomplete="off" />
           <kbd>⌘ K</kbd>
         </div>
-        <div class="topbar-context" aria-label="Status da release">
+        <div class="topbar-context" aria-label="Status da plataforma">
           <span class="live-dot" aria-hidden="true"></span>
           <span id="syncStatus">Release publicada</span>
-          <strong>V1</strong>
+          <span id="networkStatus" class="network-label">Online</span>
+          <strong>V2</strong>
         </div>
         <button id="refreshButton" class="refresh-button" type="button" data-refresh-release aria-label="Atualizar release publicada" title="Buscar a versão publicada mais recente"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a8 8 0 1 0 2 5M20 11V5M20 11h-6" /></svg><span id="refreshLabel">Atualizar</span></button>
-        <button id="themeButton" class="icon-button" type="button" aria-label="Alternar tema">◐</button>
+        <button id="themeButton" class="icon-button" type="button" aria-label="Usar tema escuro" aria-pressed="false" title="Alternar tema">◐</button>
       </header>
 
       <main id="main" tabindex="-1">
         <section class="view" data-view="home">
-          <div class="hero">
+          <div class="hero hero-v2">
             <div class="hero-copy">
               <div class="hero-kicker-row">
-                <p class="eyebrow">BANCO DE QUESTÕES · EDITAIS · REVISÃO</p>
+                <p class="eyebrow">ESTUDO ORIENTADO POR QUESTÕES</p>
                 <span class="release-pill"><span class="live-dot" aria-hidden="true"></span>RELEASE VALIDADA</span>
               </div>
-              <h1>Abra, escolha o recorte e comece a resolver.</h1>
-              <p class="lede">Questões organizadas para você estudar com foco, revisar os pontos fracos e transformar cada sessão em progresso.</p>
-              <div class="hero-tags" aria-label="Trilhas em destaque">
-                <span>SEEDF</span>
-                <span>TJDFT</span>
-                <span>SEDES/DF · histórico</span>
+              <h1>Estude com foco. Evolua com evidências.</h1>
+              <p class="lede">Escolha uma trilha, resolva uma bateria e transforme erros em um plano claro de revisão — em qualquer aparelho.</p>
+              <div class="hero-actions">
+                <button class="primary" type="button" data-quick-filter="seedf">Praticar SEEDF</button>
+                <button class="secondary" type="button" data-quick-filter="tjdft">Praticar TJDFT</button>
+                <button class="secondary" type="button" data-go="edits">Escolher pelo edital</button>
+              </div>
+              <div class="hero-tags" aria-label="Recursos da plataforma">
+                <span>Gabarito após confirmar</span>
+                <span>Revisão inteligente</span>
+                <span>Progresso multiaparelho</span>
               </div>
             </div>
             <div class="hero-side">
-              <div class="hero-emblem" aria-hidden="true">
-                <img src="./assets/logo.svg" alt="" />
-                <span>RESOLVA<br />REVISE<br />AVANCE</span>
-              </div>
-              <div class="hero-quick-stats" aria-label="Resumo do acervo">
-                <div><strong id="heroReleaseCount">—</strong><span>questões válidas</span></div>
-                <div><strong>02</strong><span>trilhas foco</span></div>
-              </div>
-              <div class="hero-actions">
-                <button class="primary" data-go="questions">Abrir banco de questões</button>
-                <button class="secondary" data-go="review">Revisar pendências</button>
+              <div class="hero-scorecard" aria-label="Resumo rápido da plataforma">
+                <div class="scorecard-head">
+                  <img src="./assets/logo.svg" alt="" aria-hidden="true" />
+                  <div><strong>Seu painel de estudo</strong><span>Release auditada e pronta para praticar</span></div>
+                </div>
+                <div class="scorecard-grid">
+                  <div><strong id="heroReleaseCount">—</strong><span>questões</span></div>
+                  <div><strong id="heroSeedfCount">—</strong><span>SEEDF</span></div>
+                  <div><strong id="heroTjdftCount">—</strong><span>TJDFT</span></div>
+                  <div><strong id="heroPrecision">0%</strong><span>precisão</span></div>
+                </div>
               </div>
             </div>
           </div>
@@ -138,18 +161,24 @@
 
         <section class="view hidden" data-view="edits">
           <div class="page-head">
-            <div><p class="eyebrow">BANCO E EDITAIS</p><h1>Editais verticalizados</h1><p>Escolha uma disciplina e um tópico para abrir imediatamente as questões correspondentes.</p></div>
-            <div class="page-head-actions"><span class="page-status" id="editalStatus">Carregando mapeamento…</span><button type="button" class="secondary" data-go="questions">Banco completo →</button></div>
+            <div><p class="eyebrow">BANCO E EDITAIS</p><h1>Editais verticalizados</h1><p>Pesquise um conteúdo e inicie uma bateria somente com as questões daquele tópico.</p></div>
+            <div class="page-head-actions">
+              <label class="edital-search-wrap"><span class="sr-only">Buscar tópico no edital</span><input id="editalSearch" type="search" placeholder="Buscar disciplina ou tópico…" autocomplete="off" /></label>
+              <span class="page-status" id="editalStatus">Carregando mapeamento…</span>
+              <button type="button" class="secondary" data-go="questions">Banco completo →</button>
+            </div>
           </div>
           <div id="editalList" class="edital-board"></div>
         </section>
 
         <section class="view hidden" data-view="questions">
           <div class="page-head">
-            <div><p class="eyebrow">BANCO DE QUESTÕES</p><h1>Monte uma bateria</h1><p>Os filtros atualizam a quantidade disponível em tempo real.</p></div>
+            <div><p class="eyebrow">BANCO DE QUESTÕES</p><h1>Monte uma bateria</h1><p>Defina o recorte, a quantidade e o modo de resolução.</p></div>
+            <div class="page-head-actions"><button id="filterToggle" class="secondary filter-toggle" type="button" aria-controls="filterPanel" aria-expanded="false">☷ Exibir filtros</button></div>
           </div>
+          <div id="activeFilters" class="active-filters" aria-label="Filtros ativos"></div>
           <div class="bank-layout">
-            <aside class="filter-panel card" aria-label="Filtros do banco">
+            <aside id="filterPanel" class="filter-panel card" aria-label="Filtros do banco">
               <label>Órgão<select id="filterOrgao"></select></label>
               <label>Cargo<select id="filterCargo"></select></label>
               <label>Banca<select id="filterBanca"></select></label>
@@ -192,6 +221,10 @@
         <section class="view hidden" data-view="resolver">
           <div class="resolver-shell">
             <article class="card resolver-card">
+              <div class="resolver-progress-wrap">
+                <div class="resolver-progress-copy"><span id="resolverModeLabel">Treino comentado</span><span id="resolverProgressLabel">Progresso da bateria</span></div>
+                <div id="resolverProgress" class="resolver-progress" role="progressbar" aria-label="Progresso da bateria" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="resolverProgressBar"></span></div>
+              </div>
               <div class="resolver-topline">
                 <span id="resolverPosition">1/1</span>
                 <span id="resolverTimer">00:00</span>
@@ -200,7 +233,7 @@
               <div id="questionMeta" class="chips"></div>
               <div id="questionText" class="question-text"></div>
               <div id="answers" class="answers"></div>
-              <div id="feedback" class="feedback hidden"></div>
+              <div id="feedback" class="feedback hidden" role="status" aria-live="polite" tabindex="-1"></div>
               <section class="question-notes" aria-labelledby="questionNoteTitle">
                 <div class="card-head">
                   <div><span class="kicker">ANOTAÇÃO</span><h2 id="questionNoteTitle">Minha anotação</h2></div>
@@ -235,6 +268,7 @@
         <section class="view hidden" data-view="performance">
           <div class="page-head"><div><p class="eyebrow">DESEMPENHO</p><h1>O que seus dados sugerem estudar</h1></div></div>
           <div id="performanceMetrics" class="metrics"></div>
+          <div id="performanceInsights" class="performance-insights" aria-label="Próximas ações sugeridas"></div>
           <div id="performanceCharts" class="performance-charts"></div>
           <div class="section-heading"><span class="kicker">DETALHAMENTO</span><h2>Desempenho por disciplina</h2></div>
           <div id="performanceBreakdown" class="grid two"></div>
@@ -272,6 +306,11 @@
               </div>
               <p class="release-note">A nuvem guarda somente o estado do seu estudo — sessões, respostas, marcações, revisões e anotações. As questões continuam no GitHub.</p>
             </article>
+            <article id="installCard" class="card install-card">
+              <div class="card-head"><div><span class="kicker">ACESSO RÁPIDO</span><h2>Instalar a plataforma</h2></div><span class="install-icon" aria-hidden="true">↓</span></div>
+              <p id="installStatus">Instale no celular, iPad ou computador para abrir como aplicativo e manter a experiência disponível após a primeira visita.</p>
+              <button id="installApp" class="primary" type="button">Instalar neste aparelho</button>
+            </article>
             <article class="card"><h2>Dados neste aparelho</h2><p>O conteúdo não é alterado por estes comandos. Exporte uma cópia local ou zere somente os dados deste aparelho.</p><button id="exportProgress" class="secondary">Exportar progresso</button> <button id="resetProgress" class="danger">Zerar este aparelho</button></article>
           </div>
         </section>
@@ -280,6 +319,6 @@
   </div>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
-  <script type="module" src="./assets/app.js?v=tjdft-provas9"></script>
+  <script type="module" src="./assets/app.js?v=platform-v2-1"></script>
 </body>
 </html>

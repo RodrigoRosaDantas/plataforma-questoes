@@ -14,7 +14,8 @@ const ROUTES = [
 const state = {
   questions: [], meta: {}, competitions: [], editais: [], officialExams: [], filtered: [],
   session: null, timer: null, startedAt: null, currentView: 'home', hiddenAt: null, syncLabel: 'Release publicada',
-  cloudSyncTimer: null, noteDrafts: {},
+  cloudSyncTimer: null, noteDrafts: {}, searchTimer: null, editalTimer: null,
+  installPrompt: null, swRegistration: null, editalQuery: '', filtersOpen: false,
   cloud: {status:'loading',email:'',profileId:'',message:''}
 };
 
@@ -25,6 +26,74 @@ const uniq = arr => [...new Set(arr.filter(v => v !== null && v !== undefined &&
 const escapeHtml = s => String(s ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
 const seconds = ms => Math.max(0, Math.floor(ms/1000));
 const clock = sec => `${String(Math.floor(sec/60)).padStart(2,'0')}:${String(sec%60).padStart(2,'0')}`;
+const VIEW_IDS = new Set(['home','edits','questions','proofs','simulations','resolver','result','review','performance','import','settings']);
+const FILTER_TO_ELEMENT = {orgao:'filterOrgao',cargo:'filterCargo',banca:'filterBanca',ano:'filterAno',disciplina:'filterDisciplina',assunto:'filterAssunto',formato:'filterFormato',text:'filterText'};
+const FILTER_LABELS = {orgao:'Órgão',cargo:'Cargo',banca:'Banca',ano:'Ano',disciplina:'Disciplina',assunto:'Assunto',formato:'Formato',text:'Texto'};
+
+function routeFromUrl(){
+  const route=new URL(window.location.href).searchParams.get('view')||'home';
+  return VIEW_IDS.has(route)?route:'home';
+}
+function syncViewUrl(view,replace=false){
+  const url=new URL(window.location.href);
+  if(view==='home')url.searchParams.delete('view');else url.searchParams.set('view',view);
+  window.history[replace?'replaceState':'pushState']({view},'',url);
+}
+function setSidebarOpen(open){
+  const sidebar=$('#sidebar'),backdrop=$('#sidebarBackdrop'),button=$('#menuButton');
+  if(!sidebar||!backdrop||!button)return;
+  sidebar.classList.toggle('open',open);
+  backdrop.classList.toggle('hidden',!open);
+  button.setAttribute('aria-expanded',String(open));
+  button.setAttribute('aria-label',open?'Fechar menu':'Abrir menu');
+  document.body.classList.toggle('menu-open',open);
+}
+function setTheme(theme){
+  const next=theme==='dark'?'dark':'light';
+  document.documentElement.dataset.theme=next;
+  localStorage.setItem('plataforma.questoes.theme',next);
+  const button=$('#themeButton');
+  if(button){button.setAttribute('aria-pressed',String(next==='dark'));button.setAttribute('aria-label',next==='dark'?'Usar tema claro':'Usar tema escuro');}
+  const meta=document.querySelector('meta[name="theme-color"]');
+  if(meta)meta.content=next==='dark'?'#090f20':'#111936';
+}
+function updateNetworkStatus(){
+  const online=navigator.onLine;
+  const status=$('#networkStatus');
+  if(status){status.textContent=online?'Online':'Offline';status.classList.toggle('offline',!online);}
+}
+function completeLoading(){
+  document.body.setAttribute('aria-busy','false');
+  const loading=$('#appLoading');if(loading)loading.hidden=true;
+}
+function renderProgressSurface(){
+  if(state.currentView==='home')renderHome();
+  if(state.currentView==='review')renderReview();
+  if(state.currentView==='performance')renderPerformance();
+}
+function shuffleItems(items){
+  const shuffled=[...items];
+  for(let i=shuffled.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[shuffled[i],shuffled[j]]=[shuffled[j],shuffled[i]];}
+  return shuffled;
+}
+function isStandalone(){
+  return window.matchMedia?.('(display-mode: standalone)').matches||window.navigator.standalone===true;
+}
+function renderInstallState(){
+  const card=$('#installCard'),button=$('#installApp'),status=$('#installStatus');
+  if(!card||!button||!status)return;
+  if(isStandalone()){status.textContent='A plataforma já está instalada neste aparelho.';button.classList.add('hidden');return;}
+  button.classList.remove('hidden');
+  const isiOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
+  if(state.installPrompt){button.textContent='Instalar neste aparelho';status.textContent='Instalação disponível. Seus dados locais continuam neste aparelho e podem ser sincronizados pela conta.';}
+  else if(isiOS){button.textContent='Como instalar no iPhone ou iPad';status.textContent='No Safari, toque em Compartilhar e depois em “Adicionar à Tela de Início”.';}
+  else{button.textContent='Ver opção de instalação';status.textContent='Use a opção “Instalar aplicativo” do menu do navegador quando ela estiver disponível.';}
+}
+async function installApp(){
+  if(state.installPrompt){state.installPrompt.prompt();await state.installPrompt.userChoice;state.installPrompt=null;renderInstallState();return;}
+  const isiOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
+  toast(isiOS?'No Safari: Compartilhar → Adicionar à Tela de Início.':'Abra o menu do navegador e escolha “Instalar aplicativo”.');
+}
 
 
 const DEFAULT_SCORING_POLICY = {
@@ -114,8 +183,11 @@ async function boot(){
     state.syncLabel=state.meta.sampleMode?'Amostra local':'Release publicada';
     renderNav(); bindGlobal(); populateFilters(); applyFilters(); renderAll();
     const progress=store.load(); if(progress.activeSession) hydrateSession(progress.activeSession);
+    const requested=routeFromUrl();
+    navigate(requested==='resolver'&&!state.session?'home':requested,{history:false});
     void initCloudProgress();
-    if('serviceWorker' in navigator) navigator.serviceWorker.register('./service-worker.js').catch(()=>{});
+    if('serviceWorker' in navigator) navigator.serviceWorker.register('./service-worker.js').then(registration=>{state.swRegistration=registration;return registration.update();}).catch(()=>{});
+    completeLoading();
   }catch(err){
     document.body.innerHTML='<main style="padding:32px"><h1>Não foi possível carregar a release.</h1><p>'+escapeHtml(err.message)+'</p></main>';
   }
@@ -132,6 +204,7 @@ async function refreshRelease(){
     state.questions=q; state.meta=m; state.competitions=c; state.editais=e; state.officialExams=p; state.filtered=[...q];
     state.syncLabel='Atualizada · '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
     populateFilters(); applyFilters(); renderAll();
+    state.swRegistration?.update().catch(()=>{});
     toast('Release atualizada: '+fmt(q.length)+' questões disponíveis.');
   }catch(err){
     state.syncLabel='Atualização indisponível';
@@ -264,23 +337,41 @@ function buildVerticalizedEditais(){
 }
 
 function bindGlobal(){
-  document.addEventListener('click', e=>{
-    const topic=e.target.closest('[data-topic-orgao]'); if(topic){openTopic(topic.dataset.topicOrgao,topic.dataset.topicDisciplina,topic.dataset.topicAssunto,topic.dataset.topicCargo);return;}
-    const edital=e.target.closest('[data-edital-filter]'); if(edital){openCompetition(edital.dataset.editalFilter);return;}
-    const quick=e.target.closest('[data-quick-filter]'); if(quick){openQuickFilter(quick.dataset.quickFilter);return;}
-    const refresh=e.target.closest('[data-refresh-release]'); if(refresh){refreshRelease();return;}
-    const go=e.target.closest('[data-go]'); if(go){navigate(go.dataset.go);}
+  document.addEventListener('click',e=>{
+    const topic=e.target.closest('[data-topic-orgao]');if(topic){openTopic(topic.dataset.topicOrgao,topic.dataset.topicDisciplina,topic.dataset.topicAssunto,topic.dataset.topicCargo);return;}
+    const edital=e.target.closest('[data-edital-filter]');if(edital){openCompetition(edital.dataset.editalFilter);return;}
+    const quick=e.target.closest('[data-quick-filter]');if(quick){openQuickFilter(quick.dataset.quickFilter);return;}
+    const insight=e.target.closest('[data-insight-discipline]');if(insight){openDiscipline(insight.dataset.insightDiscipline);return;}
+    const removeFilter=e.target.closest('[data-remove-filter]');if(removeFilter){
+      const key=removeFilter.dataset.removeFilter,id=FILTER_TO_ELEMENT[key],element=id?$('#'+id):null;
+      if(element)element.value='';
+      if(key==='text')$('#globalSearch').value='';
+      applyFilters();return;
+    }
+    const refresh=e.target.closest('[data-refresh-release]');if(refresh){refreshRelease();return;}
+    const go=e.target.closest('[data-go]');if(go){navigate(go.dataset.go);}
   });
-  $('#menuButton').addEventListener('click',()=>$('#sidebar').classList.toggle('open'));
-  $('#themeButton').addEventListener('click',()=>{
-    const root=document.documentElement; const dark=root.dataset.theme==='dark'; root.dataset.theme=dark?'light':'dark'; localStorage.setItem('plataforma.questoes.theme',root.dataset.theme);
+  $('#menuButton').addEventListener('click',()=>setSidebarOpen(!$('#sidebar').classList.contains('open')));
+  $('#sidebarBackdrop').addEventListener('click',()=>setSidebarOpen(false));
+  const savedTheme=localStorage.getItem('plataforma.questoes.theme');
+  setTheme(savedTheme||'light');
+  $('#themeButton').addEventListener('click',()=>setTheme(document.documentElement.dataset.theme==='dark'?'light':'dark'));
+  $('#globalSearch').addEventListener('input',event=>{
+    clearTimeout(state.searchTimer);
+    state.searchTimer=setTimeout(()=>{if(state.currentView!=='questions')navigate('questions');$('#filterText').value=event.target.value;applyFilters();},120);
   });
-  const savedTheme=localStorage.getItem('plataforma.questoes.theme'); if(savedTheme) document.documentElement.dataset.theme=savedTheme;
-  $('#globalSearch').addEventListener('input',e=>{ if(state.currentView!=='questions') navigate('questions'); $('#filterText').value=e.target.value; applyFilters(); });
-  document.addEventListener('keydown',e=>{ if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();$('#globalSearch').focus();}});
-  $('#clearFilters').addEventListener('click',()=>{ ['filterOrgao','filterCargo','filterBanca','filterAno','filterDisciplina','filterAssunto','filterFormato'].forEach(id=>$('#'+id).value=''); $('#filterText').value=''; $('#globalSearch').value=''; applyFilters(); });
+  $('#editalSearch')?.addEventListener('input',event=>{
+    clearTimeout(state.editalTimer);
+    state.editalTimer=setTimeout(()=>{state.editalQuery=event.target.value;renderEditais();},120);
+  });
+  $('#filterToggle')?.addEventListener('click',()=>setFilterPanelOpen(!state.filtersOpen));
+  document.addEventListener('keydown',event=>{
+    if((event.metaKey||event.ctrlKey)&&event.key.toLowerCase()==='k'){event.preventDefault();$('#globalSearch').focus();}
+    if(event.key==='Escape'&&$('#sidebar').classList.contains('open')){setSidebarOpen(false);$('#menuButton').focus();}
+  });
+  $('#clearFilters').addEventListener('click',()=>{resetQuestionFilters();applyFilters();});
   ['filterOrgao','filterCargo','filterBanca','filterAno','filterDisciplina','filterAssunto','filterFormato'].forEach(id=>$('#'+id).addEventListener('change',applyFilters));
-  $('#filterText').addEventListener('input',applyFilters);
+  $('#filterText').addEventListener('input',event=>{$('#globalSearch').value=event.target.value;applyFilters();});
   $('#startSession').addEventListener('click',startSessionFromFilters);
   $('#prevQuestion').addEventListener('click',()=>moveQuestion(-1));
   $('#nextQuestion').addEventListener('click',()=>moveQuestion(1));
@@ -299,25 +390,37 @@ function bindGlobal(){
   $('#importFile').addEventListener('change',validateImport);
   $('#exportProgress').addEventListener('click',exportProgress);
   $('#resetProgress').addEventListener('click',resetProgress);
+  $('#installApp')?.addEventListener('click',installApp);
   $('#cloudSignIn')?.addEventListener('click',requestCloudAccess);
   $('#cloudEmail')?.addEventListener('keydown',event=>{if(event.key==='Enter')requestCloudAccess();});
   $('#cloudSync')?.addEventListener('click',()=>syncCloudProgress());
   $('#cloudSignOut')?.addEventListener('click',async()=>{await cloudProgress.signOut();toast('Conta desconectada.');renderCloudAccount();});
-  window.addEventListener('online',()=>syncCloudProgress({silent:true}));
+  window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();state.installPrompt=event;renderInstallState();});
+  window.addEventListener('appinstalled',()=>{state.installPrompt=null;renderInstallState();toast('Plataforma instalada.');});
+  window.addEventListener('online',()=>{updateNetworkStatus();syncCloudProgress({silent:true});});
+  window.addEventListener('offline',updateNetworkStatus);
+  window.addEventListener('popstate',()=>navigate(routeFromUrl(),{history:false}));
   document.addEventListener('visibilitychange',handleVisibilityChange);
   window.addEventListener('pagehide',pauseSessionForExit);
   window.addEventListener('pageshow',resumeSessionAfterReturn);
-  window.addEventListener('progress:changed',()=>renderAll());
+  window.addEventListener('progress:changed',renderProgressSurface);
+  updateNetworkStatus();renderInstallState();
 }
 
-function navigate(view){
-  if(view==='resolver' && !state.session) return;
+function navigate(view,options={}){
+  if(!VIEW_IDS.has(view))view='home';
+  if(view==='resolver'&&!state.session)return;
   state.currentView=view;
-  $$('.view').forEach(v=>v.classList.toggle('hidden',v.dataset.view!==view));
-  $$('#nav [data-go]').forEach(b=>b.classList.toggle('active',b.dataset.go===view));
-  $('#sidebar').classList.remove('open');
-  $('#main').focus({preventScroll:true}); window.scrollTo({top:0,behavior:'smooth'});
-  if(view==='review') renderReview(); if(view==='performance') renderPerformance();
+  $$('.view').forEach(element=>element.classList.toggle('hidden',element.dataset.view!==view));
+  $$('#nav [data-go]').forEach(button=>{const active=button.dataset.go===view;button.classList.toggle('active',active);if(active)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current');});
+  setSidebarOpen(false);
+  if(options.history!==false)syncViewUrl(view,Boolean(options.replace));
+  const routeLabel=ROUTES.find(route=>route[0]===view)?.[2]||({resolver:'Resolver',result:'Resultado'}[view]||'Plataforma');
+  document.title=(view==='home'?'Plataforma de Questões':routeLabel+' · Plataforma de Questões');
+  $('#main').focus({preventScroll:true});
+  window.scrollTo({top:0,behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
+  if(view==='review')renderReview();
+  if(view==='performance')renderPerformance();
 }
 
 function resetQuestionFilters(){
@@ -343,8 +446,18 @@ function openCompetition(competitionId){
   toast(sample?fmt(state.filtered.length)+' questões nesta trilha.':'Ainda não há questões publicadas nesta trilha.');
 }
 function openQuickFilter(quickFilter){
-  if(quickFilter==='seedf'){openCompetition('seedf');return;}
-  navigate('questions'); resetQuestionFilters(); applyFilters();
+  if(quickFilter==='seedf'||quickFilter==='tjdft'){openCompetition(quickFilter);return;}
+  navigate('questions');resetQuestionFilters();applyFilters();
+}
+function openDiscipline(discipline){
+  navigate('questions');resetQuestionFilters();setQuestionFilter('filterDisciplina',discipline);applyFilters();
+  toast(fmt(state.filtered.length)+' questões encontradas nesta disciplina.');
+}
+function setFilterPanelOpen(open){
+  state.filtersOpen=Boolean(open);
+  const panel=$('#filterPanel'),toggle=$('#filterToggle');
+  if(panel)panel.classList.toggle('open',state.filtersOpen);
+  if(toggle){toggle.setAttribute('aria-expanded',String(state.filtersOpen));toggle.textContent=state.filtersOpen?'× Ocultar filtros':'☷ Exibir filtros';}
 }
 function populateSelect(id, values, label='Todos'){
   const el=$('#'+id), old=el.value; el.innerHTML=`<option value="">${label}</option>`+uniq(values).map(v=>`<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join('');
@@ -360,6 +473,12 @@ function populateFilters(){
   populateSelect('filterFormato',state.questions.map(q=>q.formato));
 }
 
+function renderActiveFilters(filters){
+  const root=$('#activeFilters');if(!root)return;
+  const active=Object.entries(filters).filter(([,value])=>value);
+  root.innerHTML=active.map(([key,value])=>`<span class="filter-chip"><span>${escapeHtml(FILTER_LABELS[key]||key)}: ${escapeHtml(value)}</span><button type="button" data-remove-filter="${escapeHtml(key)}" aria-label="Remover filtro ${escapeHtml(FILTER_LABELS[key]||key)}">×</button></span>`).join('');
+  const toggle=$('#filterToggle');if(toggle&&!state.filtersOpen)toggle.textContent=active.length?`☷ Filtros (${active.length})`:'☷ Exibir filtros';
+}
 function applyFilters(){
   const f={orgao:$('#filterOrgao').value,cargo:$('#filterCargo').value,banca:$('#filterBanca').value,ano:$('#filterAno').value,disciplina:$('#filterDisciplina').value,assunto:$('#filterAssunto').value,formato:$('#filterFormato').value,text:$('#filterText').value.trim().toLowerCase()};
   state.filtered=state.questions.filter(q=>{
@@ -369,8 +488,8 @@ function applyFilters(){
     return true;
   });
   const n=state.filtered.length; $('#availableCount').textContent=`${fmt(n)} ${n===1?'questão disponível':'questões disponíveis'}`; $('#sessionSize').max=Math.max(1,n); if(+$('#sessionSize').value>n) $('#sessionSize').value=Math.max(1,n);
-  const active=Object.entries(f).filter(([,v])=>v).map(([k,v])=>`${k}: ${v}`); $('#filterSummary').textContent=active.length?active.join(' · '):'Sem filtros adicionais.';
-  renderQuestionPreview();
+  const active=Object.entries(f).filter(([,v])=>v).map(([k,v])=>`${FILTER_LABELS[k]||k}: ${v}`);$('#filterSummary').textContent=active.length?active.join(' · '):'Sem filtros adicionais.';
+  renderActiveFilters(f);renderQuestionPreview();
 }
 
 function renderQuestionPreview(){
@@ -393,7 +512,10 @@ function renderHome(){
   focusCounts.forEach(([id,competitionId])=>{const el=$('#'+id);if(el)el.textContent=fmt(state.questions.filter(q=>questionBelongsTo(q,competitionId)).length);});
   const syncStatus=$('#syncStatus'); if(syncStatus) syncStatus.textContent=state.syncLabel;
   const heroReleaseCount=$('#heroReleaseCount');
-  if(heroReleaseCount) heroReleaseCount.textContent=fmt(state.questions.length);
+  if(heroReleaseCount)heroReleaseCount.textContent=fmt(state.questions.length);
+  const heroSeedf=$('#heroSeedfCount');if(heroSeedf)heroSeedf.textContent=fmt(state.questions.filter(q=>questionBelongsTo(q,'seedf')).length);
+  const heroTjdft=$('#heroTjdftCount');if(heroTjdft)heroTjdft.textContent=fmt(state.questions.filter(q=>questionBelongsTo(q,'tjdft')).length);
+  const heroPrecision=$('#heroPrecision');if(heroPrecision)heroPrecision.textContent=precision+'%';
   $('#datasetStamp').textContent=`${state.meta.sampleMode?'Amostra local':'Release'} · ${state.meta.generatedAt?new Date(state.meta.generatedAt).toLocaleString('pt-BR'):''}`;
   $('#connectionBadge').textContent=state.meta.sampleMode?'Amostra — sincronize Notion':'Release publicada';
   const banner=$('#sampleBanner'); banner.classList.toggle('hidden',!state.meta.sampleMode); if(state.meta.sampleMode) banner.innerHTML=`<strong>Modo de amostra.</strong> Esta cópia contém ${fmt(state.questions.length)} ${state.questions.length===1?'questão':'questões'} para validar a interface. O Banco Mestre auditado possui ${fmt(state.meta.sourceAudit?.records||0)} registros; execute o workflow de sincronização para gerar a release completa.`;
@@ -434,22 +556,36 @@ function renderCompetitions(){
     return `<article class='competition-card'><span class='status'>${escapeHtml(String(c.status||'ativo').toUpperCase())}</span><h3>${escapeHtml(c.name)}</h3><p>${escapeHtml(c.description)}</p><div class='competition-count'><strong>${fmt(count)}</strong><span>questões associadas</span></div><small>${escapeHtml(status)}</small>${action}</article>`;
   }).join('');
 }
+function normalizeSearch(value){return String(value||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('pt-BR');}
 function renderEditais(){
-  const editais=buildVerticalizedEditais();
-  const totalQuestions=editais.reduce((sum,e)=>sum+e.questionCount,0);
-  const editalStatus=$('#editalStatus'); if(editalStatus) editalStatus.textContent=fmt(totalQuestions)+' questões mapeadas na release';
-  $('#editalList').innerHTML=editais.map(e=>{
-    const axes=e.axes||[];
-    const axisMarkup=axes.length?`<div class='edital-axis-list'>${axes.map(axis=>{
-      const topics=axis.topics.length?`<div class='topic-list'>${axis.topics.map(topic=>{
+  const editais=buildVerticalizedEditais(),query=normalizeSearch(state.editalQuery);
+  const totalQuestions=editais.reduce((sum,edital)=>sum+edital.questionCount,0);
+  const visible=editais.map(edital=>{
+    const editalMatch=query&&normalizeSearch([edital.title,edital.competitionId].join(' ')).includes(query);
+    const axes=(edital.axes||[]).map(axis=>{
+      const axisMatch=query&&normalizeSearch(axis.label).includes(query);
+      const topics=!query||editalMatch||axisMatch?axis.topics:axis.topics.filter(topic=>normalizeSearch([topic.label,...topic.subassuntos].join(' ')).includes(query));
+      return {...axis,topics,searchMatch:Boolean(axisMatch)};
+    }).filter(axis=>!query||editalMatch||axis.searchMatch||axis.topics.length);
+    return {...edital,axes,searchMatch:Boolean(editalMatch)};
+  }).filter(edital=>!query||edital.searchMatch||edital.axes.length);
+  const visibleTopics=visible.reduce((sum,edital)=>sum+edital.axes.reduce((inner,axis)=>inner+axis.topics.length,0),0);
+  const editalStatus=$('#editalStatus');
+  if(editalStatus)editalStatus.textContent=query?fmt(visibleTopics)+(visibleTopics===1?' tópico encontrado':' tópicos encontrados'):fmt(totalQuestions)+' questões mapeadas na release';
+  const root=$('#editalList');
+  if(!visible.length){root.innerHTML='<article class="card edital-no-results"><span class="kicker">SEM RESULTADOS</span><h2>Nenhum tópico corresponde à busca</h2><p>Tente outro termo ou limpe a pesquisa para ver o edital completo.</p></article>';return;}
+  root.innerHTML=visible.map(edital=>{
+    const axes=edital.axes||[];
+    const axisMarkup=axes.length?`<div class="edital-axis-list">${axes.map((axis,axisIndex)=>{
+      const topics=axis.topics.length?`<div class="topic-list">${axis.topics.map(topic=>{
         const visibleSubs=topic.subassuntos.slice(0,3).join(' · ');
         const detail=visibleSubs?`Subassuntos: ${escapeHtml(visibleSubs)}${topic.subassuntos.length>3?' · …':''}`:'Taxonomia do banco publicada';
-        return `<button type='button' class='topic-row' data-topic-orgao='${escapeHtml(topic.filter.orgao)}' data-topic-cargo='${escapeHtml(topic.filter.cargo||'')}' data-topic-disciplina='${escapeHtml(topic.filter.disciplina)}' data-topic-assunto='${escapeHtml(topic.filter.assunto)}' aria-label='Fazer ${fmt(topic.questionCount)} questões de ${escapeHtml(topic.label)}'><span class='topic-copy'><strong>${escapeHtml(topic.label)}</strong><small>${detail}</small></span><span class='topic-action'><b>${fmt(topic.questionCount)}</b><small>Fazer questões →</small></span></button>`;
-      }).join('')}</div>`:`<div class='topic-empty'>Ainda não há assuntos cadastrados nesta disciplina.</div>`;
-      return `<section class='edital-axis'><div class='edital-axis-head'><div><span class='kicker'>${fmt(axis.topics.length)} TÓPICOS</span><h3>${escapeHtml(axis.label)}</h3></div><span class='axis-count'>${fmt(axis.questionCount)} questões</span></div>${topics}${axis.unmappedCount?`<p class='axis-note'>${fmt(axis.unmappedCount)} questões desta disciplina ainda sem assunto cadastrado.</p>`:''}</section>`;
-    }).join('')}</div>`:`<div class='edital-empty'><strong>Este verticalizado ainda não tem questões mapeadas.</strong><span>Quando a trilha entrar na release do Notion, os tópicos aparecerão aqui automaticamente.</span><button type='button' class='secondary' data-edital-filter='${escapeHtml(e.competitionId)}'>Abrir banco da trilha</button></div>`;
-    const status=e.questionCount?`<span class='status-badge status-live'>Mapeamento disponível</span>`:`<span class='status-badge status-empty'>Aguardando questões</span>`;
-    return `<article class='card edital-card'><div class='edital-card-head'><div><span class='kicker'>${escapeHtml(String(e.competitionId||'').toUpperCase())}</span><h2>${escapeHtml(e.title)}</h2><p>${escapeHtml(e.mappingNote)}</p></div><div class='edital-count'><strong>${fmt(e.questionCount)}</strong><span>questões no recorte</span></div></div><div class='edital-summary'>${status}<span>${fmt(e.mappedQuestionCount)} em tópicos · ${fmt(e.axisCount)} disciplinas</span></div><p class='edital-note'>Escolha um tópico para abrir o banco já filtrado e começar a responder somente aquele conteúdo.</p>${axisMarkup}<div class='edital-footer'><small>Fonte: ${escapeHtml(e.source||'Release publicada')}</small>${e.questionCount?`<button type='button' class='secondary' data-edital-filter='${escapeHtml(e.competitionId)}'>Abrir todas as questões</button>`:''}</div></article>`;
+        return `<button type="button" class="topic-row" data-topic-orgao="${escapeHtml(topic.filter.orgao)}" data-topic-cargo="${escapeHtml(topic.filter.cargo||'')}" data-topic-disciplina="${escapeHtml(topic.filter.disciplina)}" data-topic-assunto="${escapeHtml(topic.filter.assunto)}" aria-label="Fazer ${fmt(topic.questionCount)} questões de ${escapeHtml(topic.label)}"><span class="topic-copy"><strong>${escapeHtml(topic.label)}</strong><small>${detail}</small></span><span class="topic-action"><b>${fmt(topic.questionCount)}</b><small>Fazer questões →</small></span></button>`;
+      }).join('')}</div>`:'<div class="topic-empty">Ainda não há assuntos cadastrados nesta disciplina.</div>';
+      return `<details class="edital-axis" ${query||axisIndex===0?'open':''}><summary class="edital-axis-head"><div><span class="kicker">${fmt(axis.topics.length)} TÓPICOS</span><h3>${escapeHtml(axis.label)}</h3></div><span class="axis-count">${fmt(axis.questionCount)} questões</span></summary>${topics}${axis.unmappedCount?`<p class="axis-note">${fmt(axis.unmappedCount)} questões desta disciplina ainda sem assunto cadastrado.</p>`:''}</details>`;
+    }).join('')}</div>`:`<div class="edital-empty"><strong>Este verticalizado ainda não tem questões mapeadas.</strong><span>Quando a trilha entrar na release do Notion, os tópicos aparecerão aqui automaticamente.</span><button type="button" class="secondary" data-edital-filter="${escapeHtml(edital.competitionId)}">Abrir banco da trilha</button></div>`;
+    const status=edital.questionCount?'<span class="status-badge status-live">Mapeamento disponível</span>':'<span class="status-badge status-empty">Aguardando questões</span>';
+    return `<article class="card edital-card"><div class="edital-card-head"><div><span class="kicker">${escapeHtml(String(edital.competitionId||'').toUpperCase())}</span><h2>${escapeHtml(edital.title)}</h2><p>${escapeHtml(edital.mappingNote)}</p></div><div class="edital-count"><strong>${fmt(edital.questionCount)}</strong><span>questões no recorte</span></div></div><div class="edital-summary">${status}<span>${fmt(edital.mappedQuestionCount)} em tópicos · ${fmt(edital.axisCount)} disciplinas</span></div><p class="edital-note">Abra uma disciplina e escolha o tópico. A bateria será criada somente com aquele conteúdo.</p>${axisMarkup}<div class="edital-footer"><small>Fonte: ${escapeHtml(edital.source||'Release publicada')}</small>${edital.questionCount?`<button type="button" class="secondary" data-edital-filter="${escapeHtml(edital.competitionId)}">Abrir todas as questões</button>`:''}</div></article>`;
   }).join('');
 }
 function renderMaterials(){
@@ -493,7 +629,7 @@ function startSessionFromFilters(){
   const poolSource=state.filtered.filter(q=>answerOptions(q).length); const max=poolSource.length;
   if(!max){toast('Nenhuma questão objetiva disponível neste recorte.');return;}
   if(max!==state.filtered.length) toast('Questões discursivas foram mantidas fora da bateria objetiva.');
-  const size=Math.min(max,Math.max(1,+$('#sessionSize').value||10)); let pool=[...poolSource]; if($('#shuffleQuestions').checked) pool.sort(()=>Math.random()-.5); pool=pool.slice(0,size);
+  const size=Math.min(max,Math.max(1,+$('#sessionSize').value||10));let pool=$('#shuffleQuestions').checked?shuffleItems(poolSource):[...poolSource];pool=pool.slice(0,size);
   createSession(pool,$('#sessionMode').value);
 }
 function createSession(items,mode='training'){
@@ -532,31 +668,54 @@ function saveQuestionTime(now=Date.now()){
   state.session.questionTimes[q.id]=(state.session.questionTimes[q.id]||0)+delta; state.session.currentEnteredAt=now;
 }
 function renderResolver(){
-  if(!state.session)return; const q=currentQuestion(); if(!q)return; const s=state.session, p=store.load();
-  $('#resolverPosition').textContent=`${s.index+1}/${s.items.length}`; $('#resolverTimer').textContent=clock(seconds(elapsedMs(s)));
-  $('#questionMeta').innerHTML=[q.formato,q.disciplina,q.assunto,q.banca].map(chip).join(''); $('#questionText').textContent=q.enunciado;
-  const opts=answerOptions(q); const chosen=s.answers[q.id]; const confirmed=!!s.confirmed[q.id];
-  const isBinary=q.formato==='Certo / Errado' || ['Certo','Errado'].includes(q.gabarito);
-  $('#answers').innerHTML=opts.map(([key,text])=>{let cls='answer'; if(chosen===key)cls+=' selected'; if(confirmed&&s.mode==='training'){if(key===q.gabarito)cls+=' correct';else if(chosen===key)cls+=' wrong';} const answerKey=isBinary?String(key).slice(0,1):key; return `<button type="button" class="${cls}" data-answer="${escapeHtml(key)}" ${confirmed?'disabled':''} aria-label="${escapeHtml(text)}"><span class="answer-key">${escapeHtml(answerKey)}</span><span class="answer-copy">${escapeHtml(text)}</span></button>`;}).join('');
-  $$('#answers [data-answer]').forEach(b=>b.addEventListener('click',()=>{s.answers[q.id]=b.dataset.answer;persistActive();renderResolver();}));
-  const feedback=$('#feedback'); feedback.classList.toggle('hidden',!(confirmed&&s.mode==='training')); if(confirmed&&s.mode==='training') feedback.innerHTML=feedbackHtml(q,chosen);
+  if(!state.session)return;
+  const q=currentQuestion();if(!q)return;
+  const s=state.session,p=store.load(),position=s.index+1,total=s.items.length,percent=Math.round(position/Math.max(1,total)*100);
+  $('#resolverPosition').textContent=`${position}/${total}`;
+  $('#resolverTimer').textContent=clock(seconds(elapsedMs(s)));
+  const progress=$('#resolverProgress'),progressBar=$('#resolverProgressBar');
+  if(progress){progress.setAttribute('aria-valuenow',String(percent));progress.setAttribute('aria-valuetext',`Questão ${position} de ${total}`);}
+  if(progressBar)progressBar.style.width=percent+'%';
+  const progressLabel=$('#resolverProgressLabel');if(progressLabel)progressLabel.textContent=`${percent}% concluído`;
+  const modeLabel=$('#resolverModeLabel');if(modeLabel)modeLabel.textContent=s.mode==='exam'?'Modo prova':'Treino comentado';
+  $('#questionMeta').innerHTML=[q.formato,q.disciplina,q.assunto,q.banca].map(chip).join('');
+  const questionText=$('#questionText');questionText.textContent=q.enunciado;questionText.setAttribute('role','heading');questionText.setAttribute('aria-level','2');questionText.setAttribute('tabindex','-1');
+  const opts=answerOptions(q),chosen=s.answers[q.id],confirmed=Boolean(s.confirmed[q.id]);
+  const isBinary=q.formato==='Certo / Errado'||['Certo','Errado'].includes(q.gabarito);
+  const answers=$('#answers');answers.setAttribute('aria-label',`Alternativas da questão ${position}`);
+  answers.innerHTML=opts.map(([key,text])=>{
+    let cls='answer';if(chosen===key)cls+=' selected';if(confirmed&&s.mode==='training'){if(key===q.gabarito)cls+=' correct';else if(chosen===key)cls+=' wrong';}
+    const answerKey=isBinary?String(key).slice(0,1):key;
+    return `<button type="button" class="${cls}" data-answer="${escapeHtml(key)}" ${confirmed?'disabled':''} aria-pressed="${chosen===key}" aria-label="${escapeHtml(text)}"><span class="answer-key">${escapeHtml(answerKey)}</span><span class="answer-copy">${escapeHtml(text)}</span></button>`;
+  }).join('');
+  $$('#answers [data-answer]').forEach(button=>button.addEventListener('click',()=>{
+    s.answers[q.id]=button.dataset.answer;persistActive();renderResolver();
+    [...$$('#answers [data-answer]')].find(item=>item.dataset.answer===s.answers[q.id])?.focus();
+  }));
+  const feedback=$('#feedback'),showFeedback=confirmed&&s.mode==='training';
+  feedback.classList.toggle('hidden',!showFeedback);feedback.classList.remove('is-correct','is-wrong');
+  if(showFeedback){feedback.innerHTML=feedbackHtml(q,chosen);feedback.classList.add(chosen===q.gabarito?'is-correct':'is-wrong');}
   const savedNote=typeof p.notes[q.id]==='string'?p.notes[q.id]:(p.notes[q.id]?.text||'');
-  const hasDraft=Object.prototype.hasOwnProperty.call(state.noteDrafts,q.id);
-  const noteText=hasDraft?String(state.noteDrafts[q.id]||''):savedNote;
-  const noteInput=$('#questionNote'); if(noteInput){noteInput.value=noteText;noteInput.setAttribute('aria-label','Anotação da questão '+q.id);}
-  const noteCounter=$('#questionNoteCounter'); if(noteCounter)noteCounter.textContent=noteText.length+'/4000';
-  const noteStatus=$('#questionNoteStatus'); if(noteStatus)noteStatus.textContent=hasDraft&&noteText!==savedNote?'Edição não salva':noteText?'Salva neste aparelho':'Ainda não salva';
-  $('#confirmAnswer').classList.toggle('hidden',confirmed); $('#nextQuestion').classList.toggle('hidden',!confirmed||s.index===s.items.length-1); $('#finishSession').classList.toggle('hidden',!confirmed||s.index!==s.items.length-1);
-  $('#prevQuestion').disabled=s.index===0; const marked=!!p.marked[q.id]&&!p.marked[q.id].removed; $('#markQuestion').textContent=marked?'★ Marcada':'☆ Marcar'; renderQuestionMap();
+  const hasDraft=Object.prototype.hasOwnProperty.call(state.noteDrafts,q.id),noteText=hasDraft?String(state.noteDrafts[q.id]||''):savedNote;
+  const noteInput=$('#questionNote');if(noteInput){noteInput.value=noteText;noteInput.setAttribute('aria-label','Anotação da questão '+q.id);}
+  const noteCounter=$('#questionNoteCounter');if(noteCounter)noteCounter.textContent=noteText.length+'/4000';
+  const noteStatus=$('#questionNoteStatus');if(noteStatus)noteStatus.textContent=hasDraft&&noteText!==savedNote?'Edição não salva':noteText?'Salva neste aparelho':'Ainda não salva';
+  const confirm=$('#confirmAnswer');confirm.classList.toggle('hidden',confirmed);confirm.disabled=!chosen&&!confirmed;
+  $('#nextQuestion').classList.toggle('hidden',!confirmed||s.index===total-1);
+  $('#finishSession').classList.toggle('hidden',!confirmed||s.index!==total-1);
+  $('#prevQuestion').disabled=s.index===0;
+  const marked=Boolean(p.marked[q.id])&&!p.marked[q.id].removed,markButton=$('#markQuestion');
+  markButton.textContent=marked?'★ Marcada':'☆ Marcar';markButton.setAttribute('aria-pressed',String(marked));
+  renderQuestionMap();
 }
 function answerOptions(q){
   if(q.formato==='Certo / Errado' || ['Certo','Errado'].includes(q.gabarito)) return [['Certo','Certo'],['Errado','Errado']];
   return Object.entries(q.alternativas||{}).filter(([,v])=>String(v||'').trim());
 }
 function feedbackHtml(q,chosen){ const ok=chosen===q.gabarito; return `<strong>${ok?'Resposta correta.':'Resposta incorreta.'}</strong> Gabarito: <strong>${escapeHtml(q.gabarito)}</strong>${q.comentarioGeral?`<p>${escapeHtml(q.comentarioGeral)}</p>`:''}${q.fundamentoLegal?`<p><strong>Fundamento:</strong> ${escapeHtml(q.fundamentoLegal)}</p>`:''}${q.pegadinha?`<p><strong>Pegadinha:</strong> ${escapeHtml(q.pegadinha)}</p>`:''}`; }
-function confirmAnswer(){ const q=currentQuestion(), s=state.session; if(!q||!s)return; if(!s.answers[q.id]){toast('Selecione uma resposta.');return;} s.confirmed[q.id]=true; persistActive(); renderResolver(); }
-function moveQuestion(delta){ if(!state.session)return; saveQuestionTime(); const s=state.session; s.index=Math.max(0,Math.min(s.items.length-1,s.index+delta)); persistActive(); renderResolver(); }
-function renderQuestionMap(){ const s=state.session,p=store.load(); $('#questionMap').innerHTML=s.items.map((id,i)=>`<button type="button" data-map="${i}" class="${i===s.index?'current ':''}${s.answers[id]?'answered ':''}${p.marked[id]&&!p.marked[id].removed?'marked':''}">${i+1}</button>`).join(''); $$('#questionMap [data-map]').forEach(b=>b.addEventListener('click',()=>{saveQuestionTime();s.index=+b.dataset.map;s.currentEnteredAt=Date.now();persistActive();renderResolver();})); }
+function confirmAnswer(){const q=currentQuestion(),s=state.session;if(!q||!s)return;if(!s.answers[q.id]){toast('Selecione uma resposta.');return;}s.confirmed[q.id]=true;persistActive();renderResolver();if(s.mode==='training')requestAnimationFrame(()=>$('#feedback')?.focus());}
+function moveQuestion(delta){if(!state.session)return;saveQuestionTime();const s=state.session;s.index=Math.max(0,Math.min(s.items.length-1,s.index+delta));persistActive();renderResolver();requestAnimationFrame(()=>$('#questionText')?.focus());}
+function renderQuestionMap(){const s=state.session,p=store.load(),root=$('#questionMap');root.innerHTML=s.items.map((id,index)=>{const current=index===s.index,answered=Boolean(s.answers[id]),marked=p.marked[id]&&!p.marked[id].removed;return `<button type="button" data-map="${index}" class="${current?'current ':''}${answered?'answered ':''}${marked?'marked':''}" aria-label="Questão ${index+1}${answered?', respondida':''}${marked?', marcada':''}" ${current?'aria-current="step"':''}>${index+1}</button>`;}).join('');$$('#questionMap [data-map]').forEach(button=>button.addEventListener('click',()=>{saveQuestionTime();s.index=+button.dataset.map;s.currentEnteredAt=Date.now();persistActive();renderResolver();requestAnimationFrame(()=>$('#questionText')?.focus());}));}
 function persistActive(){
   if(!state.session)return;
   state.session.lastSavedAt=Date.now();
@@ -621,21 +780,22 @@ function renderPerformance(){
   const history=store.load().history;
   const all=history.flatMap(record=>(record.answers||[]).map(enrichAnswer));
   const total=all.length,attempted=all.filter(answer=>!answer.blank),correct=all.filter(answer=>answer.isCorrect).length;
-  const answeredCount=attempted.length;
-  const precision=attempted.length?correct/attempted.length*100:0;
+  const answeredCount=attempted.length,precision=answeredCount?correct/answeredCount*100:0;
   const avg=total?all.reduce((sum,answer)=>sum+(answer.time||0),0)/total:0;
   const best=history.length?Math.max(...history.map(record=>{const answered=(record.correct||0)+(record.wrong||0);return answered?record.correct/answered*100:0;})):0;
   $('#performanceMetrics').innerHTML=[['Respondidas',answeredCount],['Acertos',correct],['Precisão',precision.toFixed(1)+'%'],['Tempo médio',clock(Math.round(avg))],['Sessões',history.length],['Melhor sessão',best.toFixed(1)+'%']].map(metricHtml).join('');
   const sessions=[...history].sort((a,b)=>(a.finishedAt||0)-(b.finishedAt||0)).slice(-12);
   const trend=sessions.map((record,index)=>{const answered=(record.correct||0)+(record.wrong||0);return {value:answered?record.correct/answered*100:0,label:new Date(record.finishedAt||Date.now()).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})+' · '+(index+1)};});
   const by=aggregateBy(all,'disciplina');
-  const entries=Object.entries(by).sort((a,b)=>{
-    const pa=a[1].correct/Math.max(1,a[1].total-a[1].blank),pb=b[1].correct/Math.max(1,b[1].total-b[1].blank);
-    return pa-pb||b[1].total-a[1].total;
-  });
+  const entries=Object.entries(by).sort((a,b)=>{const pa=a[1].correct/Math.max(1,a[1].total-a[1].blank),pb=b[1].correct/Math.max(1,b[1].total-b[1].blank);return pa-pb||b[1].total-a[1].total;});
+  const insightRoot=$('#performanceInsights');
+  if(insightRoot){
+    const weak=entries.filter(([,value])=>value.total-value.blank>0).slice(0,3);
+    insightRoot.innerHTML=weak.length?weak.map(([discipline,value],index)=>{const answered=value.total-value.blank,percent=answered?value.correct/answered*100:0;return `<article class="insight-card"><span>PRIORIDADE ${index+1}</span><strong>${escapeHtml(discipline||'Sem disciplina')}</strong><p>${percent.toFixed(0)}% de precisão em ${answered} respostas. Uma nova bateria pode consolidar este ponto.</p><button type="button" class="text-button" data-insight-discipline="${escapeHtml(discipline)}">Praticar esta disciplina →</button></article>`;}).join(''):'<article class="insight-card"><span>PRÓXIMO PASSO</span><strong>Conclua sua primeira bateria</strong><p>Com algumas respostas, a plataforma passa a indicar onde concentrar o estudo.</p><button type="button" class="text-button" data-go="questions">Montar bateria →</button></article>';
+  }
   const chartRoot=$('#performanceCharts');
   if(chartRoot)chartRoot.innerHTML='<div class="chart-grid"><article class="card chart-card"><div class="chart-head"><div><span class="kicker">EVOLUÇÃO</span><h2>Precisão por sessão</h2></div><span class="chart-caption">Últimas '+sessions.length+'</span></div><div class="chart-scroll">'+trendChart(trend)+'</div></article><article class="card chart-card"><div class="chart-head"><div><span class="kicker">FOCO</span><h2>Precisão por disciplina</h2></div><span class="chart-caption">'+entries.length+' áreas</span></div><div class="bar-chart">'+(entries.length?entries.slice(0,10).map(([key,value])=>{const percent=value.correct/Math.max(1,value.total-value.blank)*100;return '<div class="bar-row"><div class="bar-label"><span>'+escapeHtml(key||'Sem disciplina')+'</span><strong>'+percent.toFixed(0)+'%</strong></div><div class="bar-track"><span class="bar-fill" style="width:'+Math.max(0,Math.min(100,percent))+'%"></span></div><small>'+value.total+' respostas · '+value.blank+' em branco</small></div>';}).join(''):'<div class="empty-state">Responda questões para ver seus pontos fortes e fracos.</div>')+'</div></article></div>';
-  $('#performanceBreakdown').innerHTML=entries.length?entries.map(([key,value])=>{const answered=value.total-value.blank;const percent=answered?value.correct/answered*100:0;return '<article class="card"><span class="kicker">'+value.total+' RESPOSTAS</span><h2>'+escapeHtml(key||'Sem disciplina')+'</h2><p>'+percent.toFixed(1)+'% de precisão · '+value.blank+' em branco</p></article>';}).join(''):'<div class="card empty-state">Conclua uma bateria para gerar desempenho.</div>';
+  $('#performanceBreakdown').innerHTML=entries.length?entries.map(([key,value])=>{const answered=value.total-value.blank,percent=answered?value.correct/answered*100:0;return '<article class="card"><span class="kicker">'+value.total+' RESPOSTAS</span><h2>'+escapeHtml(key||'Sem disciplina')+'</h2><p>'+percent.toFixed(1)+'% de precisão · '+value.blank+' em branco</p></article>';}).join(''):'<div class="card empty-state">Conclua uma bateria para gerar desempenho.</div>';
 }
 function aggregateBy(arr,key){return arr.reduce((m,a)=>{const k=a[key]||'Sem classificação';m[k]??={total:0,correct:0,blank:0};m[k].total++;if(a.blank)m[k].blank++;else if(a.isCorrect)m[k].correct++;return m;},{});}
 
