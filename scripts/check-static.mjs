@@ -3,6 +3,8 @@ import {spawnSync} from 'node:child_process';
 
 const html=await fs.readFile('index.html','utf8');
 const js=await fs.readFile('assets/app.js','utf8');
+const cloud=await fs.readFile('assets/cloud-progress.js','utf8');
+const studyPlan=await fs.readFile('assets/study-plan.js','utf8');
 const sw=await fs.readFile('service-worker.js','utf8');
 const manifest=JSON.parse(await fs.readFile('manifest.webmanifest','utf8'));
 const v2=await fs.readFile('assets/v2.css','utf8');
@@ -33,7 +35,7 @@ if(!sw.includes('./data/tjdft-provas.json')) throw new Error('Catálogo TJDFT n�
 if(!html.includes('Provas oficiais e materiais')) throw new Error('Tela de provas oficiais ausente.');
 if(!js.includes("cloud-progress.js")||!js.includes("syncCloudProgress")) throw new Error('Sincronização de progresso ausente.');
 if(!html.includes('id="cloudEmail"')||!html.includes('id="performanceCharts"')) throw new Error('Controles de conta/desempenho ausentes.');
-if(/service_role|sb_secret_/i.test(html+'\n'+js+'\n'+sw)) throw new Error('Segredo do Supabase não pode existir no frontend.');
+if(/service_role|sb_secret_/i.test(html+'\n'+js+'\n'+cloud+'\n'+studyPlan+'\n'+sw)) throw new Error('Segredo do Supabase não pode existir no frontend.');
 
 for(const marker of ['assets/v2.css','id="sidebarBackdrop"','id="editalSearch"','id="filterToggle"','id="resolverProgress"','id="performanceInsights"','id="installApp"']) if(!html.includes(marker)) throw new Error(`Contrato V2 ausente: ${marker}`);
 for(const marker of ['setSidebarOpen','renderActiveFilters','shuffleItems','aria-pressed','renderInstallState','renderProgressSurface']) if(!js.includes(marker)) throw new Error(`Comportamento V2 ausente: ${marker}`);
@@ -45,6 +47,10 @@ const shellDefinition=sw.match(/const SHELL=\[([\s\S]*?)\];/)?.[1]||'';
 if(shellDefinition.includes('data/questions.json')) throw new Error('Arquivo de questões não deve ser pré-carregado no shell.');
 if(!manifest.icons.some(icon=>icon.sizes==='192x192')||!manifest.icons.some(icon=>icon.sizes==='512x512')) throw new Error('Ícones PWA PNG ausentes.');
 if(!v2.includes('@media (max-width: 1024px)')||!v2.includes('@media (max-width: 680px)')) throw new Error('Breakpoints de iPad e celular ausentes.');
+
+if(!cloud.includes("import './study-plan.js';")) throw new Error('Plano diário não é carregado pela aplicação.');
+if(!sw.includes('./assets/study-plan.js')) throw new Error('Plano diário não está no cache offline do PWA.');
+for(const marker of ['PLANO DE HOJE','30 min','60 min','90 min','America/Sao_Paulo','data-plan-action']) if(!studyPlan.includes(marker)) throw new Error(`Contrato do plano diário ausente: ${marker}`);
 
 const privilegeHardening=migrations.find(item=>item.name.includes('harden_student_profile_sync_privileges'))?.sql||'';
 const legacyProfilePolicy=migrations.find(item=>item.name.includes('preserve_legacy_profile_ids_during_sync'))?.sql||'';
@@ -65,8 +71,8 @@ const allMigrations=migrations.map(item=>item.sql).join('\n');
 if(/grant\s+[^;]*\bon\s+(?:table\s+)?public\.student_progress_states\s+to\s+anon\b/i.test(allMigrations)) throw new Error('Progresso não pode conceder acesso ao papel anon.');
 if(/grant\s+all(?:\s+privileges)?\s+on\s+(?:table\s+)?public\.student_progress_states\s+to\s+authenticated\b/i.test(allMigrations)) throw new Error('Progresso não pode conceder privilégios amplos ao papel authenticated.');
 
-for(const file of ['assets/app.js','assets/cloud-progress.js','service-worker.js']){
+for(const file of ['assets/app.js','assets/cloud-progress.js','assets/study-plan.js','service-worker.js','scripts/smoke-published.mjs']){
   const syntax=spawnSync(process.execPath,['--check',file],{encoding:'utf8'});
   if(syntax.status!==0)throw new Error('JavaScript inválido em '+file+'\n'+(syntax.stderr||syntax.stdout));
 }
-console.log('OK: V2 responsiva, navegação, filtros, resolvedor, persistência, PWA, cache e hardening Supabase validados.');
+console.log('OK: V2 responsiva, navegação, plano diário, filtros, resolvedor, persistência, PWA, cache e hardening Supabase validados.');
