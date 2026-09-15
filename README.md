@@ -16,13 +16,13 @@ adaptador de progresso do usuário
 
 O navegador **nunca recebe o token do Notion**. O conteúdo editorial e o progresso do usuário são domínios separados.
 
-## Estado desta V1
+## Estado da plataforma
 
-A interface foi reconstruída a partir do inventário funcional e do snapshot mais recente do projeto no Work. Não é uma cópia literal do código-fonte do Work: o código-fonte interno do Work não estava exposto nesta sessão. A V1 implementa uma arquitetura limpa, sem carregar o legado técnico do repositório SEDES/DF excluído.
+A plataforma usa uma arquitetura limpa, sem carregar o legado técnico do repositório SEDES/DF. A V2 reorganiza a experiência de estudo em torno do fluxo escolher → responder → corrigir → revisar → acompanhar, mantendo Notion e progresso do estudante em domínios separados.
 
 A `main` do repositório já contém a release completa derivada do Banco Mestre. O workflow `Sincronizar Banco Mestre do Notion` recompõe essa release automaticamente; snapshots locais de bootstrap podem continuar em modo de amostra para validar a interface sem expor o banco inteiro.
 
-## Funcionalidades V1
+## Funcionalidades V2
 
 - Home orientada à próxima ação;
 - Banco e editais;
@@ -45,20 +45,15 @@ A `main` do repositório já contém a release completa derivada do Banco Mestre
 - responsividade mobile/tablet/desktop;
 - workflows de validação, sync do Notion e GitHub Pages.
 
-## Banco Mestre auditado em 14/09/2026
+## Release auditada em 15/09/2026
 
-- 3.525 registros;
-- 2.380 Certo/Errado;
-- 937 múltipla escolha A–E;
-- 206 sem formato explícito;
-- 2 discursivas;
-- 0 sem enunciado;
-- 2 sem gabarito;
-- 0 sem disciplina;
-- 125 sem assunto;
-- 0 sem cargo;
-- 0 sem fonte/banca.
-
+- 3.765 registros na fonte editorial;
+- 3.696 questões objetivas publicadas;
+- 69 registros excluídos pelos gates editoriais;
+- 2.528 questões de Certo / Errado;
+- 1.168 questões de múltipla escolha A–E;
+- 38 cadernos oficiais TJDFT catalogados, com 232 questões interativas revisadas;
+- 0 questões publicadas sem enunciado, gabarito ou campos essenciais.
 O sincronizador preserva `formatoOriginal` e cria um `formato` derivado apenas quando o campo está vazio. Ele não altera o Notion.
 
 ## Configuração do GitHub
@@ -83,13 +78,13 @@ Uma questão não entra na release quando:
 - está marcada como duplicada;
 - possui bloqueio manual de publicação;
 - `Auditoria de conteúdo = Não aprovada`;
-- é discursiva ou não possui alternativas objetivas suficientes para o fluxo da V1.
+- é discursiva ou não possui alternativas objetivas suficientes para o fluxo objetivo da plataforma.
 
 Questões anuladas e questões com gabarito `Anulada` ou `Sem gabarito` permanecem fora da release. Questões discursivas também ficam preservadas no Notion até existir um fluxo próprio de resposta e correção; nenhum desses estados é silenciosamente convertido em questão objetiva.
 
 ## Persistência
 
-A V1 usa `ProgressStore` com armazenamento local para que a plataforma seja funcional sem backend. Isso é um **adaptador**, não uma decisão arquitetural definitiva. A próxima camada pode implementar conta/sincronização em nuvem sem trocar os IDs das questões nem misturar estado do usuário com o Banco Mestre.
+A plataforma usa `ProgressStore` com armazenamento local para que a plataforma seja funcional sem backend. Isso é um **adaptador**, não uma decisão arquitetural definitiva. A próxima camada pode implementar conta/sincronização em nuvem sem trocar os IDs das questões nem misturar estado do usuário com o Banco Mestre.
 
 ## Desenvolvimento
 
@@ -124,3 +119,19 @@ A interface foi refinada para celular, iPad/tablet e desktop: grades se adaptam 
 
 ### Publicação responsiva
 A melhoria responsiva está consolidada no commit de release atual. O workflow padrão executa validação e publicação a cada push na `main`.
+
+
+## Atualização V2 — 15/09/2026
+
+- Home compacta e orientada à próxima ação;
+- sidebar off-canvas em iPad e celular, com backdrop, Escape e estados ARIA;
+- editais verticalizados pesquisáveis, com disciplinas recolhíveis e bateria exata por tópico;
+- painel de filtros recolhível em telas médias e chips de filtros ativos;
+- resolvedor com barra de progresso, modo visível, alternativas acessíveis e foco no feedback;
+- recomendações de estudo no painel de desempenho;
+- rotas compartilháveis e suporte ao botão Voltar;
+- instalação PWA com ícones 180, 192 e 512 px;
+- cache canônico da release, sem duplicar o arquivo de questões a cada atualização;
+- persistência otimizada para não reconstruir toda a interface a cada resposta.
+
+O conteúdo editorial não foi alterado pela atualização visual. O Supabase permanece restrito ao progresso do estudante; questões e gabaritos continuam derivados do Banco Mestre no Notion.
