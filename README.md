@@ -123,4 +123,4 @@ A interface foi refinada para celular, iPad/tablet e desktop: grades se adaptam 
 
 
 ### Publicação responsiva
-A melhoria responsiva está consolidada no commit de release atual e será publicada pelo workflow padrão após o merge desta branch.
+A melhoria responsiva está consolidada no commit de release atual. O workflow padrão executa validação e publicação a cada push na `main`.
