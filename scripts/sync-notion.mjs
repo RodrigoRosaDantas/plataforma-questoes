@@ -163,6 +163,28 @@ function publishable(q) {
   if (String(q.auditoria).toLowerCase() === 'não aprovada') return false;
   return true;
 }
+function countMissing(rows) {
+  return {
+    enunciado: rows.filter(q=>!q.enunciado).length,
+    gabarito: rows.filter(q=>!usableGabarito(q.gabarito)).length,
+    concurso: rows.filter(q=>!q.concurso).length,
+    edital: rows.filter(q=>!q.edital).length,
+    topicoEdital: rows.filter(q=>!q.topicoEdital).length,
+    disciplina: rows.filter(q=>!q.disciplina).length,
+    assunto: rows.filter(q=>!q.assunto).length,
+    subassunto: rows.filter(q=>!q.subassunto).length,
+    cargo: rows.filter(q=>!q.cargo).length,
+    fonte: rows.filter(q=>!q.banca).length
+  };
+}
+function taxonomyCoverage(rows) {
+  const total=rows.length;
+  const fields=['concurso','edital','topicoEdital','disciplina','assunto','subassunto','cargo'];
+  return Object.fromEntries(fields.map(field=>{
+    const filled=rows.filter(q=>String(q[field]??'').trim()).length;
+    return [field,{filled,missing:total-filled,coveragePercent:total?Number((filled/total*100).toFixed(2)):0}];
+  }));
+}
 
 let cursor = null, raw = [];
 do {
@@ -199,13 +221,11 @@ questions.forEach(question => {
 });
 const excluded = transformed.length - questions.length;
 const formats = Object.fromEntries([...questions.reduce((m,q)=>m.set(q.formato,(m.get(q.formato)||0)+1),new Map())]);
-const missing = {
-  enunciado: transformed.filter(q=>!q.enunciado).length,
-  gabarito: transformed.filter(q=>!usableGabarito(q.gabarito)).length,
-  disciplina: transformed.filter(q=>!q.disciplina).length,
-  assunto: transformed.filter(q=>!q.assunto).length,
-  cargo: transformed.filter(q=>!q.cargo).length,
-  fonte: transformed.filter(q=>!q.banca).length
+const missing = countMissing(transformed);
+const publishedMissing = countMissing(questions);
+const taxonomy = {
+  source: taxonomyCoverage(transformed),
+  published: taxonomyCoverage(questions)
 };
 const metadata = {
   schemaVersion: 2,
@@ -230,9 +250,10 @@ const metadata = {
   },
   sampleMode: false,
   questionCount: questions.length,
-  sourceAudit: { records: transformed.length, published: questions.length, excluded, formats, missing }
+  sourceAudit: { records: transformed.length, published: questions.length, excluded, formats, missing, publishedMissing, taxonomy }
 };
 await fs.mkdir(path.resolve('data'), { recursive: true });
 await fs.writeFile('data/questions.json', JSON.stringify(questions,null,2)+'\n');
 await fs.writeFile('data/metadata.json', JSON.stringify(metadata,null,2)+'\n');
 console.log(`Release gerada: ${questions.length} publicáveis; ${excluded} excluídos por gate.`);
+console.log(`Cobertura publicada: Concurso ${taxonomy.published.concurso.coveragePercent}% · Assunto ${taxonomy.published.assunto.coveragePercent}% · Subassunto ${taxonomy.published.subassunto.coveragePercent}% · Tópico do edital ${taxonomy.published.topicoEdital.coveragePercent}%.`);
