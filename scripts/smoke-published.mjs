@@ -1,4 +1,5 @@
 const rawUrl=process.env.SITE_URL||process.argv[2]||'';
+const expectedSha=String(process.env.EXPECTED_SHA||'').trim();
 if(!rawUrl){
   console.error('SITE_URL ausente.');
   process.exit(2);
@@ -35,7 +36,7 @@ async function smoke(){
     ensure(html.includes('Plataforma de Questões'),`Rota ${view} não entregou o shell da aplicação.`);
   }
 
-  const [app,cloud,planner,sw,manifest,metadata,questions,competitions,editais,proofs]=await Promise.all([
+  const [app,cloud,planner,sw,manifest,metadata,questions,competitions,editais,proofs,deployment]=await Promise.all([
     request('assets/app.js'),
     request('assets/cloud-progress.js'),
     request('assets/study-plan.js'),
@@ -45,7 +46,8 @@ async function smoke(){
     request('data/questions.json',{json:true}),
     request('data/competitions.json',{json:true}),
     request('data/editais.json',{json:true}),
-    request('data/tjdft-provas.json',{json:true})
+    request('data/tjdft-provas.json',{json:true}),
+    request('deployment.json',{json:true})
   ]);
 
   ensure(app.includes("cloud-progress.js")&&app.includes('loadRelease'),'app.js publicado não contém os contratos essenciais.');
@@ -65,8 +67,14 @@ async function smoke(){
   ensure(Array.isArray(editais),'Editais publicados em formato inválido.');
   ensure(Array.isArray(proofs),'Catálogo de provas oficiais em formato inválido.');
 
+  ensure(deployment?.schemaVersion===1,'Identidade do deploy ausente ou inválida.');
+  ensure(typeof deployment.sourceSha==='string'&&deployment.sourceSha.length>=7,'SHA do deploy ausente.');
+  ensure(deployment.releaseSnapshotId===metadata.releaseSnapshotId,'deployment.json aponta para snapshot editorial diferente do publicado.');
+  ensure(Number(deployment.questionCount)===questions.length,'deployment.json tem contagem diferente da release publicada.');
+  if(expectedSha)ensure(deployment.sourceSha===expectedSha,`Pages ainda serve ${deployment.sourceSha.slice(0,12)}, esperado ${expectedSha.slice(0,12)}.`);
+
   console.log(`OK: site publicado saudável em ${root.href}`);
-  console.log(`Release ${metadata.releaseSnapshotId.slice(0,12)} · ${questions.length} questões · ${competitions.length} concursos · ${proofs.length} registros de provas.`);
+  console.log(`Commit ${deployment.sourceSha.slice(0,12)} · release ${metadata.releaseSnapshotId.slice(0,12)} · ${questions.length} questões · ${competitions.length} concursos · ${proofs.length} registros de provas.`);
 }
 
 let lastError;
