@@ -76,6 +76,10 @@ O modo local continua funcionando sem conta. Com acesso por link de e-mail, o ad
 
 A tabela `public.student_progress_states` não tem permissão para `anon`, usa políticas `authenticated` com `USING` e `WITH CHECK` de propriedade e não recebe o conteúdo de `questions.json`.
 
+O provisionamento de perfil permanece `SECURITY INVOKER`. As permissões de `student_profiles` são concedidas por coluna: o cliente autenticado pode criar a própria identidade e reativar o próprio perfil, mas não pode alterar `id` ou `user_id`. Perfis históricos com IDs legados continuam válidos. O papel anônimo não executa `ensure_student_profile()` e não acessa `student_progress_states`; privilégios não protegidos por RLS, como `TRUNCATE`, `TRIGGER` e `REFERENCES`, também foram removidos.
+
+A validação de 15/09/2026 executou uma transação sintética com dois usuários: o usuário próprio leu suas cinco tentativas e gravou/consultou um estado; o segundo usuário viu zero tentativas e zero estados e não conseguiu atualizar o estado alheio. A transação foi revertida, deixando zero dados de teste persistidos.
+
 ## Tempo e pontuação
 
 O cronômetro considera somente tempo ativo: troca de aba, `pagehide` e retorno são persistidos e pausados. A release declara a política de pontuação; a atual usa acerto simples, sem penalidade por erro, não conta branco como erro e só mostra gabarito após confirmação.

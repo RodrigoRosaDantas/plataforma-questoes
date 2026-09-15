@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "test": "npm run validate",
     "sync:notion": "node scripts/sync-notion.mjs",
     "validate": "node scripts/validate-data.mjs && node scripts/check-static.mjs",
     "build": "node scripts/build.mjs"

@@ -7,6 +7,13 @@ const sw=await fs.readFile('service-worker.js','utf8');
 const manifest=JSON.parse(await fs.readFile('manifest.webmanifest','utf8'));
 const v2=await fs.readFile('assets/v2.css','utf8');
 const shell=html+'\n'+js;
+const migrationNames=(await fs.readdir('supabase/migrations'))
+  .filter(name=>name.endsWith('.sql'))
+  .sort();
+const migrations=(await Promise.all(migrationNames.map(async name=>({
+  name,
+  sql:await fs.readFile(`supabase/migrations/${name}`,'utf8')
+}))));
 
 for(const marker of ['Banco de questões','Provas aplicadas','Simulados','Revisar','Desempenho','Importar provas','Ajustes e dados']) if(!shell.includes(marker)) throw new Error(`Navegação ausente: ${marker}`);
 for(const marker of ['finishSession','ProgressStore','applyFilters','renderQuestionMap','loadRelease','refreshRelease','buildVerticalizedEditais','openTopic','officialExams']) if(!js.includes(marker)) throw new Error(`Contrato JS ausente: ${marker}`);
@@ -38,8 +45,27 @@ if(shellDefinition.includes('data/questions.json')) throw new Error('Arquivo de 
 if(!manifest.icons.some(icon=>icon.sizes==='192x192')||!manifest.icons.some(icon=>icon.sizes==='512x512')) throw new Error('Ícones PWA PNG ausentes.');
 if(!v2.includes('@media (max-width: 1024px)')||!v2.includes('@media (max-width: 680px)')) throw new Error('Breakpoints de iPad e celular ausentes.');
 
+const privilegeHardening=migrations.find(item=>item.name.includes('harden_student_profile_sync_privileges'))?.sql||'';
+const legacyProfilePolicy=migrations.find(item=>item.name.includes('preserve_legacy_profile_ids_during_sync'))?.sql||'';
+for(const marker of [
+  'revoke all privileges on table public.student_profiles from anon',
+  'grant insert (id, user_id, is_active) on table public.student_profiles to authenticated',
+  'grant update (is_active, updated_at) on table public.student_profiles to authenticated',
+  'revoke all privileges on table public.student_progress_states from anon',
+  'grant select, insert, update on table public.student_progress_states to authenticated',
+  'revoke execute on function public.ensure_student_profile() from public, anon',
+  'grant execute on function public.ensure_student_profile() to authenticated'
+]) if(!privilegeHardening.includes(marker)) throw new Error(`Hardening Supabase ausente: ${marker}`);
+for(const marker of [
+  'using (user_id = (select auth.uid()))',
+  'with check (user_id = (select auth.uid()))'
+]) if(!legacyProfilePolicy.includes(marker)) throw new Error(`Compatibilidade de perfil legado ausente: ${marker}`);
+const allMigrations=migrations.map(item=>item.sql).join('\n');
+if(/grant\s+[^;]*\bon\s+(?:table\s+)?public\.student_progress_states\s+to\s+anon\b/i.test(allMigrations)) throw new Error('Progresso não pode conceder acesso ao papel anon.');
+if(/grant\s+all(?:\s+privileges)?\s+on\s+(?:table\s+)?public\.student_progress_states\s+to\s+authenticated\b/i.test(allMigrations)) throw new Error('Progresso não pode conceder privilégios amplos ao papel authenticated.');
+
 for(const file of ['assets/app.js','assets/cloud-progress.js','service-worker.js']){
   const syntax=spawnSync(process.execPath,['--check',file],{encoding:'utf8'});
   if(syntax.status!==0)throw new Error('JavaScript inválido em '+file+'\n'+(syntax.stderr||syntax.stdout));
 }
-console.log('OK: V2 responsiva, navegação, filtros, resolvedor, persistência, PWA e cache validados.');
+console.log('OK: V2 responsiva, navegação, filtros, resolvedor, persistência, PWA, cache e hardening Supabase validados.');

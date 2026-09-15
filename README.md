@@ -84,11 +84,22 @@ Questões anuladas e questões com gabarito `Anulada` ou `Sem gabarito` permanec
 
 ## Persistência
 
-A plataforma usa `ProgressStore` com armazenamento local para que a plataforma seja funcional sem backend. Isso é um **adaptador**, não uma decisão arquitetural definitiva. A próxima camada pode implementar conta/sincronização em nuvem sem trocar os IDs das questões nem misturar estado do usuário com o Banco Mestre.
+A plataforma usa `ProgressStore` com armazenamento local imediato e sincronização opcional no Supabase. Sem conta ou sem conexão, o estudo continua funcionando no aparelho; após o login por link de e-mail, o estado é mesclado por recência entre aparelhos sem trocar os IDs das questões nem misturar estado do usuário com o Banco Mestre.
+
+### Auditoria Supabase — 15/09/2026
+
+- corrigido o privilégio que impedia `ensure_student_profile()` de criar ou reativar o perfil do usuário autenticado;
+- `anon` não tem acesso à tabela de estado sincronizado nem à função de provisionamento;
+- `authenticated` possui somente `SELECT`, `INSERT` e `UPDATE` necessários, sem `DELETE`, `TRUNCATE`, `TRIGGER` ou `REFERENCES`;
+- políticas RLS isolam perfil e progresso pelo `auth.uid()` do usuário;
+- IDs de perfis históricos são preservados e as colunas de identidade não podem ser alteradas pelo cliente;
+- teste transacional confirmou leitura/escrita própria, zero leitura cruzada e zero atualização cruzada, sem deixar registros de teste;
+- questões, alternativas, enunciados e gabaritos continuam fora do Supabase.
 
 ## Desenvolvimento
 
 ```bash
+npm test
 npm run validate
 npm run build
 ```
