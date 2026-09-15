@@ -147,7 +147,7 @@ function renderPlan(){
   const progressPct=Math.min(100,Math.round(today.questions/plan.questions*100));
   card.innerHTML=`
     <div class="card-head daily-plan-head">
-      <div><span class="kicker">PLANO ADAPTATIVO DE HOJE</span><h2>O próximo bloco nasce do seu desempenho</h2></div>
+      <div><span class="kicker">PLANO DE HOJE · ADAPTATIVO</span><h2>O próximo bloco nasce do seu desempenho</h2></div>
       <span class="daily-plan-status">${summary.active?'Sessão em andamento · ':''}${today.questions}/${plan.questions} questões</span>
     </div>
     <p class="daily-plan-copy">Escolha uma janela. A plataforma combina seu progresso de hoje, erros pendentes e disciplina com menor precisão para sugerir a próxima ação.</p>
