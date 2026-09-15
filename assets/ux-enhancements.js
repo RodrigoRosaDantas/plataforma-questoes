@@ -8,12 +8,14 @@ let facetRows=[];
 let facetUniverses={};
 
 const FACET_CONFIG=[
+  {id:'filterConcurso',key:'concurso',label:'Concurso'},
   {id:'filterOrgao',key:'orgao',label:'Órgão'},
   {id:'filterCargo',key:'cargo',label:'Cargo'},
   {id:'filterBanca',key:'banca',label:'Banca'},
   {id:'filterAno',key:'ano',label:'Ano'},
   {id:'filterDisciplina',key:'disciplina',label:'Disciplina'},
   {id:'filterAssunto',key:'assunto',label:'Assunto'},
+  {id:'filterSubassunto',key:'subassunto',label:'Subassunto'},
   {id:'filterFormato',key:'formato',label:'Formato'}
 ];
 
@@ -269,14 +271,16 @@ function installPerformanceTopics(){
 
 function compactFacetRows(questions){
   const rows=(Array.isArray(questions)?questions:[]).map(question=>({
+    concurso:String(question.concurso||''),
     orgao:String(question.orgao||''),
     cargo:String(question.cargo||''),
     banca:String(question.banca||''),
     ano:question.ano===null||question.ano===undefined?'':String(question.ano),
     disciplina:String(question.disciplina||''),
     assunto:String(question.assunto||''),
+    subassunto:String(question.subassunto||''),
     formato:String(question.formato||''),
-    search:[question.enunciado,question.disciplina,question.assunto,question.subassunto,question.cargo,question.banca,question.nomeMaterial].join(' ').toLowerCase()
+    search:[question.enunciado,question.concurso,question.edital,question.topicoEdital,question.disciplina,question.assunto,question.subassunto,question.cargo,question.banca,question.nomeMaterial].join(' ').toLowerCase()
   }));
   facetUniverses=Object.fromEntries(FACET_CONFIG.map(config=>[
     config.key,
