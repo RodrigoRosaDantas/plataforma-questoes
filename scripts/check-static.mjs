@@ -54,7 +54,7 @@ if(!cloud.includes("import './ux-enhancements.js';")) throw new Error('Melhorias
 if(!sw.includes('./assets/study-plan.js')) throw new Error('Plano diário não está no cache offline do PWA.');
 if(!sw.includes('./assets/ux-enhancements.js')) throw new Error('Melhorias de UX não estão no cache offline do PWA.');
 for(const marker of ['PLANO DE HOJE','30 min','60 min','90 min','America/Sao_Paulo','data-plan-action']) if(!studyPlan.includes(marker)) throw new Error(`Contrato do plano diário ausente: ${marker}`);
-for(const marker of ['reviewSummary','unresolvedError','data-answer','ArrowRight','markQuestion','resolver-shortcut-hint','resultSessionInsight','sessionDisciplineStats','data-insight-discipline']) if(!ux.includes(marker)) throw new Error(`Contrato de UX ausente: ${marker}`);
+for(const marker of ['reviewSummary','unresolvedError','data-answer','ArrowRight','markQuestion','resolver-shortcut-hint','resultSessionInsight','sessionDisciplineStats','data-insight-discipline','performanceTopicInsights','priorityTopics','data-ux-topic']) if(!ux.includes(marker)) throw new Error(`Contrato de UX ausente: ${marker}`);
 
 const privilegeHardening=migrations.find(item=>item.name.includes('harden_student_profile_sync_privileges'))?.sql||'';
 const legacyProfilePolicy=migrations.find(item=>item.name.includes('preserve_legacy_profile_ids_during_sync'))?.sql||'';
