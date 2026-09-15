@@ -1,4 +1,4 @@
-const CACHE_PREFIX='plataforma-questoes-v24';
+const CACHE_PREFIX='plataforma-questoes-v25';
 const SHELL_CACHE=CACHE_PREFIX+'-shell';
 const DATA_CACHE=CACHE_PREFIX+'-data';
 
