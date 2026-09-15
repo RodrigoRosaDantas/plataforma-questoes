@@ -1,3 +1,5 @@
+import './study-plan.js';
+
 const SUPABASE_URL='https://fqqkkyusnzhuuizahkww.supabase.co';
 const SUPABASE_KEY='sb_publishable_GfoaAPKtYuSu_UY6wE8jMg_XsVjdWU7';
 const SESSION_KEY='plataforma.questoes.supabase.session.v1';
