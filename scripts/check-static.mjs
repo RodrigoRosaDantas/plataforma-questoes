@@ -7,6 +7,8 @@ const cloud=await fs.readFile('assets/cloud-progress.js','utf8');
 const studyPlan=await fs.readFile('assets/study-plan.js','utf8');
 const ux=await fs.readFile('assets/ux-enhancements.js','utf8');
 const sw=await fs.readFile('service-worker.js','utf8');
+const syncNotion=await fs.readFile('scripts/sync-notion.mjs','utf8');
+const metadata=JSON.parse(await fs.readFile('data/metadata.json','utf8'));
 const manifest=JSON.parse(await fs.readFile('manifest.webmanifest','utf8'));
 const v2=await fs.readFile('assets/v2.css','utf8');
 const shell=html+'\n'+js;
@@ -58,7 +60,13 @@ if(!cloud.includes("import './ux-enhancements.js';")) throw new Error('Melhorias
 if(!sw.includes('./assets/study-plan.js')) throw new Error('Plano diário não está no cache offline do PWA.');
 if(!sw.includes('./assets/ux-enhancements.js')) throw new Error('Melhorias de UX não estão no cache offline do PWA.');
 for(const marker of ['PLANO DE HOJE','30 min','60 min','90 min','America/Sao_Paulo','data-plan-action']) if(!studyPlan.includes(marker)) throw new Error(`Contrato do plano diário ausente: ${marker}`);
-for(const marker of ['reviewSummary','unresolvedError','data-answer','ArrowRight','markQuestion','resolver-shortcut-hint','resultSessionInsight','sessionDisciplineStats','data-insight-discipline','performanceTopicInsights','priorityTopics','data-ux-topic','FACET_CONFIG','facetCounts','data-facet-managed','Filtros combinados','opções incompatíveis ficam ocultas']) if(!ux.includes(marker)) throw new Error(`Contrato de UX ausente: ${marker}`);
+for(const marker of ['reviewSummary','unresolvedError','data-answer','ArrowRight','markQuestion','resolver-shortcut-hint','resultSessionInsight','sessionDisciplineStats','data-insight-discipline','performanceTopicInsights','priorityTopics','data-ux-topic','FACET_CONFIG','facetCounts','data-facet-managed','Filtros combinados','opções incompatíveis ficam ocultas','COVERAGE_FIELDS','editorialCoverageCard','Cobertura da taxonomia','A plataforma não inventa concurso']) if(!ux.includes(marker)) throw new Error(`Contrato de UX ausente: ${marker}`);
+for(const marker of ['countMissing','taxonomyCoverage','publishedMissing','coveragePercent','sourceAudit: { records: transformed.length, published: questions.length, excluded, formats, missing, publishedMissing, taxonomy }']) if(!syncNotion.includes(marker)) throw new Error(`Auditoria editorial ausente: ${marker}`);
+if(!metadata.sourceAudit?.taxonomy?.published) throw new Error('Metadata publicado não contém cobertura da taxonomia.');
+for(const field of ['concurso','edital','topicoEdital','disciplina','assunto','subassunto','cargo']){
+  const item=metadata.sourceAudit.taxonomy.published[field];
+  if(!item||!Number.isFinite(item.coveragePercent)||!Number.isFinite(item.filled)||!Number.isFinite(item.missing)) throw new Error(`Cobertura publicada inválida: ${field}`);
+}
 
 const privilegeHardening=migrations.find(item=>item.name.includes('harden_student_profile_sync_privileges'))?.sql||'';
 const legacyProfilePolicy=migrations.find(item=>item.name.includes('preserve_legacy_profile_ids_during_sync'))?.sql||'';
@@ -79,8 +87,8 @@ const allMigrations=migrations.map(item=>item.sql).join('\n');
 if(/grant\s+[^;]*\bon\s+(?:table\s+)?public\.student_progress_states\s+to\s+anon\b/i.test(allMigrations)) throw new Error('Progresso não pode conceder acesso ao papel anon.');
 if(/grant\s+all(?:\s+privileges)?\s+on\s+(?:table\s+)?public\.student_progress_states\s+to\s+authenticated\b/i.test(allMigrations)) throw new Error('Progresso não pode conceder privilégios amplos ao papel authenticated.');
 
-for(const file of ['assets/app.js','assets/cloud-progress.js','assets/study-plan.js','assets/ux-enhancements.js','service-worker.js','scripts/smoke-published.mjs']){
+for(const file of ['assets/app.js','assets/cloud-progress.js','assets/study-plan.js','assets/ux-enhancements.js','service-worker.js','scripts/sync-notion.mjs','scripts/smoke-published.mjs']){
   const syntax=spawnSync(process.execPath,['--check',file],{encoding:'utf8'});
   if(syntax.status!==0)throw new Error('JavaScript inválido em '+file+'\n'+(syntax.stderr||syntax.stdout));
 }
-console.log('OK: V2 responsiva, navegação, plano diário, UX, filtros nativos e facetados, resolvedor, persistência, PWA, cache e hardening Supabase validados.');
+console.log('OK: V2 responsiva, navegação, plano diário, UX, cobertura editorial, filtros nativos e facetados, resolvedor, persistência, PWA, cache e hardening Supabase validados.');
