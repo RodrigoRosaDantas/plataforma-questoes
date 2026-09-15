@@ -1,4 +1,4 @@
-const CACHE_PREFIX='plataforma-questoes-v27';
+const CACHE_PREFIX='plataforma-questoes-v28';
 const SHELL_CACHE=CACHE_PREFIX+'-shell';
 const DATA_CACHE=CACHE_PREFIX+'-data';
 
@@ -7,7 +7,7 @@ const SHELL=[
   './index.html',
   './assets/styles.css?v=tjdft-provas11',
   './assets/v2.css?v=platform-v2-1',
-  './assets/app.js?v=platform-v2-3',
+  './assets/app.js?v=platform-v2-4',
   './assets/cloud-progress.js',
   './assets/study-plan.js',
   './assets/ux-enhancements.js',
