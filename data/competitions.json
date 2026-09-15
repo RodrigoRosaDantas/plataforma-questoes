@@ -1,0 +1,26 @@
+[
+  {
+    "id": "seedf",
+    "name": "SEEDF",
+    "status": "ativo",
+    "description": "Trilha de questões e edital verticalizado para cargos administrativos e de gestão educacional.",
+    "mappingStatus": "configuração editorial",
+    "axes": []
+  },
+  {
+    "id": "tjdft",
+    "name": "TJDFT",
+    "status": "ativo",
+    "description": "Trilha independente para Técnico e Analista das áreas Administrativa, Judiciária e Análise de Dados.",
+    "mappingStatus": "configuração editorial",
+    "axes": []
+  },
+  {
+    "id": "sedes-df-2026",
+    "name": "SEDES/DF 2026",
+    "status": "histórico",
+    "description": "Acervo histórico preservado como fonte de questões; não define a identidade da plataforma.",
+    "mappingStatus": "histórico",
+    "axes": []
+  }
+]

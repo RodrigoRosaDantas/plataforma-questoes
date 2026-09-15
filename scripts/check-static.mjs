@@ -1,0 +1,28 @@
+import fs from 'node:fs/promises';
+import {spawnSync} from 'node:child_process';
+const html=await fs.readFile('index.html','utf8');
+const js=await fs.readFile('assets/app.js','utf8');
+const sw=await fs.readFile('service-worker.js','utf8');
+const shell=html+'\n'+js;
+for(const marker of ['Banco de questões','Provas aplicadas','Simulados','Revisar','Desempenho','Importar provas','Ajustes e dados']) if(!shell.includes(marker)) throw new Error(`Navegação ausente: ${marker}`);
+for(const marker of ['finishSession','ProgressStore','applyFilters','renderQuestionMap','loadRelease','refreshRelease','buildVerticalizedEditais','openTopic','officialExams']) if(!js.includes(marker)) throw new Error(`Contrato JS ausente: ${marker}`);
+if(js.includes('NOTION_TOKEN')||html.includes('NOTION_TOKEN')) throw new Error('Segredo do Notion não pode existir no frontend.');
+if(!/plataforma-questoes-v\d+/.test(sw)) throw new Error('Cache PWA não versionado.');
+if(!sw.includes('./assets/logo.svg')||!html.includes('./assets/logo.svg')) throw new Error('Logo não incluída no shell público/PWA.');
+if(!html.includes('class="mobile-brand"')) throw new Error('Marca móvel ausente.');
+if(!html.includes('id="finishSession"')) throw new Error('Fluxo explícito de finalização ausente.');
+if(!js.includes('answer-copy')||!js.includes('const isBinary=')) throw new Error('Renderização das alternativas binárias ausente.');
+if(!html.includes('data-refresh-release')) throw new Error('Atualização manual da release ausente.');
+if(!html.includes('editalStatus')) throw new Error('Status do edital verticalizado ausente.');
+if(!js.includes('disciplina:discipline')) throw new Error('Filtro de tópico não referencia a disciplina correta.');
+if(!js.includes('data-topic-cargo')||!js.includes("setQuestionFilter('filterCargo',cargo)")) throw new Error('Filtro de tópico não preserva o cargo.');
+if(!js.includes('tjdft-provas')) throw new Error('Catálogo TJDFT não é carregado pelo frontend.');
+if(!sw.includes('./data/tjdft-provas.json')) throw new Error('Catálogo TJDFT não está no shell do PWA.');
+if(!html.includes('Provas oficiais e materiais')) throw new Error('Tela de provas oficiais ausente.');
+console.log('OK: shell, navegação, persistência abstrata, finalização e PWA presentes.');
+
+if(!js.includes("cloud-progress.js")||!js.includes("syncCloudProgress")) throw new Error('Sincronização de progresso ausente.');
+if(!html.includes('id="cloudEmail"')||!html.includes('id="performanceCharts"')) throw new Error('Controles de conta/desempenho ausentes.');
+if(/service_role|sb_secret_/i.test(html+'\n'+js+'\n'+sw)) throw new Error('Segredo do Supabase não pode existir no frontend.');
+
+for(const file of ['assets/app.js','assets/cloud-progress.js']){const syntax=spawnSync(process.execPath,['--check',file],{encoding:'utf8'});if(syntax.status!==0)throw new Error('JavaScript inválido em '+file+'\n'+(syntax.stderr||syntax.stdout));}

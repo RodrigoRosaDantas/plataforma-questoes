@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="logo-title logo-desc">
+  <title id="logo-title">Plataforma de Questões</title>
+  <desc id="logo-desc">Marca com cartões de estudo sobrepostos e um sinal de confirmação.</desc>
+  <defs>
+    <linearGradient id="logo-gradient" x1="18" y1="18" x2="108" y2="112" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#8B7CFF"/>
+      <stop offset="1" stop-color="#27D4E8"/>
+    </linearGradient>
+    <filter id="logo-shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="8" stdDeviation="7" flood-color="#080B18" flood-opacity=".28"/>
+    </filter>
+  </defs>
+  <rect width="128" height="128" rx="32" fill="#11182C"/>
+  <path d="M15 89c18 18 43 28 68 24 14-2 24-8 30-16-8 11-23 18-41 19-23 1-45-9-57-27Z" fill="#27D4E8" opacity=".18"/>
+  <g filter="url(#logo-shadow)">
+    <rect x="24" y="25" width="72" height="56" rx="13" fill="#6D5DFC" transform="rotate(-8 60 53)"/>
+    <rect x="32" y="37" width="72" height="56" rx="13" fill="url(#logo-gradient)" transform="rotate(5 68 65)"/>
+  </g>
+  <path d="m48 66 12 12 27-29" fill="none" stroke="#11182C" stroke-linecap="round" stroke-linejoin="round" stroke-width="9"/>
+  <circle cx="40" cy="49" r="4" fill="#fff" opacity=".9"/>
+  <path d="M52 47h25" stroke="#fff" stroke-linecap="round" stroke-width="5" opacity=".9"/>
+  <path d="M43 91h43" stroke="#fff" stroke-linecap="round" stroke-width="4" opacity=".45"/>
+</svg>

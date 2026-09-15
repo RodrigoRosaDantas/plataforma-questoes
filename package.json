@@ -1,0 +1,11 @@
+{
+  "name": "plataforma-questoes",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "sync:notion": "node scripts/sync-notion.mjs",
+    "validate": "node scripts/validate-data.mjs && node scripts/check-static.mjs",
+    "build": "node scripts/build.mjs"
+  }
+}
