@@ -1,4 +1,5 @@
 import './study-plan.js';
+import './ux-enhancements.js';
 
 const SUPABASE_URL='https://fqqkkyusnzhuuizahkww.supabase.co';
 const SUPABASE_KEY='sb_publishable_GfoaAPKtYuSu_UY6wE8jMg_XsVjdWU7';
