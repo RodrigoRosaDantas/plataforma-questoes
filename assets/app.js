@@ -411,8 +411,8 @@ function navigate(view,options={}){
   if(!VIEW_IDS.has(view))view='home';
   if(view==='resolver'&&!state.session)return;
   state.currentView=view;
-  $('.view').forEach(element=>element.classList.toggle('hidden',element.dataset.view!==view));
-  $('#nav [data-go]').forEach(button=>{const active=button.dataset.go===view;button.classList.toggle('active',active);if(active)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current');});
+  $$('.view').forEach(element=>element.classList.toggle('hidden',element.dataset.view!==view));
+  $$('#nav [data-go]').forEach(button=>{const active=button.dataset.go===view;button.classList.toggle('active',active);if(active)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current');});
   setSidebarOpen(false);
   if(options.history!==false)syncViewUrl(view,Boolean(options.replace));
   const routeLabel=ROUTES.find(route=>route[0]===view)?.[2]||({resolver:'Resolver',result:'Resultado'}[view]||'Plataforma');
@@ -715,7 +715,7 @@ function answerOptions(q){
 function feedbackHtml(q,chosen){ const ok=chosen===q.gabarito; return `<strong>${ok?'Resposta correta.':'Resposta incorreta.'}</strong> Gabarito: <strong>${escapeHtml(q.gabarito)}</strong>${q.comentarioGeral?`<p>${escapeHtml(q.comentarioGeral)}</p>`:''}${q.fundamentoLegal?`<p><strong>Fundamento:</strong> ${escapeHtml(q.fundamentoLegal)}</p>`:''}${q.pegadinha?`<p><strong>Pegadinha:</strong> ${escapeHtml(q.pegadinha)}</p>`:''}`; }
 function confirmAnswer(){const q=currentQuestion(),s=state.session;if(!q||!s)return;if(!s.answers[q.id]){toast('Selecione uma resposta.');return;}s.confirmed[q.id]=true;persistActive();renderResolver();if(s.mode==='training')requestAnimationFrame(()=>$('#feedback')?.focus());}
 function moveQuestion(delta){if(!state.session)return;saveQuestionTime();const s=state.session;s.index=Math.max(0,Math.min(s.items.length-1,s.index+delta));persistActive();renderResolver();requestAnimationFrame(()=>$('#questionText')?.focus());}
-function renderQuestionMap(){const s=state.session,p=store.load(),root=$('#questionMap');root.innerHTML=s.items.map((id,index)=>{const current=index===s.index,answered=Boolean(s.answers[id]),marked=p.marked[id]&&!p.marked[id].removed;return `<button type="button" data-map="${index}" class="${current?'current ':''}${answered?'answered ':''}${marked?'marked':''}" aria-label="Questão ${index+1}${answered?', respondida':''}${marked?', marcada':''}" ${current?'aria-current="step"':''}>${index+1}</button>`;}).join('');$('#questionMap [data-map]').forEach(button=>button.addEventListener('click',()=>{saveQuestionTime();s.index=+button.dataset.map;s.currentEnteredAt=Date.now();persistActive();renderResolver();requestAnimationFrame(()=>$('#questionText')?.focus());}));}
+function renderQuestionMap(){const s=state.session,p=store.load(),root=$('#questionMap');root.innerHTML=s.items.map((id,index)=>{const current=index===s.index,answered=Boolean(s.answers[id]),marked=p.marked[id]&&!p.marked[id].removed;return `<button type="button" data-map="${index}" class="${current?'current ':''}${answered?'answered ':''}${marked?'marked':''}" aria-label="Questão ${index+1}${answered?', respondida':''}${marked?', marcada':''}" ${current?'aria-current="step"':''}>${index+1}</button>`;}).join('');$$('#questionMap [data-map]').forEach(button=>button.addEventListener('click',()=>{saveQuestionTime();s.index=+button.dataset.map;s.currentEnteredAt=Date.now();persistActive();renderResolver();requestAnimationFrame(()=>$('#questionText')?.focus());}));}
 function persistActive(){
   if(!state.session)return;
   state.session.lastSavedAt=Date.now();

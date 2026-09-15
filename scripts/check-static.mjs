@@ -31,6 +31,7 @@ for(const marker of ['assets/v2.css','id="sidebarBackdrop"','id="editalSearch"',
 for(const marker of ['setSidebarOpen','renderActiveFilters','shuffleItems','aria-pressed','renderInstallState','renderProgressSurface']) if(!js.includes(marker)) throw new Error(`Comportamento V2 ausente: ${marker}`);
 if(js.includes("progress:changed',()=>renderAll")) throw new Error('Persistência ainda dispara renderização integral.');
 if(js.includes('sort(()=>Math.random()-.5)')) throw new Error('Embaralhamento enviesado ainda presente.');
+if(js.includes("$('.view').forEach")||js.includes("$('#nav [data-go]').forEach")||js.includes("$('#questionMap [data-map]').forEach")) throw new Error('Consulta de lista usa querySelector em vez de querySelectorAll.');
 if(!sw.includes('DATA_CACHE')||!sw.includes('canonicalDataRequest')) throw new Error('Cache canônico de dados ausente.');
 const shellDefinition=sw.match(/const SHELL=\[([\s\S]*?)\];/)?.[1]||'';
 if(shellDefinition.includes('data/questions.json')) throw new Error('Arquivo de questões não deve ser pré-carregado no shell.');
