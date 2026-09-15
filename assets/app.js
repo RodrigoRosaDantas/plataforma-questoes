@@ -539,7 +539,9 @@ const metricHints = {
   'Total':'Questões na sessão',
   'Pontuação':'Resultado conforme a política da release',
   'Acertos':'Acertos registrados',
-  'Tempo médio':'Ritmo médio das sessões'
+  'Tempo médio':'Ritmo médio das sessões',
+  'Sessões':'Baterias concluídas',
+  'Melhor sessão':'Maior precisão em uma bateria'
 };
 function metricHtml([label,value], index=0){
   const glyph=metricGlyphs[index%metricGlyphs.length];
@@ -791,7 +793,7 @@ function renderPerformance(){
   const insightRoot=$('#performanceInsights');
   if(insightRoot){
     const weak=entries.filter(([,value])=>value.total-value.blank>0).slice(0,3);
-    insightRoot.innerHTML=weak.length?weak.map(([discipline,value],index)=>{const answered=value.total-value.blank,percent=answered?value.correct/answered*100:0;return `<article class="insight-card"><span>PRIORIDADE ${index+1}</span><strong>${escapeHtml(discipline||'Sem disciplina')}</strong><p>${percent.toFixed(0)}% de precisão em ${answered} respostas. Uma nova bateria pode consolidar este ponto.</p><button type="button" class="text-button" data-insight-discipline="${escapeHtml(discipline)}">Praticar esta disciplina →</button></article>`;}).join(''):'<article class="insight-card"><span>PRÓXIMO PASSO</span><strong>Conclua sua primeira bateria</strong><p>Com algumas respostas, a plataforma passa a indicar onde concentrar o estudo.</p><button type="button" class="text-button" data-go="questions">Montar bateria →</button></article>';
+    insightRoot.innerHTML=weak.length?weak.map(([discipline,value],index)=>{const answered=value.total-value.blank,percent=answered?value.correct/answered*100:0;return `<article class="insight-card"><span>PRIORIDADE ${index+1}</span><strong>${escapeHtml(discipline||'Sem disciplina')}</strong><p>${percent.toFixed(0)}% de precisão em ${answered} ${answered===1?'resposta':'respostas'}. Uma nova bateria pode consolidar este ponto.</p><button type="button" class="text-button" data-insight-discipline="${escapeHtml(discipline)}">Praticar esta disciplina →</button></article>`;}).join(''):'<article class="insight-card"><span>PRÓXIMO PASSO</span><strong>Conclua sua primeira bateria</strong><p>Com algumas respostas, a plataforma passa a indicar onde concentrar o estudo.</p><button type="button" class="text-button" data-go="questions">Montar bateria →</button></article>';
   }
   const chartRoot=$('#performanceCharts');
   if(chartRoot)chartRoot.innerHTML='<div class="chart-grid"><article class="card chart-card"><div class="chart-head"><div><span class="kicker">EVOLUÇÃO</span><h2>Precisão por sessão</h2></div><span class="chart-caption">Últimas '+sessions.length+'</span></div><div class="chart-scroll">'+trendChart(trend)+'</div></article><article class="card chart-card"><div class="chart-head"><div><span class="kicker">FOCO</span><h2>Precisão por disciplina</h2></div><span class="chart-caption">'+entries.length+' áreas</span></div><div class="bar-chart">'+(entries.length?entries.slice(0,10).map(([key,value])=>{const percent=value.correct/Math.max(1,value.total-value.blank)*100;return '<div class="bar-row"><div class="bar-label"><span>'+escapeHtml(key||'Sem disciplina')+'</span><strong>'+percent.toFixed(0)+'%</strong></div><div class="bar-track"><span class="bar-fill" style="width:'+Math.max(0,Math.min(100,percent))+'%"></span></div><small>'+value.total+' respostas · '+value.blank+' em branco</small></div>';}).join(''):'<div class="empty-state">Responda questões para ver seus pontos fortes e fracos.</div>')+'</div></article></div>';
