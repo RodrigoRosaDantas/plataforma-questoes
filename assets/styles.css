@@ -291,6 +291,8 @@ main{padding:46px 42px 64px}
 .official-proof-card .card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
 .official-proof-card .card-head h2{margin:6px 0 0;font-size:21px;line-height:1.2}
 .proof-summary{margin:12px 0 0;color:var(--muted);font-size:12px;line-height:1.45}
+.proof-coverage{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:16px 0 0;padding:13px 14px;border:1px solid var(--line);border-radius:14px;background:color-mix(in srgb,var(--brand-violet) 5%,var(--surface2))}
+.proof-coverage>div{display:grid;gap:3px;min-width:0}.proof-coverage strong{font-size:13px}.proof-coverage small{color:var(--muted);font-size:10px;line-height:1.4}.proof-coverage .primary{flex:0 0 auto}
 .proof-variants{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:20px 0 14px}
 .proof-variant{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 13px;border:1px solid var(--line);border-radius:12px;background:var(--surface2);color:var(--text);text-decoration:none;transition:transform .18s ease,border-color .18s ease,background .18s ease}
 .proof-variant:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--brand-violet) 36%,var(--line));background:color-mix(in srgb,var(--brand-violet) 7%,var(--surface))}
@@ -301,6 +303,7 @@ main{padding:46px 42px 64px}
 @media(max-width:520px){
   .proof-variants{grid-template-columns:1fr}
   .official-proof-card .card-head{flex-direction:column}
+  .proof-coverage{align-items:stretch;flex-direction:column}.proof-coverage .primary{width:100%}
 }
 /* Plataforma de Questões · camada de progresso e análise */
 .section-heading{display:flex;align-items:baseline;gap:10px;margin-top:4px}.section-heading h2{margin:0;font-size:22px;letter-spacing:-.03em}

@@ -16,7 +16,7 @@ const migrations=(await Promise.all(migrationNames.map(async name=>({
 }))));
 
 for(const marker of ['Banco de questões','Provas aplicadas','Simulados','Revisar','Desempenho','Importar provas','Ajustes e dados']) if(!shell.includes(marker)) throw new Error(`Navegação ausente: ${marker}`);
-for(const marker of ['finishSession','ProgressStore','applyFilters','renderQuestionMap','loadRelease','refreshRelease','buildVerticalizedEditais','openTopic','officialExams']) if(!js.includes(marker)) throw new Error(`Contrato JS ausente: ${marker}`);
+for(const marker of ['finishSession','ProgressStore','applyFilters','renderQuestionMap','loadRelease','refreshRelease','buildVerticalizedEditais','openTopic','openOfficialProof','officialExams']) if(!js.includes(marker)) throw new Error(`Contrato JS ausente: ${marker}`);
 if(js.includes('NOTION_TOKEN')||html.includes('NOTION_TOKEN')) throw new Error('Segredo do Notion não pode existir no frontend.');
 if(!/plataforma-questoes-v\d+/.test(sw)) throw new Error('Cache PWA não versionado.');
 if(!sw.includes('./assets/logo.svg')||!html.includes('./assets/logo.svg')) throw new Error('Logo não incluída no shell público/PWA.');
@@ -27,6 +27,7 @@ if(!html.includes('data-refresh-release')) throw new Error('Atualização manual
 if(!html.includes('editalStatus')) throw new Error('Status do edital verticalizado ausente.');
 if(!js.includes('disciplina:discipline')) throw new Error('Filtro de tópico não referencia a disciplina correta.');
 if(!js.includes('data-topic-cargo')||!js.includes("setQuestionFilter('filterCargo',cargo)")) throw new Error('Filtro de tópico não preserva o cargo.');
+if(!js.includes('data-proof-cargo')||!js.includes("setQuestionFilter('filterCargo',career)")) throw new Error('Prova oficial não abre o recorte interativo do cargo.');
 if(!js.includes('tjdft-provas')) throw new Error('Catálogo TJDFT não é carregado pelo frontend.');
 if(!sw.includes('./data/tjdft-provas.json')) throw new Error('Catálogo TJDFT não está no cache de dados do PWA.');
 if(!html.includes('Provas oficiais e materiais')) throw new Error('Tela de provas oficiais ausente.');

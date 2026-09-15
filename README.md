@@ -52,7 +52,7 @@ A `main` do repositório já contém a release completa derivada do Banco Mestre
 - 69 registros excluídos pelos gates editoriais;
 - 2.528 questões de Certo / Errado;
 - 1.168 questões de múltipla escolha A–E;
-- 38 cadernos oficiais TJDFT catalogados, com 232 questões interativas revisadas;
+- 38 cadernos oficiais TJDFT catalogados, correspondentes a 17 provas canônicas Tipo 1, com 232 questões interativas revisadas;
 - 0 questões publicadas sem enunciado, gabarito ou campos essenciais.
 O sincronizador preserva `formatoOriginal` e cria um `formato` derivado apenas quando o campo está vazio. Ele não altera o Notion.
 
@@ -137,6 +137,7 @@ A melhoria responsiva está consolidada no commit de release atual. O workflow p
 - Home compacta e orientada à próxima ação;
 - sidebar off-canvas em iPad e celular, com backdrop, Escape e estados ARIA;
 - editais verticalizados pesquisáveis, com disciplinas recolhíveis e bateria exata por tópico;
+- provas oficiais com cobertura interativa por cargo e acesso direto ao recorte correspondente, sem duplicar variantes Tipo 2–4;
 - painel de filtros recolhível em telas médias e chips de filtros ativos;
 - resolvedor com barra de progresso, modo visível, alternativas acessíveis e foco no feedback;
 - recomendações de estudo no painel de desempenho;

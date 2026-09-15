@@ -339,6 +339,7 @@ function buildVerticalizedEditais(){
 function bindGlobal(){
   document.addEventListener('click',e=>{
     const topic=e.target.closest('[data-topic-orgao]');if(topic){openTopic(topic.dataset.topicOrgao,topic.dataset.topicDisciplina,topic.dataset.topicAssunto,topic.dataset.topicCargo);return;}
+    const proof=e.target.closest('[data-proof-cargo]');if(proof){openOfficialProof(proof.dataset.proofCargo);return;}
     const edital=e.target.closest('[data-edital-filter]');if(edital){openCompetition(edital.dataset.editalFilter);return;}
     const quick=e.target.closest('[data-quick-filter]');if(quick){openQuickFilter(quick.dataset.quickFilter);return;}
     const insight=e.target.closest('[data-insight-discipline]');if(insight){openDiscipline(insight.dataset.insightDiscipline);return;}
@@ -444,6 +445,20 @@ function openCompetition(competitionId){
   if(sample) setQuestionFilter('filterOrgao',sample.orgao);
   applyFilters();
   toast(sample?fmt(state.filtered.length)+' questões nesta trilha.':'Ainda não há questões publicadas nesta trilha.');
+}
+function officialProofQuestions(career){
+  return state.questions
+    .filter(q=>q.concurso==='TJDFT 2022'&&q.banca==='FGV'&&q.cargo===career&&answerOptions(q).length)
+    .sort((a,b)=>(Number(a.numeroOriginal)||999)-(Number(b.numeroOriginal)||999));
+}
+function openOfficialProof(career){
+  const items=officialProofQuestions(career);
+  if(!items.length){toast('Esta prova ainda está em preparação editorial.');return;}
+  navigate('questions');resetQuestionFilters();
+  setQuestionFilter('filterOrgao',items[0].orgao);setQuestionFilter('filterCargo',career);setQuestionFilter('filterBanca','FGV');setQuestionFilter('filterAno','2022');
+  applyFilters();
+  $('#sessionSize').value=String(items.length);
+  toast(fmt(items.length)+' questões desta prova prontas para montar a bateria.');
 }
 function openQuickFilter(quickFilter){
   if(quickFilter==='seedf'||quickFilter==='tjdft'){openCompetition(quickFilter);return;}
@@ -607,13 +622,16 @@ function renderMaterials(){
     if(!officialGroups.has(key)) officialGroups.set(key,[]);
     officialGroups.get(key).push(exam);
   });
+  const canonicalExamCount=state.officialExams.filter(exam=>exam.examType==='Tipo 1').length;
+  const interactiveCareerCount=[...officialGroups.keys()].filter(career=>officialProofQuestions(career).length).length;
+  const interactiveQuestionCount=[...officialGroups.keys()].reduce((sum,career)=>sum+officialProofQuestions(career).length,0);
   const officialMarkup=officialGroups.size?[
-    '<section class="card proof-source-note proof-section-wide"><div class="proof-source-eyebrow"><span class="kicker">FONTE OFICIAL · TJDFT 2022</span><span class="status-badge status-live">'+fmt(state.officialExams.length)+' cadernos</span></div><h2>Provas oficiais do último concurso</h2><p>Os PDFs abaixo são os cadernos originais hospedados pela FGV. As 232 questões dos cadernos Tipo 1 de Técnico Administrativo, Analista Administração, Analista Área Judiciária e Analista Análise de Dados já estão revisadas e interativas; os demais cadernos permanecem como fonte oficial até revisão individual.</p><div class="release-actions"><a class="secondary" href="'+escapeHtml(state.officialExams[0].sourcePageUrl)+'" target="_blank" rel="noreferrer">Índice oficial FGV →</a><a class="secondary" href="'+escapeHtml(state.officialExams[0].officialPortalUrl)+'" target="_blank" rel="noreferrer">Portal do TJDFT →</a></div></section>',
-    [...officialGroups.entries()].map(([career,exams])=>[
-      '<article class="card official-proof-card"><div class="card-head"><div><span class="kicker">TJDFT · 2022</span><h2>'+escapeHtml(career)+'</h2></div><span class="status-badge status-live">Histórica</span></div><p class="proof-summary">'+escapeHtml(exams[0].level)+' · '+escapeHtml(exams[0].board)+' · '+fmt(exams[0].objectiveCount)+' objetivas · '+escapeHtml(exams[0].discursiveLabel)+' · '+fmt(exams[0].durationMinutes)+' min</p><div class="proof-variants">',
+    '<section class="card proof-source-note proof-section-wide"><div class="proof-source-eyebrow"><span class="kicker">FONTE OFICIAL · TJDFT 2022</span><span class="status-badge status-live">'+fmt(state.officialExams.length)+' cadernos</span></div><h2>Provas oficiais do último concurso</h2><p>Os PDFs abaixo são os cadernos originais hospedados pela FGV. Há '+fmt(canonicalExamCount)+' provas canônicas Tipo 1; '+fmt(interactiveCareerCount)+' já possuem '+fmt(interactiveQuestionCount)+' questões revisadas e interativas. Os Tipos 2, 3 e 4 são variantes do mesmo cargo e não são importados como questões duplicadas.</p><div class="release-actions"><a class="secondary" href="'+escapeHtml(state.officialExams[0].sourcePageUrl)+'" target="_blank" rel="noreferrer">Índice oficial FGV →</a><a class="secondary" href="'+escapeHtml(state.officialExams[0].officialPortalUrl)+'" target="_blank" rel="noreferrer">Portal do TJDFT →</a></div></section>',
+    [...officialGroups.entries()].map(([career,exams])=>{const available=officialProofQuestions(career).length;return [
+      '<article class="card official-proof-card"><div class="card-head"><div><span class="kicker">TJDFT · 2022</span><h2>'+escapeHtml(career)+'</h2></div><span class="status-badge '+(available?'status-live':'status-empty')+'">'+(available?fmt(available)+' interativas':'Em preparação')+'</span></div><p class="proof-summary">'+escapeHtml(exams[0].level)+' · '+escapeHtml(exams[0].board)+' · '+fmt(exams[0].objectiveCount)+' objetivas · '+escapeHtml(exams[0].discursiveLabel)+' · '+fmt(exams[0].durationMinutes)+' min</p><div class="proof-coverage"><div><strong>'+(available?fmt(available)+' questões prontas':'Fonte oficial catalogada')+'</strong><small>'+(available?'Abra o recorte desta prova e escolha quantidade e modo.':'A transcrição ainda não passou pelos gates editoriais.')+'</small></div>'+(available?'<button type="button" class="primary" data-proof-cargo="'+escapeHtml(career)+'">Fazer questões →</button>':'')+'</div><div class="proof-variants">',
       exams.map(exam=>'<a class="proof-variant" href="'+escapeHtml(exam.proofUrl)+'" target="_blank" rel="noreferrer"><strong>'+escapeHtml(exam.examType)+'</strong><small>Abrir PDF oficial →</small></a>').join(''),
       '</div><div class="release-actions"><a class="secondary" href="'+escapeHtml(exams[0].answerKeyUrl)+'" target="_blank" rel="noreferrer">Gabarito definitivo</a><a class="secondary" href="'+escapeHtml(exams[0].noticeUrl)+'" target="_blank" rel="noreferrer">Edital-base</a></div></article>'
-    ].join('')).join('')
+    ].join('')}).join('')
   ].join(''):'';
   const archive=grouped('prova');
   const archiveMarkup=archive.length?'<div class="proof-section-wide archive-heading"><p class="eyebrow">QUESTÕES JÁ CATALOGADAS</p><h2>Materiais disponíveis no banco</h2></div>'+cards(archive):'';

@@ -75,4 +75,32 @@ for(const exam of tjdftProvas){
   proofIds.add(exam.id); proofUrls.add(exam.proofUrl);
 }
 
-console.log(`OK: ${questions.length} questões, IDs únicos e gates editoriais preservados${meta.sampleMode?' (modo amostra)':''}; ${tjdftProvas.length} cadernos oficiais TJDFT catalogados.`);
+const examsByCareer=new Map();
+for(const exam of tjdftProvas){
+  if(!examsByCareer.has(exam.career)) examsByCareer.set(exam.career,[]);
+  examsByCareer.get(exam.career).push(exam);
+}
+if(examsByCareer.size!==17) throw new Error(`Catálogo TJDFT deveria representar 17 cargos, mas contém ${examsByCareer.size}.`);
+const canonicalExamByCareer=new Map();
+for(const [career,exams] of examsByCareer){
+  const types=new Set(exams.map(exam=>exam.examType));
+  if(types.size!==exams.length) throw new Error('Tipo de caderno duplicado no cargo: '+career);
+  const canonical=exams.filter(exam=>exam.examType==='Tipo 1');
+  if(canonical.length!==1) throw new Error('Cada cargo TJDFT precisa de exatamente um caderno canônico Tipo 1: '+career);
+  canonicalExamByCareer.set(career,canonical[0]);
+}
+const interactiveTjdft=questions.filter(q=>q.concurso==='TJDFT 2022'&&q.banca==='FGV');
+const interactiveByCareer=new Map();
+for(const question of interactiveTjdft){
+  const canonical=canonicalExamByCareer.get(question.cargo);
+  if(!canonical) throw new Error('Questão TJDFT sem caderno canônico catalogado: '+question.id);
+  if(question.sourceUrl!==canonical.proofUrl) throw new Error('Questão TJDFT não aponta para o caderno Tipo 1 do cargo: '+question.id);
+  if(!/-T1-Q\d{2}$/.test(question.id)) throw new Error('Questão TJDFT fora do padrão canônico Tipo 1: '+question.id);
+  if(!Number.isInteger(question.numeroOriginal)||question.numeroOriginal<1||question.numeroOriginal>canonical.objectiveCount) throw new Error('Número original TJDFT inválido: '+question.id);
+  if(!interactiveByCareer.has(question.cargo)) interactiveByCareer.set(question.cargo,new Set());
+  const numbers=interactiveByCareer.get(question.cargo);
+  if(numbers.has(question.numeroOriginal)) throw new Error('Questão TJDFT duplicada por cargo/número: '+question.id);
+  numbers.add(question.numeroOriginal);
+}
+
+console.log(`OK: ${questions.length} questões, IDs únicos e gates editoriais preservados${meta.sampleMode?' (modo amostra)':''}; ${tjdftProvas.length} cadernos oficiais, ${canonicalExamByCareer.size} provas canônicas Tipo 1 e ${interactiveByCareer.size} provas TJDFT interativas.`);
