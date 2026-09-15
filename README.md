@@ -120,3 +120,7 @@ A política atual de pontuação é explícita: sem penalidade, branco fora do d
 ## Auditoria responsiva — 15/09/2026
 
 A interface foi refinada para celular, iPad/tablet e desktop: grades se adaptam a telas médias, filtros e cartões empilham sem overflow, alvos de toque têm tamanho confortável, o resolvedor mantém ações acessíveis e o controle de tema permanece disponível no celular. O service worker usa cache versionado e o botão Atualizar continua explícito.
+
+
+### Publicação responsiva
+A melhoria responsiva está consolidada no commit de release atual e será publicada pelo workflow padrão após o merge desta branch.
