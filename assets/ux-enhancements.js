@@ -2,6 +2,20 @@ const PROGRESS_KEY='plataforma.questoes.progress.v1';
 let reviewSummaryTimer=null;
 let resultInsightTimer=null;
 let performanceTopicTimer=null;
+let facetTimer=null;
+let facetReloadTimer=null;
+let facetRows=[];
+let facetUniverses={};
+
+const FACET_CONFIG=[
+  {id:'filterOrgao',key:'orgao',label:'Órgão'},
+  {id:'filterCargo',key:'cargo',label:'Cargo'},
+  {id:'filterBanca',key:'banca',label:'Banca'},
+  {id:'filterAno',key:'ano',label:'Ano'},
+  {id:'filterDisciplina',key:'disciplina',label:'Disciplina'},
+  {id:'filterAssunto',key:'assunto',label:'Assunto'},
+  {id:'filterFormato',key:'formato',label:'Formato'}
+];
 
 function readProgress(){
   try{return JSON.parse(localStorage.getItem(PROGRESS_KEY)||'null')||{};}catch{return {};}
@@ -252,6 +266,171 @@ function installPerformanceTopics(){
   });
   window.addEventListener('progress:changed',schedulePerformanceTopics);
 }
+
+function compactFacetRows(questions){
+  const rows=(Array.isArray(questions)?questions:[]).map(question=>({
+    orgao:String(question.orgao||''),
+    cargo:String(question.cargo||''),
+    banca:String(question.banca||''),
+    ano:question.ano===null||question.ano===undefined?'':String(question.ano),
+    disciplina:String(question.disciplina||''),
+    assunto:String(question.assunto||''),
+    formato:String(question.formato||''),
+    search:[question.enunciado,question.disciplina,question.assunto,question.subassunto,question.cargo,question.banca,question.nomeMaterial].join(' ').toLowerCase()
+  }));
+  facetUniverses=Object.fromEntries(FACET_CONFIG.map(config=>[
+    config.key,
+    [...new Set(rows.map(row=>row[config.key]).filter(Boolean))].sort((a,b)=>String(a).localeCompare(String(b),'pt-BR',{numeric:true}))
+  ]));
+  return rows;
+}
+async function readFacetDataset(force=false){
+  const canonical=new URL('./data/questions.json',location.href);
+  try{
+    if(!force&&'caches' in window){
+      const cached=await caches.match(canonical.href);
+      if(cached?.ok)return compactFacetRows(await cached.json());
+    }
+  }catch{}
+  try{
+    const url=force?`./data/questions.json?facets=${Date.now()}`:'./data/questions.json';
+    const response=await fetch(url,{cache:force?'no-store':'force-cache'});
+    if(!response.ok)throw new Error('Banco de questões indisponível para facetas.');
+    return compactFacetRows(await response.json());
+  }catch{return [];}
+}
+function facetSelections(){
+  const selections={text:String(document.querySelector('#filterText')?.value||'').trim().toLowerCase()};
+  FACET_CONFIG.forEach(config=>{selections[config.key]=String(document.querySelector('#'+config.id)?.value||'');});
+  return selections;
+}
+function facetMatches(row,selections,exceptKey=''){
+  for(const config of FACET_CONFIG){
+    if(config.key===exceptKey)continue;
+    const selected=selections[config.key];
+    if(selected&&row[config.key]!==selected)return false;
+  }
+  if(selections.text&&!row.search.includes(selections.text))return false;
+  return true;
+}
+function facetCounts(key,selections){
+  const counts=new Map();
+  let candidateCount=0;
+  for(const row of facetRows){
+    if(!facetMatches(row,selections,key))continue;
+    candidateCount+=1;
+    const value=row[key];
+    if(value)counts.set(value,(counts.get(value)||0)+1);
+  }
+  return {counts,candidateCount};
+}
+function renderFacetOptions(){
+  if(!facetRows.length)return;
+  const selections=facetSelections();
+  for(const config of FACET_CONFIG){
+    const select=document.querySelector('#'+config.id);
+    if(!select)continue;
+    const current=select.value;
+    const {counts,candidateCount}=facetCounts(config.key,selections);
+    const fragment=document.createDocumentFragment();
+    const allOption=document.createElement('option');
+    allOption.value='';
+    allOption.textContent=`Todos (${candidateCount})`;
+    fragment.appendChild(allOption);
+    for(const value of facetUniverses[config.key]||[]){
+      const count=counts.get(value)||0;
+      const option=document.createElement('option');
+      option.value=value;
+      option.textContent=`${value} (${count})`;
+      if(count===0&&value!==current){option.disabled=true;option.hidden=true;}
+      fragment.appendChild(option);
+    }
+    select.replaceChildren(fragment);
+    if((facetUniverses[config.key]||[]).includes(current))select.value=current;
+    select.dataset.facetManaged='true';
+    select.setAttribute('aria-label',`${config.label}. As opções mostram a quantidade disponível no recorte atual.`);
+  }
+  const status=document.querySelector('#facetStatus');
+  if(status)status.innerHTML=`<strong>Filtros combinados</strong><span>${facetRows.length.toLocaleString('pt-BR')} questões indexadas · opções incompatíveis ficam ocultas.</span>`;
+}
+function clearInvalidDescendants(changedIndex){
+  const selections=facetSelections();
+  let cleared=false;
+  for(let index=changedIndex+1;index<FACET_CONFIG.length;index+=1){
+    const config=FACET_CONFIG[index];
+    const select=document.querySelector('#'+config.id);
+    const current=String(select?.value||'');
+    if(!current)continue;
+    const {counts}=facetCounts(config.key,selections);
+    if((counts.get(current)||0)>0)continue;
+    select.value='';
+    selections[config.key]='';
+    cleared=true;
+  }
+  return cleared;
+}
+function scheduleFacetRender(delay=20){
+  clearTimeout(facetTimer);
+  facetTimer=setTimeout(()=>{facetTimer=null;renderFacetOptions();},delay);
+}
+async function reloadFacetDataset(){
+  const rows=await readFacetDataset(true);
+  if(!rows.length)return;
+  facetRows=rows;
+  renderFacetOptions();
+}
+async function waitForAppFilters(){
+  for(let attempt=0;attempt<120;attempt+=1){
+    const orgao=document.querySelector('#filterOrgao');
+    const cargo=document.querySelector('#filterCargo');
+    if(orgao?.options?.length>1&&cargo?.options?.length>1)return true;
+    await new Promise(resolve=>setTimeout(resolve,100));
+  }
+  return false;
+}
+async function installFacetedFilters(){
+  const panel=document.querySelector('#filterPanel');
+  if(!panel)return;
+  let status=document.querySelector('#facetStatus');
+  if(!status){
+    status=document.createElement('div');
+    status.id='facetStatus';
+    status.className='facet-status';
+    status.innerHTML='<strong>Filtros combinados</strong><span>Preparando contagens do acervo…</span>';
+    const clear=document.querySelector('#clearFilters');
+    if(clear)clear.insertAdjacentElement('beforebegin',status);else panel.appendChild(status);
+  }
+  await waitForAppFilters();
+  facetRows=await readFacetDataset(false);
+  if(!facetRows.length){status.innerHTML='<strong>Filtros combinados indisponíveis</strong><span>O banco continua funcionando com os filtros padrão.</span>';return;}
+  renderFacetOptions();
+  document.addEventListener('change',event=>{
+    const index=FACET_CONFIG.findIndex(config=>config.id===event.target?.id);
+    if(index<0)return;
+    const target=event.target;
+    const trusted=event.isTrusted;
+    clearTimeout(facetTimer);
+    facetTimer=setTimeout(()=>{
+      facetTimer=null;
+      const cleared=trusted?clearInvalidDescendants(index):false;
+      renderFacetOptions();
+      if(cleared)target.dispatchEvent(new Event('change',{bubbles:true}));
+    },0);
+  });
+  document.addEventListener('input',event=>{
+    if(event.target?.id==='filterText'||event.target?.id==='globalSearch')scheduleFacetRender(90);
+  });
+  document.addEventListener('click',event=>{
+    if(!event.target.closest('[data-refresh-release]'))return;
+    clearTimeout(facetReloadTimer);
+    facetReloadTimer=setTimeout(()=>{facetReloadTimer=null;void reloadFacetDataset();},1600);
+  });
+}
+function scheduleFacetedInstall(){
+  const run=()=>void installFacetedFilters();
+  if('requestIdleCallback' in window)requestIdleCallback(run,{timeout:1600});else setTimeout(run,450);
+}
+
 function installStyles(){
   if(document.querySelector('#uxEnhancementStyles'))return;
   const style=document.createElement('style');
@@ -261,9 +440,10 @@ function installStyles(){
     .resolver-shortcut-hint>span{font-weight:800;letter-spacing:.04em;text-transform:uppercase;margin-right:3px}.resolver-shortcut-hint small{font-size:inherit}.resolver-shortcut-hint kbd{font:inherit;font-weight:800;line-height:1;padding:4px 6px;border:1px solid color-mix(in srgb,currentColor 24%,transparent);border-bottom-width:2px;border-radius:6px;background:color-mix(in srgb,currentColor 5%,transparent)}
     .result-session-insight{margin:18px 0}.result-insight-head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px}.result-insight-head p{max-width:760px;margin-bottom:0}.result-reading{white-space:nowrap;padding:7px 10px;border:1px solid currentColor;border-radius:999px;font-size:.78rem;font-weight:850}.result-reading-strong{color:#067647}.result-reading-attention{color:#b54708}.result-reading-priority{color:#b42318}.result-diagnostic-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:20px 0}.result-diagnostic-grid div{display:grid;gap:3px;padding:12px;border:1px solid var(--border,#d9deea);border-radius:12px}.result-diagnostic-grid strong{font-size:1.25rem}.result-diagnostic-grid span{font-size:.76rem;opacity:.7}.result-focus{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 16px;align-items:center;padding-top:16px;border-top:1px solid var(--border,#d9deea)}.result-focus>span{grid-column:1/-1;font-size:.7rem;font-weight:850;letter-spacing:.05em;opacity:.65}.result-focus>strong{font-size:1rem}.result-focus>small{grid-column:1/2;opacity:.72}.result-focus>button{grid-column:2;grid-row:2/4}
     .performance-topic-section{margin-top:24px}.performance-topic-section .section-heading p{margin-top:6px}.topic-priority-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.topic-priority-card{display:grid;gap:7px}.topic-priority-card h3{margin:0;font-size:1rem}.topic-priority-card p,.topic-priority-card small{margin:0}.topic-priority-card p{opacity:.72}.topic-priority-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.topic-priority-head span{font-size:.68rem;font-weight:850;letter-spacing:.05em;opacity:.62}.topic-priority-head strong{font-size:1.2rem}.topic-priority-bar{height:6px;border-radius:999px;overflow:hidden;background:color-mix(in srgb,currentColor 9%,transparent);margin:5px 0}.topic-priority-bar span{display:block;height:100%;border-radius:inherit;background:var(--accent,#4656e8)}.topic-priority-card .text-button{justify-self:start;margin-top:4px}
+    .facet-status{display:grid;gap:3px;padding:10px 11px;border:1px solid color-mix(in srgb,currentColor 13%,transparent);border-radius:10px;background:color-mix(in srgb,currentColor 3%,transparent)}.facet-status strong{font-size:.76rem}.facet-status span{font-size:.69rem;line-height:1.35;opacity:.68}
     @media(max-width:760px),(pointer:coarse){.resolver-shortcut-hint{display:none}.result-insight-head{display:grid}.result-reading{justify-self:start}.result-diagnostic-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.result-focus{grid-template-columns:1fr}.result-focus>*{grid-column:1!important;grid-row:auto!important}.result-focus>button{width:100%;margin-top:8px}.topic-priority-grid{grid-template-columns:1fr}}
   `;
   document.head.appendChild(style);
 }
-function init(){installStyles();installReviewSummarySync();installResolverShortcuts();installResultInsight();installPerformanceTopics();}
+function init(){installStyles();installReviewSummarySync();installResolverShortcuts();installResultInsight();installPerformanceTopics();scheduleFacetedInstall();}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
