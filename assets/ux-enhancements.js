@@ -4,6 +4,7 @@ let resultInsightTimer=null;
 let performanceTopicTimer=null;
 let facetTimer=null;
 let facetReloadTimer=null;
+let editorialCoverageTimer=null;
 let facetRows=[];
 let facetUniverses={};
 
@@ -17,6 +18,15 @@ const FACET_CONFIG=[
   {id:'filterAssunto',key:'assunto',label:'Assunto'},
   {id:'filterSubassunto',key:'subassunto',label:'Subassunto'},
   {id:'filterFormato',key:'formato',label:'Formato'}
+];
+const COVERAGE_FIELDS=[
+  {key:'concurso',label:'Concurso'},
+  {key:'edital',label:'Edital'},
+  {key:'topicoEdital',label:'Tópico do edital'},
+  {key:'disciplina',label:'Disciplina'},
+  {key:'assunto',label:'Assunto'},
+  {key:'subassunto',label:'Subassunto'},
+  {key:'cargo',label:'Cargo'}
 ];
 
 function readProgress(){
@@ -440,6 +450,74 @@ function scheduleFacetedInstall(){
   if('requestIdleCallback' in window)requestIdleCallback(run,{timeout:1600});else setTimeout(run,450);
 }
 
+function coverageTone(percent){
+  if(percent>=95)return {key:'high',label:'Alta'};
+  if(percent>=70)return {key:'good',label:'Boa'};
+  if(percent>=40)return {key:'partial',label:'Parcial'};
+  return {key:'low',label:'Baixa'};
+}
+function coverageCard(){
+  const grid=document.querySelector('[data-view="settings"] .grid.two');
+  if(!grid)return null;
+  let card=document.querySelector('#editorialCoverageCard');
+  if(card)return card;
+  card=document.createElement('article');
+  card.id='editorialCoverageCard';
+  card.className='card editorial-coverage-card';
+  const install=document.querySelector('#installCard');
+  if(install)install.insertAdjacentElement('beforebegin',card);else grid.appendChild(card);
+  return card;
+}
+function renderEditorialCoverage(metadata){
+  const card=coverageCard();
+  if(!card)return;
+  const published=metadata?.sourceAudit?.taxonomy?.published;
+  const total=Number(metadata?.questionCount)||Number(metadata?.sourceAudit?.published)||0;
+  if(!published){
+    card.innerHTML='<span class="kicker">QUALIDADE EDITORIAL</span><h2>Cobertura da taxonomia</h2><p>A auditoria detalhada será gerada na próxima sincronização do Banco Mestre.</p>';
+    return;
+  }
+  const rows=COVERAGE_FIELDS.map(field=>{
+    const value=published[field.key]||{};
+    const percent=Number(value.coveragePercent)||0;
+    const filled=Number(value.filled)||0;
+    const missing=Number(value.missing)||Math.max(0,total-filled);
+    const tone=coverageTone(percent);
+    return {...field,percent,filled,missing,tone};
+  });
+  const canonical=rows.find(row=>row.key==='concurso');
+  const topic=rows.find(row=>row.key==='topicoEdital');
+  const assunto=rows.find(row=>row.key==='assunto');
+  const generated=metadata?.generatedAt?new Date(metadata.generatedAt).toLocaleString('pt-BR'):'';
+  card.innerHTML=`
+    <div class="coverage-head"><div><span class="kicker">QUALIDADE EDITORIAL</span><h2>Cobertura da taxonomia</h2><p>Mostra quanto da release está classificado no Banco Mestre. A plataforma não inventa concurso, edital ou tópico quando a fonte está vazia.</p></div><span class="status-badge ${canonical?.percent>=95?'status-live':'status-empty'}">${canonical?canonical.percent.toFixed(2).replace('.',','):'0,00'}% vínculo canônico</span></div>
+    <div class="coverage-callout"><strong>${canonical?.filled.toLocaleString('pt-BR')||0} de ${total.toLocaleString('pt-BR')}</strong><span>questões publicadas possuem Concurso; ${canonical?.missing.toLocaleString('pt-BR')||0} ainda dependem de classificação editorial.</span></div>
+    <div class="coverage-list">${rows.map(row=>`<div class="coverage-row coverage-${row.tone.key}"><div class="coverage-label"><strong>${escapeHtml(row.label)}</strong><span>${row.filled.toLocaleString('pt-BR')} preenchidas · ${row.missing.toLocaleString('pt-BR')} faltantes</span></div><div class="coverage-value"><strong>${row.percent.toFixed(2).replace('.',',')}%</strong><small>${row.tone.label}</small></div><div class="coverage-track" aria-label="Cobertura de ${escapeHtml(row.label)}: ${row.percent.toFixed(2)}%"><span style="width:${Math.max(0,Math.min(100,row.percent))}%"></span></div></div>`).join('')}</div>
+    <div class="coverage-footer"><div><strong>Leitura do acervo</strong><span>Assunto: ${assunto?.percent.toFixed(2).replace('.',',')||'0,00'}% · Tópico do edital: ${topic?.percent.toFixed(2).replace('.',',')||'0,00'}%</span>${generated?`<small>Auditoria gerada em ${escapeHtml(generated)}.</small>`:''}</div><button type="button" class="secondary" data-refresh-release>Atualizar dados</button></div>`;
+}
+async function loadEditorialCoverage(force=false){
+  const card=coverageCard();
+  if(card&&!card.innerHTML)card.innerHTML='<span class="kicker">QUALIDADE EDITORIAL</span><h2>Cobertura da taxonomia</h2><p>Carregando auditoria da release…</p>';
+  try{
+    const url=force?`./data/metadata.json?coverage=${Date.now()}`:'./data/metadata.json';
+    const response=await fetch(url,{cache:force?'no-store':'force-cache'});
+    if(!response.ok)throw new Error('metadata indisponível');
+    renderEditorialCoverage(await response.json());
+  }catch{
+    if(card)card.innerHTML='<span class="kicker">QUALIDADE EDITORIAL</span><h2>Cobertura da taxonomia</h2><p>Não foi possível ler a auditoria agora. Os filtros e o banco continuam disponíveis normalmente.</p>';
+  }
+}
+function scheduleEditorialCoverage(delay=40,force=false){
+  clearTimeout(editorialCoverageTimer);
+  editorialCoverageTimer=setTimeout(()=>{editorialCoverageTimer=null;void loadEditorialCoverage(force);},delay);
+}
+function installEditorialCoverage(){
+  scheduleEditorialCoverage();
+  document.addEventListener('click',event=>{
+    if(event.target.closest('[data-refresh-release]'))scheduleEditorialCoverage(1900,true);
+  });
+}
+
 function installStyles(){
   if(document.querySelector('#uxEnhancementStyles'))return;
   const style=document.createElement('style');
@@ -450,9 +528,10 @@ function installStyles(){
     .result-session-insight{margin:18px 0}.result-insight-head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px}.result-insight-head p{max-width:760px;margin-bottom:0}.result-reading{white-space:nowrap;padding:7px 10px;border:1px solid currentColor;border-radius:999px;font-size:.78rem;font-weight:850}.result-reading-strong{color:#067647}.result-reading-attention{color:#b54708}.result-reading-priority{color:#b42318}.result-diagnostic-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:20px 0}.result-diagnostic-grid div{display:grid;gap:3px;padding:12px;border:1px solid var(--border,#d9deea);border-radius:12px}.result-diagnostic-grid strong{font-size:1.25rem}.result-diagnostic-grid span{font-size:.76rem;opacity:.7}.result-focus{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 16px;align-items:center;padding-top:16px;border-top:1px solid var(--border,#d9deea)}.result-focus>span{grid-column:1/-1;font-size:.7rem;font-weight:850;letter-spacing:.05em;opacity:.65}.result-focus>strong{font-size:1rem}.result-focus>small{grid-column:1/2;opacity:.72}.result-focus>button{grid-column:2;grid-row:2/4}
     .performance-topic-section{margin-top:24px}.performance-topic-section .section-heading p{margin-top:6px}.topic-priority-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.topic-priority-card{display:grid;gap:7px}.topic-priority-card h3{margin:0;font-size:1rem}.topic-priority-card p,.topic-priority-card small{margin:0}.topic-priority-card p{opacity:.72}.topic-priority-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.topic-priority-head span{font-size:.68rem;font-weight:850;letter-spacing:.05em;opacity:.62}.topic-priority-head strong{font-size:1.2rem}.topic-priority-bar{height:6px;border-radius:999px;overflow:hidden;background:color-mix(in srgb,currentColor 9%,transparent);margin:5px 0}.topic-priority-bar span{display:block;height:100%;border-radius:inherit;background:var(--accent,#4656e8)}.topic-priority-card .text-button{justify-self:start;margin-top:4px}
     .facet-status{display:grid;gap:3px;padding:10px 11px;border:1px solid color-mix(in srgb,currentColor 13%,transparent);border-radius:10px;background:color-mix(in srgb,currentColor 3%,transparent)}.facet-status strong{font-size:.76rem}.facet-status span{font-size:.69rem;line-height:1.35;opacity:.68}
-    @media(max-width:760px),(pointer:coarse){.resolver-shortcut-hint{display:none}.result-insight-head{display:grid}.result-reading{justify-self:start}.result-diagnostic-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.result-focus{grid-template-columns:1fr}.result-focus>*{grid-column:1!important;grid-row:auto!important}.result-focus>button{width:100%;margin-top:8px}.topic-priority-grid{grid-template-columns:1fr}}
+    .editorial-coverage-card{grid-column:1/-1}.coverage-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px}.coverage-head h2{margin-bottom:5px}.coverage-head p{max-width:760px;margin:0}.coverage-callout{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:18px 0;padding:12px 14px;border:1px solid var(--border,#d9deea);border-radius:12px}.coverage-callout strong{font-size:1.15rem}.coverage-callout span{font-size:.82rem;opacity:.72}.coverage-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.coverage-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px 14px;padding:12px;border:1px solid var(--border,#d9deea);border-radius:12px}.coverage-label,.coverage-value{display:grid;gap:2px}.coverage-label span,.coverage-value small{font-size:.7rem;opacity:.68}.coverage-value{text-align:right}.coverage-track{grid-column:1/-1;height:6px;border-radius:999px;background:color-mix(in srgb,currentColor 9%,transparent);overflow:hidden}.coverage-track span{display:block;height:100%;border-radius:inherit;background:var(--accent,#4656e8)}.coverage-low .coverage-track span{opacity:.48}.coverage-partial .coverage-track span{opacity:.65}.coverage-good .coverage-track span{opacity:.82}.coverage-footer{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-top:14px;padding-top:14px;border-top:1px solid var(--border,#d9deea)}.coverage-footer>div{display:grid;gap:3px}.coverage-footer span,.coverage-footer small{font-size:.75rem;opacity:.7}
+    @media(max-width:760px),(pointer:coarse){.resolver-shortcut-hint{display:none}.result-insight-head{display:grid}.result-reading{justify-self:start}.result-diagnostic-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.result-focus{grid-template-columns:1fr}.result-focus>*{grid-column:1!important;grid-row:auto!important}.result-focus>button{width:100%;margin-top:8px}.topic-priority-grid,.coverage-list{grid-template-columns:1fr}.coverage-head,.coverage-footer{display:grid}.coverage-head .status-badge{justify-self:start}.coverage-footer button{width:100%}}
   `;
   document.head.appendChild(style);
 }
-function init(){installStyles();installReviewSummarySync();installResolverShortcuts();installResultInsight();installPerformanceTopics();scheduleFacetedInstall();}
+function init(){installStyles();installReviewSummarySync();installResolverShortcuts();installResultInsight();installPerformanceTopics();scheduleFacetedInstall();installEditorialCoverage();}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
