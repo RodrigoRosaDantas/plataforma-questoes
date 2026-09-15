@@ -179,14 +179,16 @@
           <div id="activeFilters" class="active-filters" aria-label="Filtros ativos"></div>
           <div class="bank-layout">
             <aside id="filterPanel" class="filter-panel card" aria-label="Filtros do banco">
+              <label>Concurso<select id="filterConcurso"></select></label>
               <label>Órgão<select id="filterOrgao"></select></label>
               <label>Cargo<select id="filterCargo"></select></label>
               <label>Banca<select id="filterBanca"></select></label>
               <label>Ano<select id="filterAno"></select></label>
               <label>Disciplina<select id="filterDisciplina"></select></label>
               <label>Assunto<select id="filterAssunto"></select></label>
+              <label>Subassunto<select id="filterSubassunto"></select></label>
               <label>Formato<select id="filterFormato"></select></label>
-              <label>Texto<input id="filterText" type="search" placeholder="Enunciado, assunto…" /></label>
+              <label>Texto<input id="filterText" type="search" placeholder="Enunciado, concurso, assunto…" /></label>
               <button id="clearFilters" class="secondary full">Limpar filtros</button>
             </aside>
             <div class="bank-main">
@@ -319,6 +321,6 @@
   </div>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
-  <script type="module" src="./assets/app.js?v=platform-v2-3"></script>
+  <script type="module" src="./assets/app.js?v=platform-v2-4"></script>
 </body>
 </html>
