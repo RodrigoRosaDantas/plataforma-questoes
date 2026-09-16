@@ -7,15 +7,15 @@
     "sourceRepository": "RodrigoRosaDantas/seedf-ppge-dashboard",
     "sourceKind": "projected",
     "sourceVersion": "v0.2",
-    "sourceGeneratedAt": "2026-09-16T15:08:06.267Z",
+    "sourceGeneratedAt": "2026-09-16T18:55:05.661Z",
     "sourcePageUrl": "https://app.notion.com/p/3d4cf5a2673181ccb624e95c0759c02d",
     "editorialPolicy": {
       "official": false,
       "note": "Edital projetado pré-edital. Base histórica, atualização obrigatória e radar provável permanecem identificados separadamente."
     },
     "canonicalAxisCount": 60,
-    "canonicalLinkedAxes": 0,
-    "canonicalDirectQuestions": 0,
+    "canonicalLinkedAxes": 28,
+    "canonicalDirectQuestions": 119,
     "canonicalAmbiguousAxes": 0,
     "canonicalAxes": [
       {
@@ -32,7 +32,7 @@
         "sourceUrl": "https://economia.df.gov.br/documents/d/seec/dodf-122-01-07-2022-integra",
         "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
         "directLinkAmbiguous": false,
-        "directQuestionCount": 0
+        "directQuestionCount": 7
       },
       {
         "id": "3d4cf5a2-6731-8155-ad44-e56215f4c607",
@@ -48,7 +48,7 @@
         "sourceUrl": "https://economia.df.gov.br/documents/d/seec/dodf-122-01-07-2022-integra",
         "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
         "directLinkAmbiguous": false,
-        "directQuestionCount": 0
+        "directQuestionCount": 2
       },
       {
         "id": "3d4cf5a2-6731-8160-9c97-f8d126a24ff0",
@@ -64,7 +64,7 @@
         "sourceUrl": "https://economia.df.gov.br/documents/d/seec/dodf-122-01-07-2022-integra",
         "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
         "directLinkAmbiguous": false,
-        "directQuestionCount": 0
+        "directQuestionCount": 2
       },
       {
         "id": "3d4cf5a2-6731-811e-9a76-e1ba7b94a458",
@@ -80,7 +80,7 @@
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
         "sourceLastEditedAt": "2026-09-07T13:51:00.000Z",
         "directLinkAmbiguous": false,
-        "directQuestionCount": 0
+        "directQuestionCount": 2
       },
       {
         "id": "3d4cf5a2-6731-81fc-ab95-e22d69c0383e",
@@ -112,7 +112,7 @@
         "sourceUrl": "https://economia.df.gov.br/documents/d/seec/dodf-122-01-07-2022-integra",
         "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
         "directLinkAmbiguous": false,
-        "directQuestionCount": 0
+        "directQuestionCount": 3
       },
       {
         "id": "3d4cf5a2-6731-8123-aeb8-c47d7da571f8",
@@ -128,7 +128,7 @@
         "sourceUrl": "https://economia.df.gov.br/documents/d/seec/dodf-122-01-07-2022-integra",
         "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
         "directLinkAmbiguous": false,
-        "directQuestionCount": 0
+        "directQuestionCount": 5
       },
       {
         "id": "3d4cf5a2-6731-8169-af6f-d629415641c0",
@@ -144,7 +144,7 @@
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
         "sourceLastEditedAt": "2026-09-07T13:51:00.000Z",
         "directLinkAmbiguous": false,
-        "directQuestionCount": 0
+        "directQuestionCount": 3
       },
       {
         "id": "3d4cf5a2-6731-8154-902d-e2c62865e1ea",
@@ -160,7 +160,7 @@
         "sourceUrl": "https://economia.df.gov.br/documents/d/seec/dodf-122-01-07-2022-integra",
         "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
         "directLinkAmbiguous": false,
-        "directQuestionCount": 0
+        "directQuestionCount": 3
       },
       {
         "id": "3d4cf5a2-6731-819d-84e7-c3687788710f",
@@ -176,7 +176,7 @@
         "sourceUrl": "https://economia.df.gov.br/documents/d/seec/dodf-122-01-07-2022-integra",
         "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
         "directLinkAmbiguous": false,
-        "directQuestionCount": 0
+        "directQuestionCount": 6
       },
       {
         "id": "3d4cf5a2-6731-81c3-bb6c-c273d8d53963",
@@ -240,7 +240,7 @@
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
         "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
         "directLinkAmbiguous": false,
-        "directQuestionCount": 0
+        "directQuestionCount": 1
       },
       {
         "id": "3d4cf5a2-6731-81e6-bc10-d693d7011110",
@@ -288,7 +288,7 @@
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
         "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
         "directLinkAmbiguous": false,
-        "directQuestionCount": 0
+        "directQuestionCount": 1
       },
       {
         "id": "3d4cf5a2-6731-815b-9a22-e423f9b1b993",
@@ -320,7 +320,7 @@
         "sourceUrl": "https://economia.df.gov.br/documents/d/seec/dodf-122-01-07-2022-integra",
         "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
         "directLinkAmbiguous": false,
-        "directQuestionCount": 0
+        "directQuestionCount": 5
       },
       {
         "id": "3d4cf5a2-6731-81d4-a2d3-cd1b32c03289",
@@ -353,7 +353,7 @@
         "sourceUrl": "https://app.notion.com/p/3a6cf5a26731812d92f1e1a33e258eda",
         "sourceLastEditedAt": "2026-09-07T13:42:00.000Z",
         "directLinkAmbiguous": false,
-        "directQuestionCount": 0
+        "directQuestionCount": 10
       },
       {
         "id": "3d4cf5a2-6731-81e3-aab3-f18e7e2eabf7",
@@ -465,7 +465,7 @@
         "sourceUrl": "https://economia.df.gov.br/documents/d/seec/dodf-122-01-07-2022-integra",
         "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
         "directLinkAmbiguous": false,
-        "directQuestionCount": 0
+        "directQuestionCount": 5
       },
       {
         "id": "3d4cf5a2-6731-8164-a58d-ddf79346d4fb",
@@ -481,7 +481,7 @@
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
         "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
         "directLinkAmbiguous": false,
-        "directQuestionCount": 0
+        "directQuestionCount": 1
       },
       {
         "id": "3d4cf5a2-6731-819b-9852-e11387366047",
@@ -564,7 +564,7 @@
         "sourceUrl": "https://app.notion.com/p/3a6cf5a2673181148accc8d3b59f3606",
         "sourceLastEditedAt": "2026-09-07T13:42:00.000Z",
         "directLinkAmbiguous": false,
-        "directQuestionCount": 0
+        "directQuestionCount": 9
       },
       {
         "id": "3d4cf5a2-6731-811d-a16b-fa44a0ec844b",
@@ -596,7 +596,7 @@
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
         "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
         "directLinkAmbiguous": false,
-        "directQuestionCount": 0
+        "directQuestionCount": 4
       },
       {
         "id": "3d4cf5a2-6731-818e-913e-c266f3fde939",
@@ -629,7 +629,7 @@
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
         "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
         "directLinkAmbiguous": false,
-        "directQuestionCount": 0
+        "directQuestionCount": 10
       },
       {
         "id": "3d4cf5a2-6731-818d-aa26-d3d1ea852483",
@@ -713,7 +713,7 @@
         "sourceUrl": "https://app.notion.com/p/3a6cf5a26731812d92f1e1a33e258eda",
         "sourceLastEditedAt": "2026-09-07T13:42:00.000Z",
         "directLinkAmbiguous": false,
-        "directQuestionCount": 0
+        "directQuestionCount": 10
       },
       {
         "id": "3d4cf5a2-6731-815d-a70f-e3a58d145574",
@@ -729,7 +729,7 @@
         "sourceUrl": "https://economia.df.gov.br/documents/d/seec/dodf-122-01-07-2022-integra",
         "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
         "directLinkAmbiguous": false,
-        "directQuestionCount": 0
+        "directQuestionCount": 6
       },
       {
         "id": "3d4cf5a2-6731-814a-8b05-f6cb887c7be9",
@@ -826,7 +826,7 @@
         "sourceUrl": "https://app.notion.com/p/3a6cf5a2673181148accc8d3b59f3606",
         "sourceLastEditedAt": "2026-09-07T13:42:00.000Z",
         "directLinkAmbiguous": false,
-        "directQuestionCount": 0
+        "directQuestionCount": 9
       },
       {
         "id": "3d4cf5a2-6731-81ed-a527-f60c9c5bb69b",
@@ -874,7 +874,7 @@
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
         "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
         "directLinkAmbiguous": false,
-        "directQuestionCount": 0
+        "directQuestionCount": 2
       },
       {
         "id": "3d4cf5a2-6731-818e-bdf6-d19d3a841d77",
@@ -890,7 +890,7 @@
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
         "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
         "directLinkAmbiguous": false,
-        "directQuestionCount": 0
+        "directQuestionCount": 2
       },
       {
         "id": "3d4cf5a2-6731-8165-b48c-dd2a71b1c561",
@@ -922,7 +922,7 @@
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
         "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
         "directLinkAmbiguous": false,
-        "directQuestionCount": 0
+        "directQuestionCount": 4
       },
       {
         "id": "3d4cf5a2-6731-81f5-ad94-ee9893559367",
@@ -938,7 +938,7 @@
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
         "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
         "directLinkAmbiguous": false,
-        "directQuestionCount": 0
+        "directQuestionCount": 1
       },
       {
         "id": "3d4cf5a2-6731-81b6-bcbb-fd42b5979aea",
@@ -954,7 +954,7 @@
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
         "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
         "directLinkAmbiguous": false,
-        "directQuestionCount": 0
+        "directQuestionCount": 1
       },
       {
         "id": "3d4cf5a2-6731-8173-82ee-ed4a67d8f997",
@@ -970,7 +970,7 @@
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
         "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
         "directLinkAmbiguous": false,
-        "directQuestionCount": 0
+        "directQuestionCount": 4
       },
       {
         "id": "3d4cf5a2-6731-8131-84b3-c401e8795691",
@@ -986,7 +986,7 @@
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
         "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
         "directLinkAmbiguous": false,
-        "directQuestionCount": 0
+        "directQuestionCount": 1
       }
     ]
   },
@@ -998,7 +998,7 @@
     "sourceRepository": "RodrigoRosaDantas/tjdft-dashboard",
     "sourceKind": "historical-base",
     "sourceVersion": "base-2022",
-    "sourceGeneratedAt": "2026-09-16T17:28:20.715Z",
+    "sourceGeneratedAt": "2026-09-16T20:22:21.424Z",
     "sourcePageUrl": "https://app.notion.com/p/4c8fd5d72b4d42bd8dbf972b4896e64b",
     "editorialPolicy": {
       "official": false,
