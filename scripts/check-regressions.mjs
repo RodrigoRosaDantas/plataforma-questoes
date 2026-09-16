@@ -155,6 +155,16 @@ for(const marker of [
 ]) requireMarker(app,marker,'Contrato de sincronização D0/D7/D20 ausente');
 if(app.includes('Number(value.dueAt)||0,Number(value.removedAt)||0'))throw new Error('dueAt voltou a ser tratado como timestamp principal de conflito.');
 
+// Tombstones multiaparelho: remoções precisam vencer versões antigas no merge.
+for(const marker of [
+  'Number(value.updatedAt)||0',
+  'Number(value.removedAt)||0',
+  'merged[id]=entryTime(local[id])>=entryTime(remote[id])?local[id]:remote[id]',
+  'p.marked[q.id]=current&&!current.removed?{removed:true,removedAt:Date.now()}:{at:Date.now()}',
+  'p.notes[q.id]={text,updatedAt:now}'
+]) requireMarker(app,marker,'Proteção de tombstones de marcações/anotações ausente');
+
+
 // Facetas: reutilizam o questions.json já carregado pelo núcleo antes de recorrer ao fallback de rede/cache.
 for(const marker of [
   "window.dispatchEvent(new CustomEvent('questions:loaded',{detail:{questions:q}}))",
