@@ -261,6 +261,7 @@ function chooseOption(select,value){
 function openTopicFromPerformance(discipline,topic){
   document.querySelector('[data-go="questions"]')?.click();
   setTimeout(()=>{
+    document.querySelector('#clearFilters')?.click();
     chooseOption(document.querySelector('#filterDisciplina'),discipline);
     chooseOption(document.querySelector('#filterAssunto'),topic);
     document.querySelector('#startSession')?.focus({preventScroll:true});
@@ -290,6 +291,7 @@ function compactFacetRows(questions){
     assunto:String(question.assunto||''),
     subassunto:String(question.subassunto||''),
     formato:String(question.formato||''),
+    trailHay:normalize([question.concurso,question.orgao,question.cargo,question.nomeMaterial].join(' ')),
     search:[question.enunciado,question.concurso,question.edital,question.topicoEdital,question.disciplina,question.assunto,question.subassunto,question.cargo,question.banca,question.nomeMaterial].join(' ').toLowerCase()
   }));
   facetUniverses=Object.fromEntries(FACET_CONFIG.map(config=>[
@@ -318,7 +320,16 @@ function facetSelections(){
   FACET_CONFIG.forEach(config=>{selections[config.key]=String(document.querySelector('#'+config.id)?.value||'');});
   return selections;
 }
+function currentCompetitionScope(){return String(document.documentElement.dataset.competitionScope||'');}
+function facetBelongsToScope(row,scope){
+  if(!scope)return true;
+  if(scope==='seedf')return /seedf/i.test(row.trailHay);
+  if(scope==='tjdft')return /tjdft|tribunal de justica do distrito federal/i.test(row.trailHay);
+  if(scope==='sedes-df-2026')return /sedes/i.test(row.trailHay);
+  return true;
+}
 function facetMatches(row,selections,exceptKey=''){
+  if(!facetBelongsToScope(row,currentCompetitionScope()))return false;
   for(const config of FACET_CONFIG){
     if(config.key===exceptKey)continue;
     const selected=selections[config.key];
@@ -365,7 +376,12 @@ function renderFacetOptions(){
     select.setAttribute('aria-label',`${config.label}. As opções mostram a quantidade disponível no recorte atual.`);
   }
   const status=document.querySelector('#facetStatus');
-  if(status)status.innerHTML=`<strong>Filtros combinados</strong><span>${facetRows.length.toLocaleString('pt-BR')} questões indexadas · opções incompatíveis ficam ocultas.</span>`;
+  if(status){
+    const scope=currentCompetitionScope();
+    const scopedCount=scope?facetRows.filter(row=>facetBelongsToScope(row,scope)).length:facetRows.length;
+    const scopeLabel=scope?({seedf:'SEEDF',tjdft:'TJDFT','sedes-df-2026':'SEDES/DF 2026'}[scope]||scope):'';
+    status.innerHTML=`<strong>Filtros combinados${scopeLabel?' · '+escapeHtml(scopeLabel):''}</strong><span>${scopedCount.toLocaleString('pt-BR')} questões no recorte · opções incompatíveis ficam ocultas.</span>`;
+  }
 }
 function clearInvalidDescendants(changedIndex){
   const selections=facetSelections();
@@ -439,6 +455,7 @@ async function installFacetedFilters(){
   document.addEventListener('input',event=>{
     if(event.target?.id==='filterText'||event.target?.id==='globalSearch')scheduleFacetRender(90);
   });
+  window.addEventListener('competition-scope:changed',()=>scheduleFacetRender(0));
   document.addEventListener('click',event=>{
     if(!event.target.closest('[data-refresh-release]'))return;
     clearTimeout(facetReloadTimer);

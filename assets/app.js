@@ -15,7 +15,7 @@ const state = {
   questions: [], meta: {}, competitions: [], editais: [], officialExams: [], filtered: [],
   session: null, timer: null, startedAt: null, currentView: 'home', hiddenAt: null, syncLabel: 'Release publicada',
   cloudSyncTimer: null, noteDrafts: {}, searchTimer: null, editalTimer: null,
-  installPrompt: null, swRegistration: null, editalQuery: '', filtersOpen: false,
+  installPrompt: null, swRegistration: null, editalQuery: '', filtersOpen: false, competitionScope: '',
   cloud: {status:'loading',email:'',profileId:'',message:''}
 };
 
@@ -28,7 +28,7 @@ const seconds = ms => Math.max(0, Math.floor(ms/1000));
 const clock = sec => `${String(Math.floor(sec/60)).padStart(2,'0')}:${String(sec%60).padStart(2,'0')}`;
 const VIEW_IDS = new Set(['home','edits','questions','proofs','simulations','resolver','result','review','performance','import','settings']);
 const FILTER_TO_ELEMENT = {concurso:'filterConcurso',orgao:'filterOrgao',cargo:'filterCargo',banca:'filterBanca',ano:'filterAno',disciplina:'filterDisciplina',assunto:'filterAssunto',subassunto:'filterSubassunto',formato:'filterFormato',text:'filterText'};
-const FILTER_LABELS = {concurso:'Concurso',orgao:'Órgão',cargo:'Cargo',banca:'Banca',ano:'Ano',disciplina:'Disciplina',assunto:'Assunto',subassunto:'Subassunto',formato:'Formato',text:'Texto'};
+const FILTER_LABELS = {trilha:'Trilha',concurso:'Concurso',orgao:'Órgão',cargo:'Cargo',banca:'Banca',ano:'Ano',disciplina:'Disciplina',assunto:'Assunto',subassunto:'Subassunto',formato:'Formato',text:'Texto'};
 
 function routeFromUrl(){
   const route=new URL(window.location.href).searchParams.get('view')||'home';
@@ -309,6 +309,16 @@ function questionBelongsTo(q,competitionId){
   if(competitionId==='sedes-df-2026') return /SEDES/i.test(hay);
   return false;
 }
+function competitionLabel(competitionId){
+  return ({seedf:'SEEDF',tjdft:'TJDFT','sedes-df-2026':'SEDES/DF 2026'})[competitionId]||String(competitionId||'');
+}
+function setCompetitionScope(competitionId=''){
+  const next=['seedf','tjdft','sedes-df-2026'].includes(competitionId)?competitionId:'';
+  if(state.competitionScope===next)return;
+  state.competitionScope=next;
+  if(next)document.documentElement.dataset.competitionScope=next;else delete document.documentElement.dataset.competitionScope;
+  window.dispatchEvent(new CustomEvent('competition-scope:changed',{detail:{competitionId:next}}));
+}
 
 function buildVerticalizedEditais(){
   return state.editais.map(config=>{
@@ -349,6 +359,7 @@ function bindGlobal(){
       const key=removeFilter.dataset.removeFilter,id=FILTER_TO_ELEMENT[key],element=id?$('#'+id):null;
       if(element)element.value='';
       if(key==='text')$('#globalSearch').value='';
+      if(key==='trilha')setCompetitionScope('');
       applyFilters();return;
     }
     const refresh=e.target.closest('[data-refresh-release]');if(refresh){refreshRelease();return;}
@@ -428,7 +439,7 @@ function navigate(view,options={}){
 
 function resetQuestionFilters(){
   ['filterConcurso','filterOrgao','filterCargo','filterBanca','filterAno','filterDisciplina','filterAssunto','filterSubassunto','filterFormato'].forEach(id=>{const el=$('#'+id);if(el)el.value='';});
-  $('#filterText').value=''; $('#globalSearch').value='';
+  $('#filterText').value=''; $('#globalSearch').value=''; setCompetitionScope('');
 }
 function setQuestionFilter(id,value){
   const el=$('#'+id); if(!el)return;
@@ -442,11 +453,10 @@ function openTopic(orgao,disciplina,assunto,cargo){
   else toast('Nenhuma questão encontrada neste tópico.');
 }
 function openCompetition(competitionId){
-  const sample=state.questions.find(q=>questionBelongsTo(q,competitionId));
-  navigate('questions'); resetQuestionFilters();
-  if(sample) setQuestionFilter('filterOrgao',sample.orgao);
+  const hasQuestions=state.questions.some(q=>questionBelongsTo(q,competitionId));
+  navigate('questions'); resetQuestionFilters(); setCompetitionScope(competitionId);
   applyFilters();
-  toast(sample?fmt(state.filtered.length)+' questões nesta trilha.':'Ainda não há questões publicadas nesta trilha.');
+  toast(hasQuestions?fmt(state.filtered.length)+' questões na trilha '+competitionLabel(competitionId)+'.':'Ainda não há questões publicadas nesta trilha.');
 }
 function officialProofQuestions(career){
   return state.questions
@@ -499,8 +509,9 @@ function renderActiveFilters(filters){
   const toggle=$('#filterToggle');if(toggle&&!state.filtersOpen)toggle.textContent=active.length?`☷ Filtros (${active.length})`:'☷ Exibir filtros';
 }
 function applyFilters(){
-  const f={concurso:$('#filterConcurso').value,orgao:$('#filterOrgao').value,cargo:$('#filterCargo').value,banca:$('#filterBanca').value,ano:$('#filterAno').value,disciplina:$('#filterDisciplina').value,assunto:$('#filterAssunto').value,subassunto:$('#filterSubassunto').value,formato:$('#filterFormato').value,text:$('#filterText').value.trim().toLowerCase()};
+  const f={trilha:state.competitionScope?competitionLabel(state.competitionScope):'',concurso:$('#filterConcurso').value,orgao:$('#filterOrgao').value,cargo:$('#filterCargo').value,banca:$('#filterBanca').value,ano:$('#filterAno').value,disciplina:$('#filterDisciplina').value,assunto:$('#filterAssunto').value,subassunto:$('#filterSubassunto').value,formato:$('#filterFormato').value,text:$('#filterText').value.trim().toLowerCase()};
   state.filtered=state.questions.filter(q=>{
+    if(state.competitionScope&&!questionBelongsTo(q,state.competitionScope)) return false;
     if(f.concurso && q.concurso!==f.concurso) return false; if(f.orgao && q.orgao!==f.orgao) return false; if(f.cargo && q.cargo!==f.cargo) return false; if(f.banca && q.banca!==f.banca) return false;
     if(f.ano && String(q.ano)!==f.ano) return false; if(f.disciplina && q.disciplina!==f.disciplina) return false; if(f.assunto && q.assunto!==f.assunto) return false; if(f.subassunto && q.subassunto!==f.subassunto) return false; if(f.formato && q.formato!==f.formato) return false;
     if(f.text){ const hay=[q.enunciado,q.concurso,q.edital,q.topicoEdital,q.disciplina,q.assunto,q.subassunto,q.cargo,q.banca,q.nomeMaterial].join(' ').toLowerCase(); if(!hay.includes(f.text)) return false; }
