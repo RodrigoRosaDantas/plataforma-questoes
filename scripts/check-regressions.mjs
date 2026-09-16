@@ -6,6 +6,7 @@ const cloud=await fs.readFile('assets/cloud-progress.js','utf8');
 const studyPlan=await fs.readFile('assets/study-plan.js','utf8');
 const canonical=await fs.readFile('assets/canonical-editais.js','utf8');
 const taxonomySync=await fs.readFile('scripts/sync-editorial-taxonomies.mjs','utf8');
+const casMigration=await fs.readFile('supabase/migrations/20260916141000_fix_progress_state_compare_and_swap_column_ambiguity.sql','utf8');
 const v2=await fs.readFile('assets/v2.css','utf8');
 const sw=await fs.readFile('service-worker.js','utf8');
 const editais=JSON.parse(await fs.readFile('data/editais.json','utf8'));
@@ -57,6 +58,28 @@ if(cloud.includes('options:{email_redirect_to'))throw new Error('Magic Link volt
 if(/authenticated\s*:\s*status===['"]authenticated['"]/.test(cloud))throw new Error('Autenticação não pode depender apenas do estado visual da sincronização.');
 requireMarker(app,"authenticated:'Conta conectada'",'Interface voltou a chamar mera autenticação de sincronização concluída');
 if(app.includes("authenticated:'Sincronizado'"))throw new Error('Conta autenticada não pode ser apresentada como sincronizada sem confirmação de gravação.');
+
+// Concorrência multiaparelho: gravação do estado usa compare-and-swap + merge/retry.
+for(const marker of [
+  "/rest/v1/rpc/compare_and_swap_student_progress_state",
+  'p_expected_version:expected',
+  "setStatus('syncing','Outro aparelho atualizou a nuvem. Mesclando as alterações…')"
+]) requireMarker(cloud,marker,'Cliente CAS da nuvem ausente');
+if(cloud.includes('/rest/v1/student_progress_states?on_conflict=profile_id'))throw new Error('Estado da nuvem voltou ao upsert cego sem controle de versão.');
+for(const marker of [
+  'for(let attempt=0;attempt<4;attempt+=1)',
+  'Number(remoteState?.state_version)||0',
+  'if(write.saved){saved=true;break;}',
+  'if(!write.conflict)throw new Error',
+  "if(!saved)throw new Error('A nuvem mudou repetidamente durante a sincronização.')"
+]) requireMarker(app,marker,'Retry de conflito do estado da nuvem ausente');
+for(const marker of [
+  'compare_and_swap_student_progress_state',
+  'progress.state_version = p_expected_version',
+  'return query select false, coalesce(v_row.state_version, 0)',
+  'revoke all on function public.compare_and_swap_student_progress_state(text,bigint,jsonb,text) from anon',
+  'grant execute on function public.compare_and_swap_student_progress_state(text,bigint,jsonb,text) to authenticated'
+]) requireMarker(casMigration,marker,'Contrato SQL de compare-and-swap ausente');
 
 // Revisões multiaparelho: dueAt é agenda, não timestamp de conflito.
 for(const marker of [
@@ -144,7 +167,7 @@ requireMarker(v2,'.scorecard-grid { grid-template-columns: repeat(2, minmax(0, 1
 
 // PWA: qualquer alteração crítica no shell precisa chegar sem depender do cache anterior.
 const cacheVersion=Number(sw.match(/plataforma-questoes-v(\d+)/)?.[1]||0);
-if(cacheVersion<47)throw new Error('Cache PWA regrediu para uma versão anterior à correção de precisão e brancos.');
+if(cacheVersion<49)throw new Error('Cache PWA regrediu para uma versão anterior ao compare-and-swap multiaparelho.');
 for(const marker of ["'./assets/cloud-progress.js'","'./assets/study-plan.js'","'./assets/ux-enhancements.js'","'./assets/canonical-editais.js'"]) requireMarker(sw,marker,'Módulo crítico ausente do shell PWA');
 
 // Triagem editorial: nunca transforma heurística em writeback automático.

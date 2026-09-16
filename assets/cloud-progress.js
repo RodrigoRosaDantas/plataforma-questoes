@@ -273,15 +273,30 @@ async function loadCloudState(){
   const rows=await request('/rest/v1/student_progress_states?select=state,state_version,updated_at,device_id&profile_id=eq.'+encodeURIComponent(profileId)+'&limit=1');
   return Array.isArray(rows)?rows[0]||null:null;
 }
-async function saveCloudState(stateValue,stateVersion=1){
-  if(!hasSession())return {saved:false};
+async function saveCloudState(stateValue,expectedVersion=0){
+  if(!hasSession())return {saved:false,conflict:false};
   await ensureProfile();
-  const updatedAt=new Date().toISOString();
-  const row={profile_id:profileId,state:stateValue&&typeof stateValue==='object'?stateValue:{},state_version:Math.max(1,Number(stateVersion)||1),device_id:deviceId(),updated_at:updatedAt};
-  await request('/rest/v1/student_progress_states?on_conflict=profile_id',{method:'POST',headers:{Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify(row)});
-  const clock=new Date(updatedAt).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-  setStatus('authenticated','Nuvem atualizada às '+clock+'. Seu progresso está disponível para outros aparelhos conectados à mesma conta.');
-  return {saved:true,updatedAt};
+  const expected=Math.max(0,Number(expectedVersion)||0);
+  const payload={
+    p_profile_id:profileId,
+    p_expected_version:expected,
+    p_state:stateValue&&typeof stateValue==='object'?stateValue:{},
+    p_device_id:deviceId()
+  };
+  const result=await request('/rest/v1/rpc/compare_and_swap_student_progress_state',{
+    method:'POST',
+    headers:{Prefer:'return=representation'},
+    body:JSON.stringify(payload)
+  });
+  const row=Array.isArray(result)?result[0]||{}:result||{};
+  if(row.saved===true){
+    const updatedAt=row.updated_at||new Date().toISOString();
+    const clock=new Date(updatedAt).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+    setStatus('authenticated','Nuvem atualizada às '+clock+'. Seu progresso está disponível para outros aparelhos conectados à mesma conta.');
+    return {saved:true,conflict:false,stateVersion:Number(row.state_version)||expected+1,updatedAt};
+  }
+  setStatus('syncing','Outro aparelho atualizou a nuvem. Mesclando as alterações…');
+  return {saved:false,conflict:true,stateVersion:Number(row.state_version)||0,updatedAt:row.updated_at||null};
 }
 function mergeHistory(localHistory,remoteHistory){
   const merged=new Map();

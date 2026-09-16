@@ -251,12 +251,18 @@ async function syncCloudProgress(options={}){
   if(result.history)saveHistoryIfChanged(result.history);
   if(!result.synced)return;
   try{
-    const [remoteHistory,remoteState]=await Promise.all([cloudProgress.loadCloudHistory(),cloudProgress.loadCloudState()]);
-    const remotePayload=remoteState?.state&&typeof remoteState.state==='object'?{...remoteState.state,history:cloudProgress.mergeHistory(remoteState.state.history,remoteHistory)}:{history:remoteHistory};
-    const local=store.load(),merged=mergeProgressState(local,remotePayload);
-    if(JSON.stringify(local)!==JSON.stringify(merged))store.save(merged);
-    const finalState=store.load();
-    await cloudProgress.saveCloudState(cloudStatePayload(finalState),Math.max(Number(remoteState?.state_version)||0,Number(finalState.version)||1)+1);
+    let finalState=store.load(),saved=false;
+    for(let attempt=0;attempt<4;attempt+=1){
+      const [remoteHistory,remoteState]=await Promise.all([cloudProgress.loadCloudHistory(),cloudProgress.loadCloudState()]);
+      const remotePayload=remoteState?.state&&typeof remoteState.state==='object'?{...remoteState.state,history:cloudProgress.mergeHistory(remoteState.state.history,remoteHistory)}:{history:remoteHistory};
+      const local=store.load(),merged=mergeProgressState(local,remotePayload);
+      if(JSON.stringify(local)!==JSON.stringify(merged))store.save(merged);
+      finalState=store.load();
+      const write=await cloudProgress.saveCloudState(cloudStatePayload(finalState),Number(remoteState?.state_version)||0);
+      if(write.saved){saved=true;break;}
+      if(!write.conflict)throw new Error('Falha ao salvar o estado da nuvem.');
+    }
+    if(!saved)throw new Error('A nuvem mudou repetidamente durante a sincronização.');
     const active=finalState.activeSession;
     if(active&&(!state.session||entryTime(active)>entryTime(state.session)))hydrateSession(active);
     if(!options.silent)toast('Progresso sincronizado entre os aparelhos.');
