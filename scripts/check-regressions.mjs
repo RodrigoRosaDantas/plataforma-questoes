@@ -94,6 +94,16 @@ for(const marker of [
 ]) requireMarker(cloud,marker,'Contrato de idempotência do histórico ausente');
 if(cloud.includes("resolution=merge-duplicates"))throw new Error('Sessão concluída voltou a poder ser sobrescrita na nuvem.');
 
+// Paginação da nuvem: nunca aceitar histórico parcialmente carregado como se estivesse completo.
+for(const marker of [
+  'const CLOUD_PAGE_SIZE=1000',
+  'const CLOUD_MAX_PAGES=100',
+  'async function fetchRows(path,maxPages=CLOUD_MAX_PAGES)',
+  "if(data.length<CLOUD_PAGE_SIZE)return rows",
+  "if(page===safePages-1)throw new Error('Histórico da nuvem excedeu o limite seguro de '"
+]) requireMarker(cloud,marker,'Proteção contra truncamento silencioso do histórico da nuvem ausente');
+if(cloud.includes('async function fetchRows(path,maxPages=20)'))throw new Error('Paginação da nuvem regrediu para o teto silencioso de 20 mil registros.');
+
 // Erros: contagem e relógios são reconstruídos do histórico idempotente após o merge.
 for(const marker of [
   'function rebuildErrorsFromHistory(history,fallbackValue)',
@@ -237,7 +247,7 @@ requireMarker(v2,'.scorecard-grid { grid-template-columns: repeat(2, minmax(0, 1
 
 // PWA: qualquer alteração crítica no shell precisa chegar sem depender do cache anterior.
 const cacheVersion=Number(sw.match(/plataforma-questoes-v(\d+)/)?.[1]||0);
-if(cacheVersion<59)throw new Error('Cache PWA regrediu para uma versão anterior à proteção dos intervalos D0/D7/D20.');
+if(cacheVersion<61)throw new Error('Cache PWA regrediu para uma versão anterior à proteção contra truncamento da nuvem.');
 for(const marker of ["'./assets/cloud-progress.js'","'./assets/study-plan.js'","'./assets/ux-enhancements.js'","'./assets/canonical-editais.js'"]) requireMarker(sw,marker,'Módulo crítico ausente do shell PWA');
 
 // Triagem editorial: nunca transforma heurística em writeback automático.

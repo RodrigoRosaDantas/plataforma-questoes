@@ -221,13 +221,20 @@ async function syncLocal(history){
     return {synced:false,history:normalized,count:0,error};
   }
 }
-async function fetchRows(path,maxPages=20){
+const CLOUD_PAGE_SIZE=1000;
+const CLOUD_MAX_PAGES=100;
+async function fetchRows(path,maxPages=CLOUD_MAX_PAGES){
   const rows=[];
-  for(let page=0;page<maxPages;page++){
-    const data=await request(path+'&offset='+(page*1000)+'&limit=1000');
-    if(!Array.isArray(data)){if(page===0)return [];break;}
+  const safePages=Math.max(1,Number(maxPages)||CLOUD_MAX_PAGES);
+  for(let page=0;page<safePages;page++){
+    const data=await request(path+'&offset='+(page*CLOUD_PAGE_SIZE)+'&limit='+CLOUD_PAGE_SIZE);
+    if(!Array.isArray(data)){
+      if(page===0)return [];
+      throw new Error('Resposta paginada inválida durante a leitura do histórico da nuvem.');
+    }
     rows.push(...data);
-    if(data.length<1000)break;
+    if(data.length<CLOUD_PAGE_SIZE)return rows;
+    if(page===safePages-1)throw new Error('Histórico da nuvem excedeu o limite seguro de '+(safePages*CLOUD_PAGE_SIZE)+' registros. Sincronização interrompida para evitar truncamento.');
   }
   return rows;
 }
