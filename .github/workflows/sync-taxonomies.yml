@@ -7,6 +7,7 @@ on:
     paths:
       - "scripts/sync-editorial-taxonomies.mjs"
       - "scripts/build-taxonomy-candidates.mjs"
+      - "scripts/build-taxonomy-review-groups.mjs"
       - ".github/workflows/sync-taxonomies.yml"
   schedule:
     - cron: "23 * * * *"
@@ -33,18 +34,20 @@ jobs:
         run: node scripts/sync-editorial-taxonomies.mjs
       - name: Gerar triagem de vínculos editoriais
         run: node scripts/build-taxonomy-candidates.mjs
+      - name: Gerar lotes editoriais coesos
+        run: node scripts/build-taxonomy-review-groups.mjs
       - name: Validar plataforma
         run: npm run validate
       - name: Commitar dados editoriais derivados
         shell: bash
         run: |
-          if [ -z "$(git status --porcelain -- data/editais.json data/taxonomy-candidates.json)" ]; then
+          if [ -z "$(git status --porcelain -- data/editais.json data/taxonomy-candidates.json data/taxonomy-review-groups.json)" ]; then
             echo "Sem alterações nas taxonomias/triagem."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/editais.json data/taxonomy-candidates.json
+          git add data/editais.json data/taxonomy-candidates.json data/taxonomy-review-groups.json
           git commit -m "data: sincronizar taxonomias e triagem editorial"
           git pull --rebase origin main
           git push origin HEAD:main
