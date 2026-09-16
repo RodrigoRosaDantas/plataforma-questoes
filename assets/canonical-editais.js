@@ -1,3 +1,9 @@
+const CLOUD_DEVICE_KEY='plataforma.questoes.device.v1';
+try{
+  const savedDevice=localStorage.getItem(CLOUD_DEVICE_KEY);
+  if(savedDevice&&!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(savedDevice))localStorage.removeItem(CLOUD_DEVICE_KEY);
+}catch{}
+
 const CANONICAL_DATA='./data/editais.json';
 let canonicalState=null;
 let canonicalTimer=null;
