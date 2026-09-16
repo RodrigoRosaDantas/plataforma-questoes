@@ -2,6 +2,9 @@ name: Sincronizar taxonomias dos editais
 
 on:
   workflow_dispatch:
+  workflow_run:
+    workflows: ["Sincronizar Banco Mestre do Notion"]
+    types: [completed]
   push:
     branches: [main]
     paths:
@@ -21,6 +24,7 @@ concurrency:
 
 jobs:
   sync:
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
