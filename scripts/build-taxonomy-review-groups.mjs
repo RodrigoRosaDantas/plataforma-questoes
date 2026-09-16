@@ -2,6 +2,7 @@ import fs from 'node:fs/promises';
 
 const report=JSON.parse(await fs.readFile('data/taxonomy-candidates.json','utf8'));
 if(report?.schemaVersion!==3||!Array.isArray(report.entries))throw new Error('Triagem editorial v3 não encontrada.');
+if(!report.sourceReleaseSnapshotId)throw new Error('Triagem editorial sem release de origem identificada.');
 
 const text=value=>String(value??'').trim();
 const normalize=value=>text(value).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,' ').replace(/\s+/g,' ').trim();
@@ -82,6 +83,8 @@ const output={
   schemaVersion:1,
   generatedAt:new Date().toISOString(),
   sourceCandidateSchemaVersion:report.schemaVersion,
+  sourceReleaseSnapshotId:report.sourceReleaseSnapshotId,
+  sourceQuestionCount:Number(report.sourceQuestionCount),
   policy:{
     writeback:false,
     automaticApplication:false,
