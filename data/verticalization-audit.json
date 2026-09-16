@@ -1,0 +1,763 @@
+{
+  "generatedAt": "2026-09-16T18:22:33.928Z",
+  "questionCount": 3696,
+  "duplicateQuestionIds": [],
+  "scopes": {
+    "seedf": {
+      "count": 824,
+      "missingAssunto": 0,
+      "missingAssuntoPercent": 0,
+      "missingSubassunto": 509,
+      "explicitConcurso": 0,
+      "explicitEdital": 0,
+      "explicitTopicoEdital": 0,
+      "topDisciplinas": [
+        {
+          "value": "Administração",
+          "count": 89
+        },
+        {
+          "value": "Artes",
+          "count": 50
+        },
+        {
+          "value": "Biologia",
+          "count": 50
+        },
+        {
+          "value": "Biomedicina",
+          "count": 50
+        },
+        {
+          "value": "Contabilidade",
+          "count": 50
+        },
+        {
+          "value": "Direito",
+          "count": 50
+        },
+        {
+          "value": "Produção Cultural",
+          "count": 50
+        },
+        {
+          "value": "Psicologia",
+          "count": 50
+        },
+        {
+          "value": "Arquitetura",
+          "count": 49
+        },
+        {
+          "value": "Pedagogia",
+          "count": 48
+        },
+        {
+          "value": "Química",
+          "count": 48
+        },
+        {
+          "value": "Legislação e Políticas Educacionais",
+          "count": 46
+        },
+        {
+          "value": "Eletrotécnica",
+          "count": 38
+        },
+        {
+          "value": "Educação Especial e Políticas Educacionais",
+          "count": 33
+        },
+        {
+          "value": "Educação inclusiva e temas pedagógicos",
+          "count": 30
+        }
+      ],
+      "topCargos": [
+        {
+          "value": "Professor de Educação Básica — Área de Formação: Administração",
+          "count": 119
+        },
+        {
+          "value": "Gestor PPGE — Administração",
+          "count": 118
+        },
+        {
+          "value": "Professor de Educação Básica — Área de Formação: Pedagogia",
+          "count": 72
+        },
+        {
+          "value": "Professor de Educação Básica — Área de Formação: Artes",
+          "count": 50
+        },
+        {
+          "value": "Professor de Educação Básica — Área de Formação: Biologia",
+          "count": 50
+        },
+        {
+          "value": "Professor de Educação Básica — Área de Formação: Biomedicina",
+          "count": 50
+        },
+        {
+          "value": "Professor de Educação Básica — Área de Formação: Contabilidade",
+          "count": 50
+        },
+        {
+          "value": "Professor de Educação Básica — Área de Formação: Direito",
+          "count": 50
+        },
+        {
+          "value": "Professor de Educação Básica — Área de Formação: Produção Cultural",
+          "count": 50
+        },
+        {
+          "value": "Professor de Educação Básica — Área de Formação: Psicologia",
+          "count": 50
+        },
+        {
+          "value": "Professor de Educação Básica — Área de Formação: Arquitetura",
+          "count": 49
+        },
+        {
+          "value": "Professor de Educação Básica — Área de Formação: Química",
+          "count": 48
+        },
+        {
+          "value": "Professor de Educação Básica — Área de Formação: Eletrotécnica",
+          "count": 43
+        },
+        {
+          "value": "Professor de Educação Básica — Área de Formação: Eletrônica",
+          "count": 25
+        }
+      ],
+      "topOrgaos": [
+        {
+          "value": "Secretaria de Estado de Educação do Distrito Federal — SEEDF/DF",
+          "count": 824
+        }
+      ]
+    },
+    "tjdft": {
+      "count": 232,
+      "missingAssunto": 0,
+      "missingAssuntoPercent": 0,
+      "missingSubassunto": 222,
+      "explicitConcurso": 232,
+      "explicitEdital": 232,
+      "explicitTopicoEdital": 232,
+      "topDisciplinas": [
+        {
+          "value": "Língua Portuguesa",
+          "count": 40
+        },
+        {
+          "value": "Direito Penal",
+          "count": 15
+        },
+        {
+          "value": "Direito Administrativo",
+          "count": 13
+        },
+        {
+          "value": "Direito Constitucional",
+          "count": 12
+        },
+        {
+          "value": "Orçamento Público e MCASP",
+          "count": 11
+        },
+        {
+          "value": "Inteligência Artificial e Processamento de Linguagem Natural",
+          "count": 9
+        },
+        {
+          "value": "Regimento e organização judiciária",
+          "count": 9
+        },
+        {
+          "value": "Direito Processual Civil",
+          "count": 8
+        },
+        {
+          "value": "Gestão de Pessoas",
+          "count": 8
+        },
+        {
+          "value": "Processo Civil",
+          "count": 7
+        },
+        {
+          "value": "Direito Civil",
+          "count": 6
+        },
+        {
+          "value": "Direito Processual Penal",
+          "count": 6
+        },
+        {
+          "value": "Direito Civil e LINDB",
+          "count": 5
+        },
+        {
+          "value": "Ética no Serviço Público, Regimento Interno e Lei de Organização Judiciária",
+          "count": 5
+        },
+        {
+          "value": "Língua Inglesa",
+          "count": 5
+        }
+      ],
+      "topCargos": [
+        {
+          "value": "Analista Judiciário — Administração",
+          "count": 60
+        },
+        {
+          "value": "Técnico Judiciário — Área Administrativa",
+          "count": 60
+        },
+        {
+          "value": "Analista Judiciário — Área Judiciária",
+          "count": 59
+        },
+        {
+          "value": "Analista Judiciário — Análise de Dados",
+          "count": 53
+        }
+      ],
+      "topOrgaos": [
+        {
+          "value": "Tribunal de Justiça do Distrito Federal e dos Territórios (TJDFT)",
+          "count": 232
+        }
+      ]
+    },
+    "sedes-df-2026": {
+      "count": 581,
+      "missingAssunto": 0,
+      "missingAssuntoPercent": 0,
+      "missingSubassunto": 180,
+      "explicitConcurso": 0,
+      "explicitEdital": 0,
+      "explicitTopicoEdital": 0,
+      "topDisciplinas": [
+        {
+          "value": "Língua Portuguesa",
+          "count": 160
+        },
+        {
+          "value": "Programas e Benefícios do DF",
+          "count": 100
+        },
+        {
+          "value": "Assistência Social / SUAS / LOAS",
+          "count": 93
+        },
+        {
+          "value": "Legislação do DF e Carreira SEDES",
+          "count": 60
+        },
+        {
+          "value": "Políticas para Mulheres e Lei Maria da Penha",
+          "count": 40
+        },
+        {
+          "value": "Arquivologia",
+          "count": 20
+        },
+        {
+          "value": "Direito Administrativo",
+          "count": 20
+        },
+        {
+          "value": "Direito Constitucional",
+          "count": 20
+        },
+        {
+          "value": "Distrito Federal e RIDE",
+          "count": 20
+        },
+        {
+          "value": "Primeiros Socorros",
+          "count": 20
+        },
+        {
+          "value": "Recursos Materiais e Patrimônio",
+          "count": 20
+        },
+        {
+          "value": "Gestão de Pessoas",
+          "count": 6
+        },
+        {
+          "value": "Administração Financeira e Orçamentária (AFO)",
+          "count": 1
+        },
+        {
+          "value": "Assistência Social / MROSC",
+          "count": 1
+        }
+      ],
+      "topCargos": [
+        {
+          "value": "TDAS — Técnico Administrativo",
+          "count": 570
+        },
+        {
+          "value": "EDAS — Administrador",
+          "count": 11
+        }
+      ],
+      "topOrgaos": [
+        {
+          "value": "SEDES/DF",
+          "count": 581
+        }
+      ]
+    }
+  },
+  "unscoped": {
+    "count": 2059,
+    "percent": 55.71,
+    "topDisciplinas": [
+      {
+        "value": "Língua Portuguesa",
+        "count": 266
+      },
+      {
+        "value": "Direito Administrativo",
+        "count": 183
+      },
+      {
+        "value": "Administração",
+        "count": 96
+      },
+      {
+        "value": "Noções de Informática",
+        "count": 91
+      },
+      {
+        "value": "Conhecimentos Complementares e Legislação",
+        "count": 83
+      },
+      {
+        "value": "Raciocínio Lógico e Matemática",
+        "count": 80
+      },
+      {
+        "value": "Informática",
+        "count": 76
+      },
+      {
+        "value": "Agente Fiscal",
+        "count": 72
+      },
+      {
+        "value": "Legislação e conhecimentos complementares",
+        "count": 60
+      },
+      {
+        "value": "Raciocínio Lógico e Matemático",
+        "count": 59
+      },
+      {
+        "value": "Direito Constitucional",
+        "count": 54
+      },
+      {
+        "value": "Auxiliar Administrativo",
+        "count": 50
+      },
+      {
+        "value": "Advogado",
+        "count": 48
+      },
+      {
+        "value": "Administração Geral",
+        "count": 40
+      },
+      {
+        "value": "Gestão de Pessoas",
+        "count": 38
+      }
+    ],
+    "topCargos": [
+      {
+        "value": "Auxiliar Administrativo",
+        "count": 297
+      },
+      {
+        "value": "Agente Fiscal",
+        "count": 277
+      },
+      {
+        "value": "Técnico Administrativo",
+        "count": 237
+      },
+      {
+        "value": "Advogado",
+        "count": 235
+      },
+      {
+        "value": "Agente Administrativo",
+        "count": 169
+      },
+      {
+        "value": "Administrador",
+        "count": 147
+      },
+      {
+        "value": "Contador",
+        "count": 120
+      },
+      {
+        "value": "Assistente I",
+        "count": 117
+      },
+      {
+        "value": "Analista Administrativo",
+        "count": 115
+      },
+      {
+        "value": "Assistente Social",
+        "count": 101
+      },
+      {
+        "value": "Gestor em Políticas Públicas e Gestão Governamental — Administração",
+        "count": 58
+      },
+      {
+        "value": "Assistente Administrativo",
+        "count": 55
+      },
+      {
+        "value": "Analista I — Atendimento e Cobrança",
+        "count": 49
+      },
+      {
+        "value": "Orientador Social",
+        "count": 37
+      },
+      {
+        "value": "Analista de Tecnologia da Informação",
+        "count": 21
+      }
+    ],
+    "topOrgaos": [
+      {
+        "value": "Conselho Regional de Biomedicina da 6ª Região — CRBM-6",
+        "count": 408
+      },
+      {
+        "value": "Conselho Regional de Fisioterapia e Terapia Ocupacional da 17ª Região — CREFITO-17",
+        "count": 377
+      },
+      {
+        "value": "Conselho Regional dos Técnicos em Radiologia da 12ª Região — CRTR-12",
+        "count": 120
+      },
+      {
+        "value": "Conselho Regional de Medicina Veterinária do Estado de Goiás — CRMV-GO",
+        "count": 119
+      },
+      {
+        "value": "Conselho Regional de Medicina Veterinária do Estado do Rio Grande do Norte — CRMV-RN",
+        "count": 119
+      },
+      {
+        "value": "Conselho Federal de Odontologia — CFO",
+        "count": 118
+      },
+      {
+        "value": "Conselho Regional de Fonoaudiologia da 1ª Região — CRFa-1",
+        "count": 115
+      },
+      {
+        "value": "Conselho Regional de Farmácia do Distrito Federal — CRF-DF",
+        "count": 109
+      },
+      {
+        "value": "Conselho Regional de Medicina do Estado do Amazonas — CREMAM",
+        "count": 98
+      },
+      {
+        "value": "CRF-DF",
+        "count": 97
+      },
+      {
+        "value": "Secretaria de Estado de Economia do Distrito Federal — SEEC/DF",
+        "count": 58
+      },
+      {
+        "value": "Conselho Regional dos Técnicos em Radiologia da 12ª Região — CRTR-MS/MT",
+        "count": 57
+      },
+      {
+        "value": "Conselho Regional de Administração de São Paulo — CRA-SP",
+        "count": 50
+      },
+      {
+        "value": "Fundação do ABC",
+        "count": 50
+      },
+      {
+        "value": "Município de Alto Paraíso de Goiás/GO",
+        "count": 40
+      }
+    ],
+    "samples": [
+      {
+        "id": "PROVA-QDX-CRASP-2025-ANALISTA-RELACOES-EXTERNAS-400-047",
+        "orgao": "Conselho Regional de Administração de São Paulo — CRA-SP",
+        "cargo": "Analista I — Relações Externas",
+        "disciplina": "Legislação Federal",
+        "concurso": "",
+        "nomeMaterial": "Analista I — Relações Externas — CRA-SP — Quadrix 2025"
+      },
+      {
+        "id": "PROVA-QDX-CRESSSE-2021-AGENTE-FISCAL-400-119",
+        "orgao": "Conselho Regional de Serviço Social da 18ª Região — CRESS-SE",
+        "cargo": "Assistente Social — Agente Fiscal",
+        "disciplina": "Assistência Social / SUAS",
+        "concurso": "",
+        "nomeMaterial": "Assistente Social — Agente Fiscal — CRESS-SE — Quadrix 2021"
+      },
+      {
+        "id": "PROVA-QDX-CRABA-2021-ADMINISTRADOR-400-115",
+        "orgao": "Conselho Regional de Administração da Bahia — CRA-BA",
+        "cargo": "Administrador",
+        "disciplina": "Gestão de Pessoas",
+        "concurso": "",
+        "nomeMaterial": "Administrador — CRA-BA — Quadrix 2021"
+      },
+      {
+        "id": "PROVA-QDX-CRABA-2021-ADMINISTRADOR-400-114",
+        "orgao": "Conselho Regional de Administração da Bahia — CRA-BA",
+        "cargo": "Administrador",
+        "disciplina": "Gestão de Pessoas",
+        "concurso": "",
+        "nomeMaterial": "Administrador — CRA-BA — Quadrix 2021"
+      },
+      {
+        "id": "PROVA-QDX-CORENRS-2018-ANALISTA-JURIDICO-400-036",
+        "orgao": "Conselho Regional de Enfermagem do Rio Grande do Sul — COREN-RS",
+        "cargo": "Analista — Jurídico",
+        "disciplina": "Direito Administrativo",
+        "concurso": "",
+        "nomeMaterial": "Analista — Jurídico — COREN-RS — Quadrix 2018"
+      },
+      {
+        "id": "PROVA-QDX-CFP-2022-PSICOLOGIA-SOCIAL-400-037",
+        "orgao": "Conselho Federal de Psicologia — CFP",
+        "cargo": "Especialista em Psicologia — Psicologia Social",
+        "disciplina": "Direitos e Legislação Social",
+        "concurso": "",
+        "nomeMaterial": "Especialista em Psicologia — Psicologia Social — CFP — Quadrix 2022"
+      },
+      {
+        "id": "PROVA-QDX-CRFPR-2019-ANALISTA-RH-400-050",
+        "orgao": "Conselho Regional de Farmácia do Paraná — CRF-PR",
+        "cargo": "Analista de Recursos Humanos",
+        "disciplina": "Gestão de Pessoas",
+        "concurso": "",
+        "nomeMaterial": "Analista de RH — CRF-PR — Quadrix 2019"
+      },
+      {
+        "id": "PROVA-QDX-CRMMG-2025-ANALISTA-LICITACAO-400-038",
+        "orgao": "Conselho Regional de Medicina do Estado de Minas Gerais — CRM-MG",
+        "cargo": "Analista de Licitação",
+        "disciplina": "Legislação Federal",
+        "concurso": "",
+        "nomeMaterial": "Analista de Licitação — CRM-MG — Quadrix 2025"
+      },
+      {
+        "id": "PROVA-QDX-CRESSRO-2021-TECNICO-ADMINISTRATIVO-400-021",
+        "orgao": "Conselho Regional de Serviço Social da 23ª Região — CRESS-RO",
+        "cargo": "Técnico Administrativo Executivo",
+        "disciplina": "Gestão de Pessoas",
+        "concurso": "",
+        "nomeMaterial": "Técnico Administrativo Executivo — CRESS-RO — Quadrix 2021"
+      },
+      {
+        "id": "PROVA-QDX-CRESSPR-2018-ASSISTENTE-ADMINISTRATIVO-400-068",
+        "orgao": "Conselho Regional de Serviço Social da 11ª Região — CRESS-PR",
+        "cargo": "Assistente Administrativo",
+        "disciplina": "Administração Geral",
+        "concurso": "",
+        "nomeMaterial": "Assistente Administrativo — CRESS-PR — Quadrix 2018"
+      },
+      {
+        "id": "PROVA-QDX-CRABA-2021-TECNOLOGO-RH-400-075",
+        "orgao": "Conselho Regional de Administração da Bahia — CRA-BA",
+        "cargo": "Tecnólogo em RH",
+        "disciplina": "Gestão de Pessoas",
+        "concurso": "",
+        "nomeMaterial": "Tecnólogo em RH — CRA-BA — Quadrix 2021"
+      },
+      {
+        "id": "PROVA-QDX-CRESSPR-2018-ASSISTENTE-ADMINISTRATIVO-400-067",
+        "orgao": "Conselho Regional de Serviço Social da 11ª Região — CRESS-PR",
+        "cargo": "Assistente Administrativo",
+        "disciplina": "Administração Geral",
+        "concurso": "",
+        "nomeMaterial": "Assistente Administrativo — CRESS-PR — Quadrix 2018"
+      },
+      {
+        "id": "PROVA-QDX-CRABA-2021-ADMINISTRADOR-400-103",
+        "orgao": "Conselho Regional de Administração da Bahia — CRA-BA",
+        "cargo": "Administrador",
+        "disciplina": "Gestão de Pessoas",
+        "concurso": "",
+        "nomeMaterial": "Administrador — CRA-BA — Quadrix 2021"
+      },
+      {
+        "id": "PROVA-QDX-CRESSPR-2018-ASSISTENTE-ADMINISTRATIVO-400-112",
+        "orgao": "Conselho Regional de Serviço Social da 11ª Região — CRESS-PR",
+        "cargo": "Assistente Administrativo",
+        "disciplina": "Administração Geral",
+        "concurso": "",
+        "nomeMaterial": "Assistente Administrativo — CRESS-PR — Quadrix 2018"
+      },
+      {
+        "id": "PROVA-QDX-CRESSPR-2018-AGENTE-FISCAL-400-073",
+        "orgao": "Conselho Regional de Serviço Social da 11ª Região — CRESS-PR",
+        "cargo": "Agente Fiscal",
+        "disciplina": "Direitos e Legislação Social",
+        "concurso": "",
+        "nomeMaterial": "Agente Fiscal — CRESS-PR — Quadrix 2018"
+      },
+      {
+        "id": "PROVA-QDX-CRESSPR-2018-ASSISTENTE-ADMINISTRATIVO-400-069",
+        "orgao": "Conselho Regional de Serviço Social da 11ª Região — CRESS-PR",
+        "cargo": "Assistente Administrativo",
+        "disciplina": "Administração Geral",
+        "concurso": "",
+        "nomeMaterial": "Assistente Administrativo — CRESS-PR — Quadrix 2018"
+      },
+      {
+        "id": "PROVA-QDX-CRESSPR-2018-AGENTE-FISCAL-400-099",
+        "orgao": "Conselho Regional de Serviço Social da 11ª Região — CRESS-PR",
+        "cargo": "Agente Fiscal",
+        "disciplina": "Assistência Social / SUAS",
+        "concurso": "",
+        "nomeMaterial": "Agente Fiscal — CRESS-PR — Quadrix 2018"
+      },
+      {
+        "id": "PROVA-QDX-CRESSPR-2018-ASSISTENTE-ADMINISTRATIVO-400-100",
+        "orgao": "Conselho Regional de Serviço Social da 11ª Região — CRESS-PR",
+        "cargo": "Assistente Administrativo",
+        "disciplina": "Direito Administrativo",
+        "concurso": "",
+        "nomeMaterial": "Assistente Administrativo — CRESS-PR — Quadrix 2018"
+      },
+      {
+        "id": "PROVA-QDX-CRESSPR-2018-ASSISTENTE-ADMINISTRATIVO-400-111",
+        "orgao": "Conselho Regional de Serviço Social da 11ª Região — CRESS-PR",
+        "cargo": "Assistente Administrativo",
+        "disciplina": "Administração Geral",
+        "concurso": "",
+        "nomeMaterial": "Assistente Administrativo — CRESS-PR — Quadrix 2018"
+      },
+      {
+        "id": "PROVA-QDX-CRABA-2021-ADMINISTRADOR-400-104",
+        "orgao": "Conselho Regional de Administração da Bahia — CRA-BA",
+        "cargo": "Administrador",
+        "disciplina": "Gestão de Pessoas",
+        "concurso": "",
+        "nomeMaterial": "Administrador — CRA-BA — Quadrix 2021"
+      }
+    ]
+  },
+  "overlaps": {
+    "count": 0,
+    "patterns": [],
+    "samples": []
+  },
+  "editais": [
+    {
+      "competitionId": "seedf",
+      "title": "SEEDF — edital verticalizado projetado",
+      "status": "pré-edital",
+      "canonicalAxisCountConfigured": 60,
+      "canonicalAxisCountActual": 60,
+      "canonicalLinkedAxesConfigured": 0,
+      "canonicalDirectQuestionsConfigured": 0,
+      "directlyLinkedAxesActual": 0,
+      "directQuestionsActual": 0,
+      "scopeQuestionCount": 824,
+      "subjectCoveredQuestionCount": 9,
+      "exactCanonicalTopicQuestionCount": 0,
+      "axisSubjects": [
+        "Administração Geral",
+        "Administração Pública",
+        "AFO",
+        "Arquivologia",
+        "Direito Administrativo",
+        "Direito Constitucional",
+        "ECA e Direitos",
+        "Gestão de Pessoas",
+        "Inclusão e Educação Especial",
+        "Informática",
+        "LC 840/2011",
+        "Legislação Educacional",
+        "Licitações e Contratos",
+        "Materiais e Patrimônio",
+        "Outras",
+        "Políticas Públicas",
+        "Português"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "title": "TJDFT — edital verticalizado · base histórica 2022",
+      "status": "pré-edital",
+      "canonicalAxisCountConfigured": 22,
+      "canonicalAxisCountActual": 22,
+      "canonicalLinkedAxesConfigured": 0,
+      "canonicalDirectQuestionsConfigured": 0,
+      "directlyLinkedAxesActual": 0,
+      "directQuestionsActual": 0,
+      "scopeQuestionCount": 232,
+      "subjectCoveredQuestionCount": 94,
+      "exactCanonicalTopicQuestionCount": 0,
+      "axisSubjects": [
+        "Administração geral; comportamento organizacional",
+        "Administração Pública; gestão de pessoas; orçamento público",
+        "Direito Administrativo",
+        "Direito Civil; Lei de Introdução às Normas do Direito Brasileiro",
+        "Direito Constitucional",
+        "Direito Constitucional; Direito Administrativo",
+        "Direito Penal",
+        "Direito Processual Civil",
+        "Direito Processual Penal",
+        "Ética; Regimento Interno; Lei de Organização Judiciária",
+        "Gestão de pessoas; administração de materiais",
+        "Gestão pública; governança; gestão de processos",
+        "Licitações; contratos; compras públicas",
+        "Licitações; contratos; sustentabilidade nas contratações",
+        "Língua Portuguesa",
+        "Orçamento público; Lei de Responsabilidade Fiscal; MCASP",
+        "Planejamento; indicadores; gestão de projetos",
+        "Provimento Geral da Corregedoria; Provimento Judicial aplicado ao PJe",
+        "Redação/dissertativa conforme o edital-base",
+        "Redação/dissertativa específica conforme o edital-base"
+      ]
+    },
+    {
+      "competitionId": "sedes-df-2026",
+      "title": "SEDES/DF 2026 — histórico",
+      "status": "histórico",
+      "canonicalAxisCountConfigured": 0,
+      "canonicalAxisCountActual": 0,
+      "canonicalLinkedAxesConfigured": 0,
+      "canonicalDirectQuestionsConfigured": 0,
+      "directlyLinkedAxesActual": 0,
+      "directQuestionsActual": 0,
+      "scopeQuestionCount": 581,
+      "subjectCoveredQuestionCount": 0,
+      "exactCanonicalTopicQuestionCount": 0,
+      "axisSubjects": []
+    }
+  ]
+}
