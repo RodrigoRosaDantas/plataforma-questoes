@@ -104,6 +104,17 @@ for(const marker of [
 ]) requireMarker(cloud,marker,'Proteção contra truncamento silencioso do histórico da nuvem ausente');
 if(cloud.includes('async function fetchRows(path,maxPages=20)'))throw new Error('Paginação da nuvem regrediu para o teto silencioso de 20 mil registros.');
 
+// Histórico cloud: paginação precisa de ordem total e nunca pode inventar horário atual para dado legado.
+for(const marker of [
+  'order=ended_at.desc,activity_id.asc',
+  'order=answered_at.asc,question_set_id.asc,question_id.asc',
+  'const attemptTimeMap=new Map()',
+  'attemptTimeMap.set(key,Math.max(Number(attemptTimeMap.get(key))||0,answeredAt))',
+  'const attemptFinishedAt=Number(attemptTimeMap.get(id))||0',
+  'const finishedAt=Number.isFinite(endedAt)&&endedAt>0?endedAt:attemptFinishedAt'
+]) requireMarker(cloud,marker,'Ordenação/fallback temporal confiável do histórico cloud ausente');
+if(cloud.includes("row.ended_at?new Date(row.ended_at).getTime():Date.now()"))throw new Error('Histórico cloud voltou a inventar finishedAt com Date.now().');
+
 // Erros: contagem e relógios são reconstruídos do histórico idempotente após o merge.
 for(const marker of [
   'function rebuildErrorsFromHistory(history,fallbackValue)',
@@ -247,7 +258,7 @@ requireMarker(v2,'.scorecard-grid { grid-template-columns: repeat(2, minmax(0, 1
 
 // PWA: qualquer alteração crítica no shell precisa chegar sem depender do cache anterior.
 const cacheVersion=Number(sw.match(/plataforma-questoes-v(\d+)/)?.[1]||0);
-if(cacheVersion<61)throw new Error('Cache PWA regrediu para uma versão anterior à proteção contra truncamento da nuvem.');
+if(cacheVersion<63)throw new Error('Cache PWA regrediu para uma versão anterior à ordenação estável do histórico cloud.');
 for(const marker of ["'./assets/cloud-progress.js'","'./assets/study-plan.js'","'./assets/ux-enhancements.js'","'./assets/canonical-editais.js'"]) requireMarker(sw,marker,'Módulo crítico ausente do shell PWA');
 
 // Triagem editorial: nunca transforma heurística em writeback automático.

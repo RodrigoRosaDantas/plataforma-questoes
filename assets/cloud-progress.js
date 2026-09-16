@@ -240,10 +240,11 @@ async function fetchRows(path,maxPages=CLOUD_MAX_PAGES){
 }
 async function loadCloudHistory(){
   if(!hasSession())return [];
-  const sessions=await fetchRows('/rest/v1/study_sessions?select=activity_id,started_at,ended_at,duration_ms&activity_type=eq.question_set&activity_id=not.is.null&order=ended_at.desc');
-  const attempts=await fetchRows('/rest/v1/question_attempts?select=question_set_id,question_id,answer,is_correct,duration_ms,answered_at,client_event_id&question_set_id=not.is.null&order=answered_at.asc');
+  const sessions=await fetchRows('/rest/v1/study_sessions?select=activity_id,started_at,ended_at,duration_ms&activity_type=eq.question_set&activity_id=not.is.null&order=ended_at.desc,activity_id.asc');
+  const attempts=await fetchRows('/rest/v1/question_attempts?select=question_set_id,question_id,answer,is_correct,duration_ms,answered_at,client_event_id&question_set_id=not.is.null&order=answered_at.asc,question_set_id.asc,question_id.asc');
   const sessionMap=new Map(sessions.filter(row=>row.activity_id).map(row=>[String(row.activity_id),row]));
   const answerMap=new Map();
+  const attemptTimeMap=new Map();
   const seenAttempts=new Set();
   attempts.forEach(row=>{
     const key=String(row.question_set_id||''),questionId=String(row.question_id||'');
@@ -252,6 +253,8 @@ async function loadCloudHistory(){
     if(seenAttempts.has(attemptKey))return;
     seenAttempts.add(attemptKey);
     if(!answerMap.has(key))answerMap.set(key,[]);
+    const answeredAt=row.answered_at?new Date(row.answered_at).getTime():0;
+    if(Number.isFinite(answeredAt)&&answeredAt>0)attemptTimeMap.set(key,Math.max(Number(attemptTimeMap.get(key))||0,answeredAt));
     answerMap.get(key).push({
       questionId,
       given:row.answer||null,
@@ -271,8 +274,11 @@ async function loadCloudHistory(){
     const correct=answers.filter(answer=>answer.isCorrect).length;
     const blank=answers.filter(answer=>answer.blank).length;
     const wrong=answers.length-correct-blank;
-    const finishedAt=row.ended_at?new Date(row.ended_at).getTime():Date.now();
-    const startedAt=row.started_at?new Date(row.started_at).getTime():finishedAt;
+    const endedAt=row.ended_at?new Date(row.ended_at).getTime():0;
+    const attemptFinishedAt=Number(attemptTimeMap.get(id))||0;
+    const finishedAt=Number.isFinite(endedAt)&&endedAt>0?endedAt:attemptFinishedAt;
+    const rawStartedAt=row.started_at?new Date(row.started_at).getTime():0;
+    const startedAt=Number.isFinite(rawStartedAt)&&rawStartedAt>0?rawStartedAt:finishedAt;
     const elapsedMs=Number(row.duration_ms)||answers.reduce((sum,answer)=>sum+answer.time*1000,0);
     return {id,finishedAt,startedAt,mode:'training',total:answers.length,correct,wrong,blank,elapsedMs,answers,source:'supabase'};
   }).sort((a,b)=>b.finishedAt-a.finishedAt);
