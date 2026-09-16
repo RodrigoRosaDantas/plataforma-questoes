@@ -10,7 +10,6 @@ if (!token) throw new Error('NOTION_TOKEN não configurado. Use um GitHub Action
 const endpoint = `https://api.notion.com/v1/data_sources/${dataSourceId}/query`;
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
-
 function stableStringify(value) {
   if (value === undefined) return 'null';
   if (value === null || typeof value !== 'object') return JSON.stringify(value);
@@ -148,11 +147,15 @@ function transform(page) {
     duplicada: !!get(p,'Duplicada'),
     bloqueioManual: !!get(p,'Bloqueio manual de publicação'),
     auditoria: get(p,'Auditoria de conteúdo') || '',
+    exportApproved: !!get(p,'Liberada para exportação'),
     sourceUrl: get(p,'URL da fonte') || '',
     notionUrl: page.url,
     updatedAt: page.last_edited_time || null,
     publishedAt: get(p,'Data da publicação') || null
   };
+}
+function governedByCanonicalTaxonomy(q) {
+  return [q.concurso, q.edital, q.topicoEdital].every(value => String(value || '').trim());
 }
 function publishable(q) {
   if (!q.id || !q.enunciado || !usableGabarito(q.gabarito)) return false;
@@ -161,6 +164,10 @@ function publishable(q) {
   if (q.formato === 'Discursiva') return false;
   if (q.formato !== 'Certo / Errado' && Object.values(q.alternativas).filter(v => String(v || '').trim()).length < 2) return false;
   if (String(q.auditoria).toLowerCase() === 'não aprovada') return false;
+  // Migração segura: registros integralmente ligados à taxonomia canônica
+  // exigem aprovação editorial explícita no Notion. O legado ainda não
+  // verticalizado preserva a regra anterior até sua auditoria/migração.
+  if (governedByCanonicalTaxonomy(q) && !q.exportApproved) return false;
   return true;
 }
 function countMissing(rows) {
@@ -212,7 +219,8 @@ for (const question of transformed) {
     contentHash: hash
   };
 }
-const questions = transformed.filter(publishable);
+const publishableQuestions = transformed.filter(publishable);
+const questions = publishableQuestions.map(({ exportApproved, ...question }) => question);
 const releaseSnapshotId = createHash('sha256')
   .update(stableStringify(questions.map(question => ({ id: question.id, contentHash: question.contentHash })).sort((a,b) => String(a.id).localeCompare(String(b.id)))))
   .digest('hex');
@@ -226,6 +234,12 @@ const publishedMissing = countMissing(questions);
 const taxonomy = {
   source: taxonomyCoverage(transformed),
   published: taxonomyCoverage(questions)
+};
+const governance = {
+  canonicalRecords: transformed.filter(governedByCanonicalTaxonomy).length,
+  canonicalApproved: transformed.filter(q => governedByCanonicalTaxonomy(q) && q.exportApproved).length,
+  canonicalBlockedByApproval: transformed.filter(q => governedByCanonicalTaxonomy(q) && !q.exportApproved).length,
+  legacyCompatibilityRecords: transformed.filter(q => !governedByCanonicalTaxonomy(q)).length
 };
 const metadata = {
   schemaVersion: 2,
@@ -246,14 +260,17 @@ const metadata = {
     excludesAnuladas: true,
     excludesSemGabarito: true,
     excludesDiscursivas: true,
-    requiresEssentialFields: true
+    requiresEssentialFields: true,
+    canonicalTaxonomyRequiresExportApproval: true,
+    legacyCompatibilityUntilCanonicalMigration: true
   },
   sampleMode: false,
   questionCount: questions.length,
-  sourceAudit: { records: transformed.length, published: questions.length, excluded, formats, missing, publishedMissing, taxonomy }
+  sourceAudit: { records: transformed.length, published: questions.length, excluded, formats, missing, publishedMissing, taxonomy, governance }
 };
 await fs.mkdir(path.resolve('data'), { recursive: true });
 await fs.writeFile('data/questions.json', JSON.stringify(questions,null,2)+'\n');
 await fs.writeFile('data/metadata.json', JSON.stringify(metadata,null,2)+'\n');
 console.log(`Release gerada: ${questions.length} publicáveis; ${excluded} excluídos por gate.`);
+console.log(`Governança canônica: ${governance.canonicalApproved}/${governance.canonicalRecords} aprovados para exportação; ${governance.canonicalBlockedByApproval} retidos.`);
 console.log(`Cobertura publicada: Concurso ${taxonomy.published.concurso.coveragePercent}% · Assunto ${taxonomy.published.assunto.coveragePercent}% · Subassunto ${taxonomy.published.subassunto.coveragePercent}% · Tópico do edital ${taxonomy.published.topicoEdital.coveragePercent}%.`);
