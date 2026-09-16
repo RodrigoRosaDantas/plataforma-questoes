@@ -1,6 +1,8 @@
 import fs from 'node:fs/promises';
 
 const cloud=await fs.readFile('assets/cloud-progress.js','utf8');
+const studyPlan=await fs.readFile('assets/study-plan.js','utf8');
+const canonical=await fs.readFile('assets/canonical-editais.js','utf8');
 const v2=await fs.readFile('assets/v2.css','utf8');
 const sw=await fs.readFile('service-worker.js','utf8');
 const candidates=JSON.parse(await fs.readFile('data/taxonomy-candidates.json','utf8'));
@@ -27,6 +29,16 @@ for(const marker of [
 if(cloud.includes('options:{email_redirect_to'))throw new Error('Magic Link voltou ao payload de redirect legado no corpo da requisição.');
 if(/authenticated\s*:\s*status===['"]authenticated['"]/.test(cloud))throw new Error('Autenticação não pode depender apenas do estado visual da sincronização.');
 
+// Edital canônico: o módulo precisa estar no grafo executado e não apenas armazenado no repositório.
+requireMarker(studyPlan,"import './canonical-editais.js';",'Taxonomia canônica deixou de ser carregada pela aplicação');
+for(const marker of [
+  "const CANONICAL_DATA='./data/editais.json'",
+  'data-canonical-section',
+  'Vínculo direto',
+  "const CLOUD_DEVICE_KEY='plataforma.questoes.device.v1'",
+  'localStorage.removeItem(CLOUD_DEVICE_KEY)'
+]) requireMarker(canonical,marker,'Contrato do edital canônico/migração local ausente');
+
 // Mobile: impede o retorno do painel estreito observado em celular.
 requireMarker(v2,'.hero-side { width: 100%; grid-template-columns: minmax(0, 1fr); justify-items: stretch; }','Correção mobile do painel de estudo ausente');
 requireMarker(v2,'.hero-scorecard { width: 100%; max-width: none; }','Scorecard mobile não ocupa a largura útil');
@@ -34,8 +46,8 @@ requireMarker(v2,'.scorecard-grid { grid-template-columns: repeat(2, minmax(0, 1
 
 // PWA: qualquer alteração crítica no shell precisa chegar sem depender do cache anterior.
 const cacheVersion=Number(sw.match(/plataforma-questoes-v(\d+)/)?.[1]||0);
-if(cacheVersion<32)throw new Error('Cache PWA regrediu para uma versão anterior à correção crítica do Supabase.');
-requireMarker(sw,"'./assets/cloud-progress.js'",'Módulo de nuvem ausente do shell PWA');
+if(cacheVersion<35)throw new Error('Cache PWA regrediu para uma versão anterior à ativação do edital canônico.');
+for(const marker of ["'./assets/cloud-progress.js'","'./assets/study-plan.js'","'./assets/canonical-editais.js'"]) requireMarker(sw,marker,'Módulo crítico ausente do shell PWA');
 
 // Triagem editorial: nunca transforma heurística em writeback automático.
 if(candidates.schemaVersion!==3)throw new Error('Schema da triagem editorial deve permanecer em v3.');
@@ -60,4 +72,4 @@ for(const group of cohesive){
   if(Number(group.classificationCounts?.strong)!==Number(group.count))throw new Error('Lote coeso contém questão que não foi classificada como forte.');
 }
 
-console.log('OK: regressões críticas de Supabase, mobile, PWA e triagem editorial protegidas.');
+console.log('OK: regressões críticas de Supabase, edital canônico, mobile, PWA e triagem editorial protegidas.');
