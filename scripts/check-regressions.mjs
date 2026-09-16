@@ -3,14 +3,17 @@ import fs from 'node:fs/promises';
 const cloud=await fs.readFile('assets/cloud-progress.js','utf8');
 const studyPlan=await fs.readFile('assets/study-plan.js','utf8');
 const canonical=await fs.readFile('assets/canonical-editais.js','utf8');
+const taxonomySync=await fs.readFile('scripts/sync-editorial-taxonomies.mjs','utf8');
 const v2=await fs.readFile('assets/v2.css','utf8');
 const sw=await fs.readFile('service-worker.js','utf8');
+const editais=JSON.parse(await fs.readFile('data/editais.json','utf8'));
 const candidates=JSON.parse(await fs.readFile('data/taxonomy-candidates.json','utf8'));
 const reviewGroups=JSON.parse(await fs.readFile('data/taxonomy-review-groups.json','utf8'));
 
 function requireMarker(source,marker,message){
   if(!source.includes(marker))throw new Error(message+`: ${marker}`);
 }
+const normalize=value=>String(value??'').trim().normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('pt-BR');
 
 // Supabase: sessão válida deve continuar autenticada mesmo após uma falha transitória.
 for(const marker of [
@@ -29,17 +32,50 @@ for(const marker of [
 if(cloud.includes('options:{email_redirect_to'))throw new Error('Magic Link voltou ao payload de redirect legado no corpo da requisição.');
 if(/authenticated\s*:\s*status===['"]authenticated['"]/.test(cloud))throw new Error('Autenticação não pode depender apenas do estado visual da sincronização.');
 
-// Edital canônico: módulo ativo e associação primária por identificador estável.
+// Edital canônico: módulo ativo, associação estável e ambiguidade explícita.
 requireMarker(studyPlan,"import './canonical-editais.js';",'Taxonomia canônica deixou de ser carregada pela aplicação');
 for(const marker of [
   "const CANONICAL_DATA='./data/editais.json'",
   'data-canonical-section',
   'Vínculo direto',
+  'canonical-link-ambiguous',
+  'Tópico repetido',
   "const competitionId=text(card.querySelector('[data-edital-filter]')?.dataset.editalFilter)",
   "find(edital=>text(edital.competitionId)===competitionId)",
   "const CLOUD_DEVICE_KEY='plataforma.questoes.device.v1'",
   'localStorage.removeItem(CLOUD_DEVICE_KEY)'
 ]) requireMarker(canonical,marker,'Contrato do edital canônico/migração local ausente');
+for(const marker of [
+  'function topicMultiplicity(axes)',
+  'directLinkAmbiguous',
+  'directQuestionCount:directLinkAmbiguous?0:',
+  'canonicalAmbiguousAxes'
+]) requireMarker(taxonomySync,marker,'Gerador canônico perdeu a proteção contra ambiguidade');
+
+if(!Array.isArray(editais)||!editais.length)throw new Error('data/editais.json precisa conter os editais canônicos.');
+const ids=editais.map(item=>String(item.competitionId||''));
+if(new Set(ids).size!==ids.length)throw new Error('competitionId duplicado em data/editais.json.');
+for(const edital of editais){
+  const axes=Array.isArray(edital.canonicalAxes)?edital.canonicalAxes:[];
+  if(Number(edital.canonicalAxisCount)!==axes.length)throw new Error(`${edital.competitionId}: canonicalAxisCount diverge dos eixos.`);
+  const linkedAxes=axes.filter(axis=>Number(axis.directQuestionCount||0)>0).length;
+  const directQuestions=axes.reduce((sum,axis)=>sum+Math.max(0,Number(axis.directQuestionCount)||0),0);
+  const ambiguousAxes=axes.filter(axis=>axis.directLinkAmbiguous===true).length;
+  if(Number(edital.canonicalLinkedAxes)!==linkedAxes)throw new Error(`${edital.competitionId}: canonicalLinkedAxes não fecha.`);
+  if(Number(edital.canonicalDirectQuestions)!==directQuestions)throw new Error(`${edital.competitionId}: canonicalDirectQuestions não fecha.`);
+  if(Number(edital.canonicalAmbiguousAxes)!==ambiguousAxes)throw new Error(`${edital.competitionId}: canonicalAmbiguousAxes não fecha.`);
+  for(const axis of axes){
+    if(axis.directLinkAmbiguous===true&&Number(axis.directQuestionCount)!==0)throw new Error(`${edital.competitionId}: eixo ambíguo recebeu vínculo direto.`);
+  }
+  const topicCounts=new Map();
+  for(const axis of axes){
+    const topic=normalize(axis.topic);
+    if(topic)topicCounts.set(topic,(topicCounts.get(topic)||0)+1);
+  }
+  for(const axis of axes){
+    if(Number(axis.directQuestionCount||0)>0&&(topicCounts.get(normalize(axis.topic))||0)!==1)throw new Error(`${edital.competitionId}: vínculo direto apontou para tópico canônico não único.`);
+  }
+}
 
 // Mobile: impede o retorno do painel estreito observado em celular.
 requireMarker(v2,'.hero-side { width: 100%; grid-template-columns: minmax(0, 1fr); justify-items: stretch; }','Correção mobile do painel de estudo ausente');
@@ -48,7 +84,7 @@ requireMarker(v2,'.scorecard-grid { grid-template-columns: repeat(2, minmax(0, 1
 
 // PWA: qualquer alteração crítica no shell precisa chegar sem depender do cache anterior.
 const cacheVersion=Number(sw.match(/plataforma-questoes-v(\d+)/)?.[1]||0);
-if(cacheVersion<36)throw new Error('Cache PWA regrediu para uma versão anterior ao vínculo canônico estável.');
+if(cacheVersion<37)throw new Error('Cache PWA regrediu para uma versão anterior à auditoria de vínculos canônicos.');
 for(const marker of ["'./assets/cloud-progress.js'","'./assets/study-plan.js'","'./assets/canonical-editais.js'"]) requireMarker(sw,marker,'Módulo crítico ausente do shell PWA');
 
 // Triagem editorial: nunca transforma heurística em writeback automático.
@@ -74,4 +110,4 @@ for(const group of cohesive){
   if(Number(group.classificationCounts?.strong)!==Number(group.count))throw new Error('Lote coeso contém questão que não foi classificada como forte.');
 }
 
-console.log('OK: regressões críticas de Supabase, edital canônico, mobile, PWA e triagem editorial protegidas.');
+console.log('OK: regressões críticas de Supabase, editais canônicos, mobile, PWA e triagem editorial protegidas.');
