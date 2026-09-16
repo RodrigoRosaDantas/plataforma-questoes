@@ -6,21 +6,20 @@ const js=await fs.readFile('assets/app.js','utf8');
 const cloud=await fs.readFile('assets/cloud-progress.js','utf8');
 const studyPlan=await fs.readFile('assets/study-plan.js','utf8');
 const ux=await fs.readFile('assets/ux-enhancements.js','utf8');
+const canonical=await fs.readFile('assets/canonical-editais.js','utf8');
 const sw=await fs.readFile('service-worker.js','utf8');
+const buildScript=await fs.readFile('scripts/build.mjs','utf8');
 const syncNotion=await fs.readFile('scripts/sync-notion.mjs','utf8');
 const backlogScript=await fs.readFile('scripts/build-taxonomy-backlog.mjs','utf8');
+const taxonomySync=await fs.readFile('scripts/sync-editorial-taxonomies.mjs','utf8');
 const metadata=JSON.parse(await fs.readFile('data/metadata.json','utf8'));
 const taxonomyBacklog=JSON.parse(await fs.readFile('data/taxonomy-backlog.json','utf8'));
+const editais=JSON.parse(await fs.readFile('data/editais.json','utf8'));
 const manifest=JSON.parse(await fs.readFile('manifest.webmanifest','utf8'));
 const v2=await fs.readFile('assets/v2.css','utf8');
 const shell=html+'\n'+js;
-const migrationNames=(await fs.readdir('supabase/migrations'))
-  .filter(name=>name.endsWith('.sql'))
-  .sort();
-const migrations=(await Promise.all(migrationNames.map(async name=>({
-  name,
-  sql:await fs.readFile(`supabase/migrations/${name}`,'utf8')
-}))));
+const migrationNames=(await fs.readdir('supabase/migrations')).filter(name=>name.endsWith('.sql')).sort();
+const migrations=await Promise.all(migrationNames.map(async name=>({name,sql:await fs.readFile(`supabase/migrations/${name}`,'utf8')})));
 
 for(const marker of ['Banco de questões','Provas aplicadas','Simulados','Revisar','Desempenho','Importar provas','Ajustes e dados']) if(!shell.includes(marker)) throw new Error(`Navegação ausente: ${marker}`);
 for(const marker of ['finishSession','ProgressStore','applyFilters','renderQuestionMap','loadRelease','refreshRelease','buildVerticalizedEditais','openTopic','openOfficialProof','officialExams']) if(!js.includes(marker)) throw new Error(`Contrato JS ausente: ${marker}`);
@@ -40,7 +39,7 @@ if(!sw.includes('./data/tjdft-provas.json')) throw new Error('Catálogo TJDFT n�
 if(!html.includes('Provas oficiais e materiais')) throw new Error('Tela de provas oficiais ausente.');
 if(!js.includes("cloud-progress.js")||!js.includes("syncCloudProgress")) throw new Error('Sincronização de progresso ausente.');
 if(!html.includes('id="cloudEmail"')||!html.includes('id="performanceCharts"')) throw new Error('Controles de conta/desempenho ausentes.');
-if(/service_role|sb_secret_/i.test(html+'\n'+js+'\n'+cloud+'\n'+studyPlan+'\n'+ux+'\n'+sw)) throw new Error('Segredo do Supabase não pode existir no frontend.');
+if(/service_role|sb_secret_/i.test(html+'\n'+js+'\n'+cloud+'\n'+studyPlan+'\n'+ux+'\n'+canonical+'\n'+sw)) throw new Error('Segredo do Supabase não pode existir no frontend.');
 
 for(const marker of ['assets/v2.css','id="sidebarBackdrop"','id="editalSearch"','id="filterToggle"','id="resolverProgress"','id="performanceInsights"','id="installApp"']) if(!html.includes(marker)) throw new Error(`Contrato V2 ausente: ${marker}`);
 for(const marker of ['id="filterConcurso"','id="filterSubassunto"','app.js?v=platform-v2-4']) if(!html.includes(marker)) throw new Error(`Filtro nativo ausente: ${marker}`);
@@ -80,6 +79,28 @@ if(Number(backlogTotals.readyForVerticalization)>Number(backlogTotals.backlog)) 
 if(Number(backlogTotals.needsBasicTaxonomy)+Number(backlogTotals.readyForVerticalization)!==Number(backlogTotals.backlog)) throw new Error('Classificação operacional do backlog não fecha com o passivo total.');
 for(const key of ['byOrgao','byCargo','byDisciplina','byAssunto','groups']) if(!Array.isArray(taxonomyBacklog.priority?.[key])) throw new Error(`Fila de prioridade ausente no backlog: ${key}`);
 
+for(const marker of ['seedf-edital.json','tjdft-edital.json','canonicalAxisCount','canonicalLinkedAxes','canonicalDirectQuestions','directQuestionCount','editorialPolicy']) if(!taxonomySync.includes(marker)) throw new Error(`Sincronização canônica ausente: ${marker}`);
+if(!Array.isArray(editais)) throw new Error('data/editais.json deve conter um array.');
+const seedf=editais.find(item=>item.competitionId==='seedf');
+const tjdft=editais.find(item=>item.competitionId==='tjdft');
+const sedes=editais.find(item=>item.competitionId==='sedes-df-2026');
+if(!seedf||seedf.canonicalAxisCount!==60||seedf.canonicalAxes?.length!==60) throw new Error('Taxonomia canônica SEEDF deve conter exatamente 60 eixos.');
+if(!tjdft||tjdft.canonicalAxisCount!==22||tjdft.canonicalAxes?.length!==22) throw new Error('Taxonomia canônica TJDFT deve conter exatamente 22 eixos.');
+if(seedf.editorialPolicy?.official!==false||seedf.sourceKind!=='projected') throw new Error('SEEDF pré-edital deve permanecer explicitamente projetado e não oficial.');
+if(tjdft.editorialPolicy?.official!==false||tjdft.sourceKind!=='historical-base') throw new Error('TJDFT pré-edital deve permanecer explicitamente como base histórica e não oficial.');
+if(!sedes||sedes.status!=='histórico') throw new Error('SEDES/DF deve permanecer como trilha histórica.');
+for(const edital of [seedf,tjdft]){
+  if(!Number.isFinite(edital.canonicalLinkedAxes)||!Number.isFinite(edital.canonicalDirectQuestions)) throw new Error(`Cobertura canônica inválida: ${edital.competitionId}`);
+  if(edital.canonicalLinkedAxes<0||edital.canonicalLinkedAxes>edital.canonicalAxisCount||edital.canonicalDirectQuestions<0) throw new Error(`Contadores canônicos fora do intervalo: ${edital.competitionId}`);
+  for(const axis of edital.canonicalAxes){
+    if(!axis.topic||!axis.subject||!Number.isFinite(axis.directQuestionCount)||axis.directQuestionCount<0) throw new Error(`Eixo canônico inválido em ${edital.competitionId}.`);
+  }
+}
+for(const marker of ['TAXONOMIA CANÔNICA','Vínculo direto','Sem vínculo direto no banco','directQuestionCount','canonicalDirectQuestions']) if(!canonical.includes(marker)) throw new Error(`Interface canônica ausente: ${marker}`);
+if(canonical.includes('questions.json')) throw new Error('Interface canônica não deve reler o banco completo de questões no navegador.');
+if(!sw.includes('./assets/canonical-editais.js')||!sw.includes('./data/taxonomy-backlog.json')) throw new Error('PWA não inclui módulo/dados canônicos esperados.');
+if(!buildScript.includes('canonical-editais.js')||!buildScript.includes('canonicalScript')) throw new Error('Build publicado não injeta o módulo canônico.');
+
 const privilegeHardening=migrations.find(item=>item.name.includes('harden_student_profile_sync_privileges'))?.sql||'';
 const legacyProfilePolicy=migrations.find(item=>item.name.includes('preserve_legacy_profile_ids_during_sync'))?.sql||'';
 for(const marker of [
@@ -91,16 +112,13 @@ for(const marker of [
   'revoke execute on function public.ensure_student_profile() from public, anon',
   'grant execute on function public.ensure_student_profile() to authenticated'
 ]) if(!privilegeHardening.includes(marker)) throw new Error(`Hardening Supabase ausente: ${marker}`);
-for(const marker of [
-  'using (user_id = (select auth.uid()))',
-  'with check (user_id = (select auth.uid()))'
-]) if(!legacyProfilePolicy.includes(marker)) throw new Error(`Compatibilidade de perfil legado ausente: ${marker}`);
+for(const marker of ['using (user_id = (select auth.uid()))','with check (user_id = (select auth.uid()))']) if(!legacyProfilePolicy.includes(marker)) throw new Error(`Compatibilidade de perfil legado ausente: ${marker}`);
 const allMigrations=migrations.map(item=>item.sql).join('\n');
 if(/grant\s+[^;]*\bon\s+(?:table\s+)?public\.student_progress_states\s+to\s+anon\b/i.test(allMigrations)) throw new Error('Progresso não pode conceder acesso ao papel anon.');
 if(/grant\s+all(?:\s+privileges)?\s+on\s+(?:table\s+)?public\.student_progress_states\s+to\s+authenticated\b/i.test(allMigrations)) throw new Error('Progresso não pode conceder privilégios amplos ao papel authenticated.');
 
-for(const file of ['assets/app.js','assets/cloud-progress.js','assets/study-plan.js','assets/ux-enhancements.js','service-worker.js','scripts/sync-notion.mjs','scripts/build-taxonomy-backlog.mjs','scripts/smoke-published.mjs']){
+for(const file of ['assets/app.js','assets/cloud-progress.js','assets/study-plan.js','assets/ux-enhancements.js','assets/canonical-editais.js','service-worker.js','scripts/build.mjs','scripts/sync-notion.mjs','scripts/build-taxonomy-backlog.mjs','scripts/sync-editorial-taxonomies.mjs','scripts/smoke-published.mjs']){
   const syntax=spawnSync(process.execPath,['--check',file],{encoding:'utf8'});
   if(syntax.status!==0)throw new Error('JavaScript inválido em '+file+'\n'+(syntax.stderr||syntax.stdout));
 }
-console.log('OK: V2 responsiva, navegação, plano diário, UX, cobertura e backlog editorial, filtros nativos e facetados, resolvedor, persistência, PWA, cache e hardening Supabase validados.');
+console.log('OK: V2 responsiva, navegação, plano diário, UX, cobertura/backlog, taxonomia canônica SEEDF/TJDFT, filtros, resolvedor, persistência, PWA, cache e hardening Supabase validados.');
