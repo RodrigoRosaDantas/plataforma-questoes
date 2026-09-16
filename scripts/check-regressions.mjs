@@ -21,7 +21,8 @@ for(const marker of [
   'bytes[6]=(bytes[6]&0x0f)|0x40',
   'bytes[8]=(bytes[8]&0x3f)|0x80',
   'function validUuid(value)',
-  'clientEventId:validUuid(answer.clientEventId)?answer.clientEventId:uuid()'
+  'clientEventId:validUuid(answer.clientEventId)?answer.clientEventId:uuid()',
+  "setStatus('authenticated','Nuvem atualizada às '+clock+'. Seu progresso está disponível para outros aparelhos conectados à mesma conta.')"
 ]) requireMarker(cloud,marker,'Contrato de robustez Supabase ausente');
 if(cloud.includes('options:{email_redirect_to'))throw new Error('Magic Link voltou ao payload de redirect legado no corpo da requisição.');
 if(/authenticated\s*:\s*status===['"]authenticated['"]/.test(cloud))throw new Error('Autenticação não pode depender apenas do estado visual da sincronização.');
