@@ -34,6 +34,9 @@ function uuid(){
   const hex=[...bytes].map(value=>value.toString(16).padStart(2,'0')).join('');
   return `${hex.slice(0,8)}-${hex.slice(8,12)}-${hex.slice(12,16)}-${hex.slice(16,20)}-${hex.slice(20)}`;
 }
+function validUuid(value){
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(String(value||''));
+}
 function deviceId(){
   try{
     const saved=localStorage.getItem(DEVICE_KEY);
@@ -170,7 +173,7 @@ function normalizedHistory(history){
     ...record,
     answers:(Array.isArray(record.answers)?record.answers:[]).map(answer=>({
       ...answer,
-      clientEventId:answer.clientEventId||uuid()
+      clientEventId:validUuid(answer.clientEventId)?answer.clientEventId:uuid()
     }))
   }));
 }
