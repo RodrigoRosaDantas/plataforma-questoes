@@ -30,7 +30,8 @@ requireMarker(v2,'.hero-scorecard { width: 100%; max-width: none; }','Scorecard 
 requireMarker(v2,'.scorecard-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }','Grade 2x2 do scorecard no celular ausente');
 
 // PWA: qualquer alteração crítica no shell precisa chegar sem depender do cache anterior.
-requireMarker(sw,"const CACHE_PREFIX='plataforma-questoes-v32'",'Versão esperada do cache PWA ausente');
+const cacheVersion=Number(sw.match(/plataforma-questoes-v(\d+)/)?.[1]||0);
+if(cacheVersion<32)throw new Error('Cache PWA regrediu para uma versão anterior à correção crítica do Supabase.');
 requireMarker(sw,"'./assets/cloud-progress.js'",'Módulo de nuvem ausente do shell PWA');
 
 // Triagem editorial: nunca transforma heurística em writeback automático.
