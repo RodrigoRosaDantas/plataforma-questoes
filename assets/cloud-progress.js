@@ -267,7 +267,9 @@ async function loadCloudHistory(){
       clientEventId:row.client_event_id||''
     });
   });
-  const ids=new Set([...sessionMap.keys(),...answerMap.keys()]);
+  // Uma sessão relacional sem tentativas indica upload parcial; não é uma conclusão canônica.
+  // Baterias concluídas, inclusive totalmente em branco, geram uma tentativa por questão.
+  const ids=new Set(answerMap.keys());
   return [...ids].map(id=>{
     const row=sessionMap.get(id)||{};
     const answers=answerMap.get(id)||[];

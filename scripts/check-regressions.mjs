@@ -115,6 +115,13 @@ for(const marker of [
 ]) requireMarker(cloud,marker,'Ordenação/fallback temporal confiável do histórico cloud ausente');
 if(cloud.includes("row.ended_at?new Date(row.ended_at).getTime():Date.now()"))throw new Error('Histórico cloud voltou a inventar finishedAt com Date.now().');
 
+// Upload parcial: study_session sem nenhuma tentativa não pode virar bateria concluída de 0 questões.
+for(const marker of [
+  'const ids=new Set(answerMap.keys())',
+  'Uma sessão relacional sem tentativas indica upload parcial'
+]) requireMarker(cloud,marker,'Proteção contra sessão relacional órfã ausente');
+if(cloud.includes('const ids=new Set([...sessionMap.keys(),...answerMap.keys()])'))throw new Error('Sessão órfã voltou a ser reconstruída como histórico concluído.');
+
 // Erros: contagem e relógios são reconstruídos do histórico idempotente após o merge.
 for(const marker of [
   'function rebuildErrorsFromHistory(history,fallbackValue)',
@@ -258,7 +265,7 @@ requireMarker(v2,'.scorecard-grid { grid-template-columns: repeat(2, minmax(0, 1
 
 // PWA: qualquer alteração crítica no shell precisa chegar sem depender do cache anterior.
 const cacheVersion=Number(sw.match(/plataforma-questoes-v(\d+)/)?.[1]||0);
-if(cacheVersion<63)throw new Error('Cache PWA regrediu para uma versão anterior à ordenação estável do histórico cloud.');
+if(cacheVersion<65)throw new Error('Cache PWA regrediu para uma versão anterior à proteção contra sessões órfãs.');
 for(const marker of ["'./assets/cloud-progress.js'","'./assets/study-plan.js'","'./assets/ux-enhancements.js'","'./assets/canonical-editais.js'"]) requireMarker(sw,marker,'Módulo crítico ausente do shell PWA');
 
 // Triagem editorial: nunca transforma heurística em writeback automático.
