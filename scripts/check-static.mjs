@@ -8,7 +8,9 @@ const studyPlan=await fs.readFile('assets/study-plan.js','utf8');
 const ux=await fs.readFile('assets/ux-enhancements.js','utf8');
 const sw=await fs.readFile('service-worker.js','utf8');
 const syncNotion=await fs.readFile('scripts/sync-notion.mjs','utf8');
+const backlogScript=await fs.readFile('scripts/build-taxonomy-backlog.mjs','utf8');
 const metadata=JSON.parse(await fs.readFile('data/metadata.json','utf8'));
+const taxonomyBacklog=JSON.parse(await fs.readFile('data/taxonomy-backlog.json','utf8'));
 const manifest=JSON.parse(await fs.readFile('manifest.webmanifest','utf8'));
 const v2=await fs.readFile('assets/v2.css','utf8');
 const shell=html+'\n'+js;
@@ -68,6 +70,16 @@ for(const field of ['concurso','edital','topicoEdital','disciplina','assunto','s
   if(!item||!Number.isFinite(item.coveragePercent)||!Number.isFinite(item.filled)||!Number.isFinite(item.missing)) throw new Error(`Cobertura publicada inválida: ${field}`);
 }
 
+for(const marker of ['canonicalComplete','readyForVerticalization','needsBasicTaxonomy','priority','taxonomy-backlog.json']) if(!backlogScript.includes(marker)) throw new Error(`Gerador de backlog ausente: ${marker}`);
+if(taxonomyBacklog.schemaVersion!==1) throw new Error('Schema do backlog editorial inválido.');
+if(taxonomyBacklog.releaseSnapshotId!==metadata.releaseSnapshotId) throw new Error('Backlog editorial não corresponde à release atual.');
+const backlogTotals=taxonomyBacklog.totals||{};
+if(Number(backlogTotals.canonicalMapped)+Number(backlogTotals.backlog)!==Number(backlogTotals.published)) throw new Error('Backlog editorial não fecha com o total publicado.');
+if(Number(backlogTotals.published)!==Number(metadata.questionCount)) throw new Error('Backlog editorial diverge do metadata publicado.');
+if(Number(backlogTotals.readyForVerticalization)>Number(backlogTotals.backlog)) throw new Error('Backlog pronto para verticalização excede o passivo total.');
+if(Number(backlogTotals.needsBasicTaxonomy)+Number(backlogTotals.readyForVerticalization)!==Number(backlogTotals.backlog)) throw new Error('Classificação operacional do backlog não fecha com o passivo total.');
+for(const key of ['byOrgao','byCargo','byDisciplina','byAssunto','groups']) if(!Array.isArray(taxonomyBacklog.priority?.[key])) throw new Error(`Fila de prioridade ausente no backlog: ${key}`);
+
 const privilegeHardening=migrations.find(item=>item.name.includes('harden_student_profile_sync_privileges'))?.sql||'';
 const legacyProfilePolicy=migrations.find(item=>item.name.includes('preserve_legacy_profile_ids_during_sync'))?.sql||'';
 for(const marker of [
@@ -87,8 +99,8 @@ const allMigrations=migrations.map(item=>item.sql).join('\n');
 if(/grant\s+[^;]*\bon\s+(?:table\s+)?public\.student_progress_states\s+to\s+anon\b/i.test(allMigrations)) throw new Error('Progresso não pode conceder acesso ao papel anon.');
 if(/grant\s+all(?:\s+privileges)?\s+on\s+(?:table\s+)?public\.student_progress_states\s+to\s+authenticated\b/i.test(allMigrations)) throw new Error('Progresso não pode conceder privilégios amplos ao papel authenticated.');
 
-for(const file of ['assets/app.js','assets/cloud-progress.js','assets/study-plan.js','assets/ux-enhancements.js','service-worker.js','scripts/sync-notion.mjs','scripts/smoke-published.mjs']){
+for(const file of ['assets/app.js','assets/cloud-progress.js','assets/study-plan.js','assets/ux-enhancements.js','service-worker.js','scripts/sync-notion.mjs','scripts/build-taxonomy-backlog.mjs','scripts/smoke-published.mjs']){
   const syntax=spawnSync(process.execPath,['--check',file],{encoding:'utf8'});
   if(syntax.status!==0)throw new Error('JavaScript inválido em '+file+'\n'+(syntax.stderr||syntax.stdout));
 }
-console.log('OK: V2 responsiva, navegação, plano diário, UX, cobertura editorial, filtros nativos e facetados, resolvedor, persistência, PWA, cache e hardening Supabase validados.');
+console.log('OK: V2 responsiva, navegação, plano diário, UX, cobertura e backlog editorial, filtros nativos e facetados, resolvedor, persistência, PWA, cache e hardening Supabase validados.');
