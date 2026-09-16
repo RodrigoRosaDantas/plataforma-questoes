@@ -58,6 +58,20 @@ if(/authenticated\s*:\s*status===['"]authenticated['"]/.test(cloud))throw new Er
 requireMarker(app,"authenticated:'Conta conectada'",'Interface voltou a chamar mera autenticação de sincronização concluída');
 if(app.includes("authenticated:'Sincronizado'"))throw new Error('Conta autenticada não pode ser apresentada como sincronizada sem confirmação de gravação.');
 
+// Revisões multiaparelho: dueAt é agenda, não timestamp de conflito.
+for(const marker of [
+  'function reviewEntryTime(value,error)',
+  "if(stage==='Dominada')return Number(error?.lastCorrect)||0",
+  "if(stage==='D20')return Math.max(0,dueAt-20*864e5)",
+  "if(stage==='D7')return Math.max(0,dueAt-7*864e5)",
+  'function mergeReviewMap(localValue,remoteValue,errors)',
+  'const mergedErrors=mergeProgressMap(left.errors,right.errors)',
+  'const mergedReviews=mergeReviewMap(left.reviews,right.reviews,mergedErrors)',
+  'r.updatedAt=finishedAt',
+  "p.reviews[a.questionId]={stage:'D0',dueAt:finishedAt,updatedAt:finishedAt}"
+]) requireMarker(app,marker,'Contrato de sincronização D0/D7/D20 ausente');
+if(app.includes('Number(value.dueAt)||0,Number(value.removedAt)||0'))throw new Error('dueAt voltou a ser tratado como timestamp principal de conflito.');
+
 // Edital canônico: módulo ativo, associação estável e ambiguidade explícita.
 requireMarker(studyPlan,"import './canonical-editais.js';",'Taxonomia canônica deixou de ser carregada pela aplicação');
 for(const marker of [
@@ -109,7 +123,7 @@ requireMarker(v2,'.scorecard-grid { grid-template-columns: repeat(2, minmax(0, 1
 
 // PWA: qualquer alteração crítica no shell precisa chegar sem depender do cache anterior.
 const cacheVersion=Number(sw.match(/plataforma-questoes-v(\d+)/)?.[1]||0);
-if(cacheVersion<41)throw new Error('Cache PWA regrediu para uma versão anterior ao status explícito da nuvem.');
+if(cacheVersion<43)throw new Error('Cache PWA regrediu para uma versão anterior à correção de merge D0/D7/D20.');
 for(const marker of ["'./assets/cloud-progress.js'","'./assets/study-plan.js'","'./assets/ux-enhancements.js'","'./assets/canonical-editais.js'"]) requireMarker(sw,marker,'Módulo crítico ausente do shell PWA');
 
 // Triagem editorial: nunca transforma heurística em writeback automático.

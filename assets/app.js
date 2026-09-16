@@ -111,7 +111,18 @@ function currentScoringPolicy(){
 }
 function entryTime(value){
   if(!value||typeof value!=='object')return 0;
-  return Math.max(Number(value.updatedAt)||0,Number(value.lastSavedAt)||0,Number(value.lastError)||0,Number(value.lastCorrect)||0,Number(value.at)||0,Number(value.dueAt)||0,Number(value.removedAt)||0);
+  const explicit=Math.max(Number(value.updatedAt)||0,Number(value.lastSavedAt)||0,Number(value.lastError)||0,Number(value.lastCorrect)||0,Number(value.at)||0,Number(value.removedAt)||0);
+  return explicit||Number(value.dueAt)||0;
+}
+function reviewEntryTime(value,error){
+  if(!value||typeof value!=='object')return 0;
+  const explicit=Math.max(Number(value.updatedAt)||0,Number(value.lastSavedAt)||0,Number(value.lastError)||0,Number(value.lastCorrect)||0,Number(value.at)||0,Number(value.removedAt)||0);
+  if(explicit)return explicit;
+  const dueAt=Number(value.dueAt)||0,stage=String(value.stage||'');
+  if(stage==='Dominada')return Number(error?.lastCorrect)||0;
+  if(stage==='D20')return Math.max(0,dueAt-20*864e5);
+  if(stage==='D7')return Math.max(0,dueAt-7*864e5);
+  return dueAt;
 }
 function mergeProgressMap(localValue,remoteValue){
   const local=localValue&&typeof localValue==='object'&&!Array.isArray(localValue)?localValue:{};
@@ -123,9 +134,21 @@ function mergeProgressMap(localValue,remoteValue){
   }
   return merged;
 }
+function mergeReviewMap(localValue,remoteValue,errors){
+  const local=localValue&&typeof localValue==='object'&&!Array.isArray(localValue)?localValue:{};
+  const remote=remoteValue&&typeof remoteValue==='object'&&!Array.isArray(remoteValue)?remoteValue:{};
+  const merged={...local};
+  for(const id of Object.keys(remote)){
+    if(!Object.prototype.hasOwnProperty.call(local,id)){merged[id]=remote[id];continue;}
+    merged[id]=reviewEntryTime(local[id],errors?.[id])>=reviewEntryTime(remote[id],errors?.[id])?local[id]:remote[id];
+  }
+  return merged;
+}
 function mergeProgressState(local,remote){
   const left=local&&typeof local==='object'?local:{},right=remote&&typeof remote==='object'?remote:{};
-  const merged={...left,version:Math.max(Number(left.version)||1,Number(right.version)||1),history:cloudProgress.mergeHistory(left.history,right.history),marked:mergeProgressMap(left.marked,right.marked),errors:mergeProgressMap(left.errors,right.errors),reviews:mergeProgressMap(left.reviews,right.reviews),notes:mergeProgressMap(left.notes,right.notes)};
+  const mergedErrors=mergeProgressMap(left.errors,right.errors);
+  const mergedReviews=mergeReviewMap(left.reviews,right.reviews,mergedErrors);
+  const merged={...left,version:Math.max(Number(left.version)||1,Number(right.version)||1),history:cloudProgress.mergeHistory(left.history,right.history),marked:mergeProgressMap(left.marked,right.marked),errors:mergedErrors,reviews:mergedReviews,notes:mergeProgressMap(left.notes,right.notes)};
   const cutoff=Math.max(Number(left.activeSessionClearedAt)||0,Number(right.activeSessionClearedAt)||0);
   const active=[left,right].filter(value=>value.activeSession&&typeof value.activeSession==='object').map(value=>value.activeSession).sort((a,b)=>entryTime(b)-entryTime(a))[0]||null;
   merged.activeSession=active&&entryTime(active)>cutoff?active:null;
@@ -790,10 +813,10 @@ function finishSession(){
       if(a.isCorrect){
         if(p.errors[a.questionId])p.errors[a.questionId].lastCorrect=finishedAt;
         const r=p.reviews[a.questionId];
-        if(r){r.stage=r.stage==='D0'?'D7':r.stage==='D7'?'D20':'Dominada';r.dueAt=r.stage==='D7'?finishedAt+7*864e5:r.stage==='D20'?finishedAt+20*864e5:null;}
+        if(r){r.stage=r.stage==='D0'?'D7':r.stage==='D7'?'D20':'Dominada';r.dueAt=r.stage==='D7'?finishedAt+7*864e5:r.stage==='D20'?finishedAt+20*864e5:null;r.updatedAt=finishedAt;}
       }else if(a.given){
         p.errors[a.questionId]={count:(p.errors[a.questionId]?.count||0)+1,lastError:finishedAt};
-        p.reviews[a.questionId]={stage:'D0',dueAt:finishedAt};
+        p.reviews[a.questionId]={stage:'D0',dueAt:finishedAt,updatedAt:finishedAt};
       }
     });
   });
