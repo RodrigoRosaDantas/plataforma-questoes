@@ -1,0 +1,38 @@
+name: Auditar verticalizados
+
+on:
+  push:
+    paths:
+      - '.github/workflows/audit-verticalization.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Gerar auditoria
+        run: node scripts/audit-verticalization.mjs
+      - name: Validar JSON
+        run: node -e "JSON.parse(require('fs').readFileSync('data/verticalization-audit.json','utf8')); console.log('audit ok')"
+      - name: Commitar relatório
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/verticalization-audit.json
+          if git diff --cached --quiet; then
+            echo 'Relatório sem alteração.'
+            exit 0
+          fi
+          git commit -m 'chore: auditar cobertura dos verticalizados'
+          git fetch origin main
+          git rebase origin/main
+          git push
