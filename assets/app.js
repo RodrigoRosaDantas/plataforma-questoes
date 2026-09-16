@@ -175,12 +175,26 @@ function mergeReviewMap(localValue,remoteValue,errors){
   }
   return merged;
 }
+function reconcileReviewsWithErrors(reviewValue,errorValue){
+  const reviews=reviewValue&&typeof reviewValue==='object'&&!Array.isArray(reviewValue)?reviewValue:{};
+  const errors=errorValue&&typeof errorValue==='object'&&!Array.isArray(errorValue)?errorValue:{};
+  const result={...reviews};
+  for(const [id,error] of Object.entries(errors)){
+    const lastError=Math.max(0,Number(error?.lastError)||0);
+    const lastCorrect=Math.max(0,Number(error?.lastCorrect)||0);
+    if(!lastError||lastError<=lastCorrect)continue;
+    const current=result[id];
+    if(!current||lastError>reviewEntryTime(current,error))result[id]={stage:'D0',dueAt:lastError,updatedAt:lastError};
+  }
+  return result;
+}
 function mergeProgressState(local,remote){
   const left=local&&typeof local==='object'?local:{},right=remote&&typeof remote==='object'?remote:{};
   const mergedHistory=cloudProgress.mergeHistory(left.history,right.history);
   const mergedErrorFallback=mergeProgressMap(left.errors,right.errors);
   const mergedErrors=rebuildErrorsFromHistory(mergedHistory,mergedErrorFallback);
-  const mergedReviews=mergeReviewMap(left.reviews,right.reviews,mergedErrors);
+  const mergedReviewCandidates=mergeReviewMap(left.reviews,right.reviews,mergedErrors);
+  const mergedReviews=reconcileReviewsWithErrors(mergedReviewCandidates,mergedErrors);
   const merged={...left,version:Math.max(Number(left.version)||1,Number(right.version)||1),history:mergedHistory,marked:mergeProgressMap(left.marked,right.marked),errors:mergedErrors,reviews:mergedReviews,notes:mergeProgressMap(left.notes,right.notes)};
   const cutoff=Math.max(Number(left.activeSessionClearedAt)||0,Number(right.activeSessionClearedAt)||0);
   const completedSessionIds=new Set((merged.history||[]).map(record=>String(record?.id||'')).filter(Boolean));
