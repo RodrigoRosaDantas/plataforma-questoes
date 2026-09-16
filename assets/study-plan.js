@@ -1,3 +1,5 @@
+import './canonical-editais.js';
+
 const PLAN_KEY='plataforma.questoes.daily-plan.v2';
 const LEGACY_PLAN_KEY='plataforma.questoes.daily-plan.v1';
 const PROGRESS_KEY='plataforma.questoes.progress.v1';
