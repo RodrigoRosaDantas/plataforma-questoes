@@ -13,6 +13,15 @@ const sources=[
   }
 ];
 
+const normalize=value=>String(value??'').trim().normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('pt-BR');
+function belongsToCompetition(question,competitionId){
+  const hay=[question.concurso,question.orgao,question.cargo,question.nomeMaterial].filter(Boolean).join(' ');
+  if(competitionId==='seedf')return /SEEDF|Secretaria de Estado de Educação do Distrito Federal/i.test(hay);
+  if(competitionId==='tjdft')return /TJDFT|Tribunal de Justiça do Distrito Federal/i.test(hay);
+  if(competitionId==='sedes-df-2026')return /SEDES/i.test(hay);
+  return false;
+}
+
 async function fetchJson(source){
   const response=await fetch(source.url,{headers:{Accept:'application/json'}});
   if(!response.ok)throw new Error(`${source.competitionId}: fonte editorial respondeu ${response.status}.`);
@@ -25,7 +34,17 @@ async function fetchJson(source){
   return payload;
 }
 
-function normalizeAxis(axis){
+function directCounts(questions,competitionId){
+  const counts=new Map();
+  for(const question of questions){
+    if(!belongsToCompetition(question,competitionId))continue;
+    const topic=normalize(question.topicoEdital);
+    if(topic)counts.set(topic,(counts.get(topic)||0)+1);
+  }
+  return counts;
+}
+
+function normalizeAxis(axis,counts){
   const topic=String(axis.topic||'').trim();
   const subject=String(axis.subject||'').trim();
   if(!topic||!subject)throw new Error('Eixo canônico sem topic/subject.');
@@ -39,12 +58,16 @@ function normalizeAxis(axis){
     layer:String(axis.layer||'').trim(),
     level:String(axis.level||'').trim(),
     sourceUrl:String(axis.sourceUrl||'').trim(),
-    sourceLastEditedAt:axis.sourceLastEditedAt||null
+    sourceLastEditedAt:axis.sourceLastEditedAt||null,
+    directQuestionCount:counts.get(normalize(topic))||0
   };
 }
 
-function normalizeSnapshot(payload,source){
-  const canonicalAxes=payload.axes.map(normalizeAxis);
+function normalizeSnapshot(payload,source,questions){
+  const counts=directCounts(questions,payload.competitionId);
+  const canonicalAxes=payload.axes.map(axis=>normalizeAxis(axis,counts));
+  const canonicalLinkedAxes=canonicalAxes.filter(axis=>axis.directQuestionCount>0).length;
+  const canonicalDirectQuestions=canonicalAxes.reduce((sum,axis)=>sum+axis.directQuestionCount,0);
   return {
     competitionId:payload.competitionId,
     title:payload.competitionId==='seedf'?'SEEDF — edital verticalizado projetado':'TJDFT — edital verticalizado · base histórica 2022',
@@ -57,12 +80,16 @@ function normalizeSnapshot(payload,source){
     sourcePageUrl:String(payload.source?.pageUrl||''),
     editorialPolicy:payload.editorialPolicy||{official:false,note:'Pré-edital.'},
     canonicalAxisCount:canonicalAxes.length,
+    canonicalLinkedAxes,
+    canonicalDirectQuestions,
     canonicalAxes
   };
 }
 
+const questions=JSON.parse(await fs.readFile('data/questions.json','utf8'));
+if(!Array.isArray(questions))throw new Error('data/questions.json deve conter um array.');
 const snapshots=[];
-for(const source of sources)snapshots.push(normalizeSnapshot(await fetchJson(source),source));
+for(const source of sources)snapshots.push(normalizeSnapshot(await fetchJson(source),source,questions));
 
 const historical={
   competitionId:'sedes-df-2026',
@@ -75,9 +102,11 @@ const historical={
   sourcePageUrl:'',
   editorialPolicy:{official:true,note:'Concurso realizado; mantido somente como histórico e pós-prova.'},
   canonicalAxisCount:0,
+  canonicalLinkedAxes:0,
+  canonicalDirectQuestions:0,
   canonicalAxes:[]
 };
 
 const output=[...snapshots,historical];
 await fs.writeFile('data/editais.json',JSON.stringify(output,null,2)+'\n');
-console.log(`Taxonomias sincronizadas: ${snapshots.map(item=>`${item.competitionId}=${item.canonicalAxisCount}`).join(' · ')}.`);
+console.log(`Taxonomias sincronizadas: ${snapshots.map(item=>`${item.competitionId}=${item.canonicalAxisCount} eixos/${item.canonicalDirectQuestions} vínculos`).join(' · ')}.`);
