@@ -150,8 +150,9 @@ function mergeProgressState(local,remote){
   const mergedReviews=mergeReviewMap(left.reviews,right.reviews,mergedErrors);
   const merged={...left,version:Math.max(Number(left.version)||1,Number(right.version)||1),history:cloudProgress.mergeHistory(left.history,right.history),marked:mergeProgressMap(left.marked,right.marked),errors:mergedErrors,reviews:mergedReviews,notes:mergeProgressMap(left.notes,right.notes)};
   const cutoff=Math.max(Number(left.activeSessionClearedAt)||0,Number(right.activeSessionClearedAt)||0);
+  const completedSessionIds=new Set((merged.history||[]).map(record=>String(record?.id||'')).filter(Boolean));
   const active=[left,right].filter(value=>value.activeSession&&typeof value.activeSession==='object').map(value=>value.activeSession).sort((a,b)=>entryTime(b)-entryTime(a))[0]||null;
-  merged.activeSession=active&&entryTime(active)>cutoff?active:null;
+  merged.activeSession=active&&entryTime(active)>cutoff&&!completedSessionIds.has(String(active.id||''))?active:null;
   merged.activeSessionClearedAt=cutoff;
   return merged;
 }
@@ -264,7 +265,13 @@ async function syncCloudProgress(options={}){
     }
     if(!saved)throw new Error('A nuvem mudou repetidamente durante a sincronização.');
     const active=finalState.activeSession;
-    if(active&&(!state.session||entryTime(active)>entryTime(state.session)))hydrateSession(active);
+    const localSessionId=String(state.session?.id||'');
+    const completedRecord=localSessionId?(finalState.history||[]).find(record=>String(record?.id||'')===localSessionId):null;
+    if(completedRecord&&(!active||String(active.id||'')!==localSessionId)){
+      clearInterval(state.timer);state.timer=null;state.session=null;state.hiddenAt=null;
+      if(state.currentView==='resolver'){renderResult(completedRecord);navigate('result',{replace:true});}
+      toast('Esta bateria foi concluída em outro aparelho.');
+    }else if(active&&(!state.session||entryTime(active)>entryTime(state.session)))hydrateSession(active);
     if(!options.silent)toast('Progresso sincronizado entre os aparelhos.');
   }catch{
     if(!options.silent)toast('Progresso salvo localmente; tente sincronizar novamente.');
@@ -704,6 +711,12 @@ function createSession(items,mode='training'){
 function sessionMap(value,ids){ const source=value&&typeof value==='object'&&!Array.isArray(value)?value:{}; return Object.fromEntries(ids.filter(id=>Object.prototype.hasOwnProperty.call(source,id)).map(id=>[id,source[id]])); }
 function hydrateSession(saved){
   if(!saved||!Array.isArray(saved.items)){ store.mutate(p=>p.activeSession=null); state.session=null; return; }
+  const completed=store.load().history.find(record=>String(record?.id||'')===String(saved.id||''));
+  if(completed){
+    const finishedAt=Number(completed.finishedAt)||Date.now();
+    store.mutate(p=>{p.activeSession=null;p.activeSessionClearedAt=Math.max(Number(p.activeSessionClearedAt)||0,finishedAt);});
+    state.session=null;state.hiddenAt=null;return;
+  }
   const items=saved.items.filter(id=>{const q=state.questions.find(item=>item.id===id);return q&&answerOptions(q).length;});
   if(!items.length){ store.mutate(p=>p.activeSession=null); state.session=null; return; }
   const s=JSON.parse(JSON.stringify(saved));
@@ -803,7 +816,15 @@ function saveQuestionNote(){
 }
 
 function finishSession(){
-  saveQuestionTime(); clearInterval(state.timer); const s=state.session; if(!s)return;
+  const s=state.session;if(!s)return;
+  const existing=store.load().history.find(record=>String(record?.id||'')===String(s.id||''));
+  if(existing){
+    clearInterval(state.timer);state.timer=null;state.session=null;state.hiddenAt=null;
+    const finishedAt=Number(existing.finishedAt)||Date.now();
+    store.mutate(p=>{p.activeSession=null;p.activeSessionClearedAt=Math.max(Number(p.activeSessionClearedAt)||0,finishedAt);});
+    renderResult(existing);navigate('result',{replace:true});toast('Esta bateria já havia sido concluída em outro aparelho.');void syncCloudProgress({silent:true});return;
+  }
+  saveQuestionTime(); clearInterval(state.timer);
   const policy=currentScoringPolicy(),finishedAt=Date.now();
   const answers=s.items.map(id=>{
     const q=state.questions.find(x=>x.id===id),given=s.answers[id]||null;

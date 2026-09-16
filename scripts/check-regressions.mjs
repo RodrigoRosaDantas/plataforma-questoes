@@ -81,6 +81,18 @@ for(const marker of [
   'grant execute on function public.compare_and_swap_student_progress_state(text,bigint,jsonb,text) to authenticated'
 ]) requireMarker(casMigration,marker,'Contrato SQL de compare-and-swap ausente');
 
+// Sessões multiaparelho: uma bateria concluída nunca pode ressurgir como ativa.
+for(const marker of [
+  "const completedSessionIds=new Set((merged.history||[]).map(record=>String(record?.id||'')).filter(Boolean))",
+  "!completedSessionIds.has(String(active.id||''))",
+  "const completedRecord=localSessionId?(finalState.history||[]).find(record=>String(record?.id||'')===localSessionId):null",
+  "toast('Esta bateria foi concluída em outro aparelho.')",
+  "const completed=store.load().history.find(record=>String(record?.id||'')===String(saved.id||''))",
+  "const existing=store.load().history.find(record=>String(record?.id||'')===String(s.id||''))",
+  "toast('Esta bateria já havia sido concluída em outro aparelho.')"
+]) requireMarker(app,marker,'Proteção contra sessão concluída ressurgir ausente');
+if(app.includes('merged.activeSession=active&&entryTime(active)>cutoff?active:null;'))throw new Error('Sessão concluída voltou a poder ser reativada pelo merge.');
+
 // Revisões multiaparelho: dueAt é agenda, não timestamp de conflito.
 for(const marker of [
   'function reviewEntryTime(value,error)',
@@ -167,7 +179,7 @@ requireMarker(v2,'.scorecard-grid { grid-template-columns: repeat(2, minmax(0, 1
 
 // PWA: qualquer alteração crítica no shell precisa chegar sem depender do cache anterior.
 const cacheVersion=Number(sw.match(/plataforma-questoes-v(\d+)/)?.[1]||0);
-if(cacheVersion<49)throw new Error('Cache PWA regrediu para uma versão anterior ao compare-and-swap multiaparelho.');
+if(cacheVersion<51)throw new Error('Cache PWA regrediu para uma versão anterior à proteção contra sessão concluída ressurgir.');
 for(const marker of ["'./assets/cloud-progress.js'","'./assets/study-plan.js'","'./assets/ux-enhancements.js'","'./assets/canonical-editais.js'"]) requireMarker(sw,marker,'Módulo crítico ausente do shell PWA');
 
 // Triagem editorial: nunca transforma heurística em writeback automático.
