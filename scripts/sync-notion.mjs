@@ -266,8 +266,9 @@ const metadata = {
   },
   sampleMode: false,
   questionCount: questions.length,
-  sourceAudit: { records: transformed.length, published: questions.length, excluded, formats, missing, publishedMissing, taxonomy, governance }
+  sourceAudit: { records: transformed.length, published: questions.length, excluded, formats, missing, publishedMissing, taxonomy }
 };
+metadata.sourceAudit.governance = governance;
 await fs.mkdir(path.resolve('data'), { recursive: true });
 await fs.writeFile('data/questions.json', JSON.stringify(questions,null,2)+'\n');
 await fs.writeFile('data/metadata.json', JSON.stringify(metadata,null,2)+'\n');
