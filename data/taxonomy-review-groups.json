@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-16T20:40:38.116Z",
+  "generatedAt": "2026-09-16T21:23:43.911Z",
   "sourceCandidateSchemaVersion": 3,
-  "sourceReleaseSnapshotId": "97781d2a0069b56d289344f503810179bea06acfd145e258e33f695cac736130",
+  "sourceReleaseSnapshotId": "9c5e4b860940a77d41a04c077b4076a7639d3b34d0ff9fc57fb5913cd853e19a",
   "sourceQuestionCount": 3697,
   "policy": {
     "writeback": false,
@@ -13,7 +13,7 @@
   "totals": {
     "groups": 51,
     "cohesiveStrongGroups": 23,
-    "questionsInCohesiveStrongGroups": 63,
+    "questionsInCohesiveStrongGroups": 54,
     "unresolvedGroups": 28
   },
   "byCompetition": {
@@ -26,49 +26,11 @@
     "tjdft": {
       "groups": 51,
       "cohesiveStrongGroups": 23,
-      "questionsInCohesiveStrongGroups": 63,
+      "questionsInCohesiveStrongGroups": 54,
       "unresolvedGroups": 28
     }
   },
   "cohesiveStrongGroups": [
-    {
-      "competitionId": "tjdft",
-      "issue": "filled-noncanonical",
-      "cargo": "Técnico Judiciário — Área Administrativa",
-      "disciplina": "Língua Portuguesa",
-      "currentLabel": "Língua Portuguesa — interpretação e gramática",
-      "count": 10,
-      "classificationCounts": {
-        "strong": 10
-      },
-      "uniqueBestAxes": 1,
-      "cohesiveStrong": true,
-      "proposedAxis": {
-        "axisId": "3d5cf5a2-6731-8143-8781-cd99249a33b3",
-        "topic": "TJ2022-T — Língua Portuguesa",
-        "subject": "Língua Portuguesa",
-        "cargos": [
-          "Técnico Judiciário — Área Administrativa — sem especialidade"
-        ],
-        "layer": "Edital histórico",
-        "sourceBase": "Edital 2022"
-      },
-      "evidence": {
-        "minTokenCoverage": 0.75,
-        "exactTopicCount": 0,
-        "phraseMatchCount": 0
-      },
-      "sampleQuestionIds": [
-        "FGV-TJDFT-2022-TADM-T1-Q04",
-        "FGV-TJDFT-2022-TADM-T1-Q02",
-        "FGV-TJDFT-2022-TADM-T1-Q08",
-        "FGV-TJDFT-2022-TADM-T1-Q01",
-        "FGV-TJDFT-2022-TADM-T1-Q09",
-        "FGV-TJDFT-2022-TADM-T1-Q06",
-        "FGV-TJDFT-2022-TADM-T1-Q10",
-        "FGV-TJDFT-2022-TADM-T1-Q07"
-      ]
-    },
     {
       "competitionId": "tjdft",
       "issue": "filled-noncanonical",
@@ -656,6 +618,37 @@
       },
       "sampleQuestionIds": [
         "FGV-TJDFT-2022-AADM-T1-Q32"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Técnico Judiciário — Área Administrativa",
+      "disciplina": "Língua Portuguesa",
+      "currentLabel": "Língua Portuguesa — interpretação e gramática",
+      "count": 1,
+      "classificationCounts": {
+        "strong": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d5cf5a2-6731-8143-8781-cd99249a33b3",
+        "topic": "TJ2022-T — Língua Portuguesa",
+        "subject": "Língua Portuguesa",
+        "cargos": [
+          "Técnico Judiciário — Área Administrativa — sem especialidade"
+        ],
+        "layer": "Edital histórico",
+        "sourceBase": "Edital 2022"
+      },
+      "evidence": {
+        "minTokenCoverage": 0.75,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 0
+      },
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-TADM-T1-Q10"
       ]
     },
     {
@@ -788,44 +781,6 @@
       "competitionId": "tjdft",
       "issue": "filled-noncanonical",
       "cargo": "Técnico Judiciário — Área Administrativa",
-      "disciplina": "Língua Portuguesa",
-      "currentLabel": "Língua Portuguesa — interpretação e gramática",
-      "count": 10,
-      "classificationCounts": {
-        "strong": 10
-      },
-      "uniqueBestAxes": 1,
-      "cohesiveStrong": true,
-      "proposedAxis": {
-        "axisId": "3d5cf5a2-6731-8143-8781-cd99249a33b3",
-        "topic": "TJ2022-T — Língua Portuguesa",
-        "subject": "Língua Portuguesa",
-        "cargos": [
-          "Técnico Judiciário — Área Administrativa — sem especialidade"
-        ],
-        "layer": "Edital histórico",
-        "sourceBase": "Edital 2022"
-      },
-      "evidence": {
-        "minTokenCoverage": 0.75,
-        "exactTopicCount": 0,
-        "phraseMatchCount": 0
-      },
-      "sampleQuestionIds": [
-        "FGV-TJDFT-2022-TADM-T1-Q04",
-        "FGV-TJDFT-2022-TADM-T1-Q02",
-        "FGV-TJDFT-2022-TADM-T1-Q08",
-        "FGV-TJDFT-2022-TADM-T1-Q01",
-        "FGV-TJDFT-2022-TADM-T1-Q09",
-        "FGV-TJDFT-2022-TADM-T1-Q06",
-        "FGV-TJDFT-2022-TADM-T1-Q10",
-        "FGV-TJDFT-2022-TADM-T1-Q07"
-      ]
-    },
-    {
-      "competitionId": "tjdft",
-      "issue": "filled-noncanonical",
-      "cargo": "Técnico Judiciário — Área Administrativa",
       "disciplina": "Direito Processual Civil",
       "currentLabel": "Direito Processual Civil",
       "count": 8,
@@ -1409,6 +1364,37 @@
       },
       "sampleQuestionIds": [
         "FGV-TJDFT-2022-AADM-T1-Q32"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Técnico Judiciário — Área Administrativa",
+      "disciplina": "Língua Portuguesa",
+      "currentLabel": "Língua Portuguesa — interpretação e gramática",
+      "count": 1,
+      "classificationCounts": {
+        "strong": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d5cf5a2-6731-8143-8781-cd99249a33b3",
+        "topic": "TJ2022-T — Língua Portuguesa",
+        "subject": "Língua Portuguesa",
+        "cargos": [
+          "Técnico Judiciário — Área Administrativa — sem especialidade"
+        ],
+        "layer": "Edital histórico",
+        "sourceBase": "Edital 2022"
+      },
+      "evidence": {
+        "minTokenCoverage": 0.75,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 0
+      },
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-TADM-T1-Q10"
       ]
     },
     {
