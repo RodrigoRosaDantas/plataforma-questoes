@@ -63,16 +63,23 @@ function tokenCoverage(query,axis){
   for(const token of wanted)if(available.has(token))hit+=1;
   return Number((hit/wanted.size).toFixed(3));
 }
-function classify(question,axes){
-  const assunto=normalize(question.assunto);
+function canonicalTopicMatch(question,axes){
+  const current=normalize(question.topicoEdital);
+  if(!current)return null;
+  return axes.find(axis=>normalize(axis.topic)===current)||null;
+}
+function classify(question,axes,queryText){
+  const query=normalize(queryText);
   const scored=[];
   for(const axis of axes){
     const cargo=cargoCompatibility(question.cargo,axis.cargos||[]);
     if(!cargo.compatible)continue;
     const subject=subjectRelation(question.disciplina,axis.subject);
-    const exactTopic=Boolean(assunto&&assunto===normalize(axis.topic));
-    const phraseMatch=Boolean(assunto&&normalize([axis.topic,axis.subtopic].join(' ')).includes(assunto));
-    const coverage=tokenCoverage(question.assunto,axis);
+    const exactTopic=Boolean(query&&query===normalize(axis.topic));
+    const phraseMatch=Boolean(query&&normalize([axis.topic,axis.subtopic].join(' ')).includes(query));
+    const coverage=tokenCoverage(queryText,axis);
+    const meaningful=exactTopic||phraseMatch||subject!=='none'||coverage>=0.25;
+    if(!meaningful)continue;
     let score=0;
     if(exactTopic)score+=100;
     else if(phraseMatch)score+=45;
@@ -89,12 +96,19 @@ function classify(question,axes){
   scored.sort((a,b)=>b.score-a.score||b.coverage-a.coverage||String(a.axis.topic).localeCompare(String(b.axis.topic),'pt-BR'));
   const subjectCompatible=scored.filter(item=>['exact','component'].includes(item.subject));
   const exact=scored.filter(item=>item.exactTopic);
+  const best=scored[0]||null;
   let classification='none',reason='Nenhum eixo atingiu evidência mínima semântica/estrutural.';
-  if(exact.length===1){classification='strong';reason='Assunto atual coincide exatamente com um único tópico canônico compatível com o cargo.';}
-  else if(subjectCompatible.length===1){classification='strong';reason='Há um único eixo compatível por matéria e cargo; requer revisão editorial antes de aplicar.';}
-  else if(scored[0]&&(scored[0].score>=45||subjectCompatible.length>1)){
+  if(exact.length===1){
+    classification='strong';
+    reason='Texto de classificação coincide exatamente com um único tópico canônico compatível com o cargo.';
+  }else if(subjectCompatible.length===1&&best&&(best.phraseMatch||best.coverage>=0.5)){
+    classification='strong';
+    reason='Há um único eixo compatível por matéria/cargo e evidência textual relevante; ainda exige revisão editorial.';
+  }else if(best&&(best.score>=45||subjectCompatible.length>0)){
     classification='ambiguous';
-    reason=subjectCompatible.length>1?'Há múltiplos eixos compatíveis na mesma matéria/cargo.':'Há evidência textual parcial, mas não suficiente para vínculo automático.';
+    reason=subjectCompatible.length>1
+      ?'Há múltiplos eixos compatíveis na mesma matéria/cargo.'
+      :'Há compatibilidade estrutural ou textual, mas evidência insuficiente para classificar como candidato forte.';
   }
   const suggestions=scored.slice(0,3).map(item=>({
     axisId:item.axis.id,
@@ -107,6 +121,7 @@ function classify(question,axes){
     subjectRelation:item.subject,
     cargoRelation:item.cargo,
     tokenCoverage:item.coverage,
+    phraseMatch:item.phraseMatch,
     exactTopic:item.exactTopic
   }));
   return {classification,reason,suggestions};
@@ -114,36 +129,71 @@ function classify(question,axes){
 
 const axisByCompetition=new Map(editais.filter(edital=>TARGETS.has(edital.competitionId)).map(edital=>[edital.competitionId,edital.canonicalAxes||[]]));
 const entries=[];
+const canonicalMatched={seedf:0,tjdft:0};
 for(const question of questions){
-  if(canonicalComplete(question))continue;
   const competitionId=competitionFor(question);
   if(!competitionId)continue;
   const axes=axisByCompetition.get(competitionId)||[];
-  const candidate=classify(question,axes);
+  const complete=canonicalComplete(question);
+  const exactCanonical=complete?canonicalTopicMatch(question,axes):null;
+  if(exactCanonical){canonicalMatched[competitionId]+=1;continue;}
+  const issue=complete?'filled-noncanonical':'incomplete';
+  const queryText=complete?question.topicoEdital:question.assunto;
+  const candidate=classify(question,axes,queryText);
   entries.push({
     questionId:String(question.id),
     competitionId,
-    current:{cargo:text(question.cargo),disciplina:text(question.disciplina),assunto:text(question.assunto),subassunto:text(question.subassunto)},
+    issue,
+    current:{
+      concurso:text(question.concurso),
+      edital:text(question.edital),
+      topicoEdital:text(question.topicoEdital),
+      cargo:text(question.cargo),
+      disciplina:text(question.disciplina),
+      assunto:text(question.assunto),
+      subassunto:text(question.subassunto)
+    },
     classification:candidate.classification,
     reason:candidate.reason,
     suggestions:candidate.suggestions
   });
 }
 
-function summarize(rows){
-  const summary={pending:rows.length,strong:0,ambiguous:0,none:0};
-  for(const row of rows)summary[row.classification]+=1;
+function summarize(rows,matched=0){
+  const summary={
+    reviewQueue:rows.length,
+    incomplete:rows.filter(row=>row.issue==='incomplete').length,
+    filledNoncanonical:rows.filter(row=>row.issue==='filled-noncanonical').length,
+    canonicalMatched:matched,
+    strong:0,
+    ambiguous:0,
+    none:0,
+    strongExactTopic:0,
+    strongWithTextEvidence:0
+  };
+  for(const row of rows){
+    summary[row.classification]+=1;
+    if(row.classification==='strong'){
+      const best=row.suggestions[0];
+      if(best?.exactTopic)summary.strongExactTopic+=1;
+      if(best?.exactTopic||best?.phraseMatch||Number(best?.tokenCoverage)>=0.5)summary.strongWithTextEvidence+=1;
+    }
+  }
   return summary;
 }
 const byCompetition={};
-for(const competitionId of TARGETS)byCompetition[competitionId]=summarize(entries.filter(entry=>entry.competitionId===competitionId));
-const totals=summarize(entries);
+for(const competitionId of TARGETS){
+  const rows=entries.filter(entry=>entry.competitionId===competitionId);
+  byCompetition[competitionId]=summarize(rows,canonicalMatched[competitionId]||0);
+}
+const totals=summarize(entries,Object.values(canonicalMatched).reduce((sum,value)=>sum+value,0));
 const output={
-  schemaVersion:1,
+  schemaVersion:2,
   generatedAt:new Date().toISOString(),
   policy:{
     writeback:false,
     automaticApplication:false,
+    strongRequiresTextEvidence:true,
     note:'Relatório de triagem. Candidato forte ainda exige revisão editorial; nenhuma sugestão altera o Banco Mestre automaticamente.'
   },
   totals,
@@ -151,4 +201,4 @@ const output={
   entries
 };
 await fs.writeFile('data/taxonomy-candidates.json',JSON.stringify(output,null,2)+'\n');
-console.log(`Candidatos editoriais: ${totals.pending} pendentes · ${totals.strong} fortes · ${totals.ambiguous} ambíguos · ${totals.none} sem candidato.`);
+console.log(`Triagem canônica: ${totals.reviewQueue} na fila · ${totals.incomplete} incompletas · ${totals.filledNoncanonical} preenchidas não canônicas · ${totals.strong} fortes · ${totals.ambiguous} ambíguas · ${totals.none} sem candidato · ${totals.canonicalMatched} já canônicas.`);
