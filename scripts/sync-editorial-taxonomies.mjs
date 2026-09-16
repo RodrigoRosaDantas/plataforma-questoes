@@ -43,11 +43,21 @@ function directCounts(questions,competitionId){
   }
   return counts;
 }
+function topicMultiplicity(axes){
+  const counts=new Map();
+  for(const axis of axes){
+    const topic=normalize(axis?.topic);
+    if(topic)counts.set(topic,(counts.get(topic)||0)+1);
+  }
+  return counts;
+}
 
-function normalizeAxis(axis,counts){
+function normalizeAxis(axis,counts,multiplicity){
   const topic=String(axis.topic||'').trim();
   const subject=String(axis.subject||'').trim();
   if(!topic||!subject)throw new Error('Eixo canônico sem topic/subject.');
+  const topicKey=normalize(topic);
+  const directLinkAmbiguous=(multiplicity.get(topicKey)||0)>1;
   return {
     id:String(axis.id||''),
     topic,
@@ -59,15 +69,18 @@ function normalizeAxis(axis,counts){
     level:String(axis.level||'').trim(),
     sourceUrl:String(axis.sourceUrl||'').trim(),
     sourceLastEditedAt:axis.sourceLastEditedAt||null,
-    directQuestionCount:counts.get(normalize(topic))||0
+    directLinkAmbiguous,
+    directQuestionCount:directLinkAmbiguous?0:(counts.get(topicKey)||0)
   };
 }
 
 function normalizeSnapshot(payload,source,questions){
   const counts=directCounts(questions,payload.competitionId);
-  const canonicalAxes=payload.axes.map(axis=>normalizeAxis(axis,counts));
+  const multiplicity=topicMultiplicity(payload.axes);
+  const canonicalAxes=payload.axes.map(axis=>normalizeAxis(axis,counts,multiplicity));
   const canonicalLinkedAxes=canonicalAxes.filter(axis=>axis.directQuestionCount>0).length;
   const canonicalDirectQuestions=canonicalAxes.reduce((sum,axis)=>sum+axis.directQuestionCount,0);
+  const canonicalAmbiguousAxes=canonicalAxes.filter(axis=>axis.directLinkAmbiguous).length;
   return {
     competitionId:payload.competitionId,
     title:payload.competitionId==='seedf'?'SEEDF — edital verticalizado projetado':'TJDFT — edital verticalizado · base histórica 2022',
@@ -82,6 +95,7 @@ function normalizeSnapshot(payload,source,questions){
     canonicalAxisCount:canonicalAxes.length,
     canonicalLinkedAxes,
     canonicalDirectQuestions,
+    canonicalAmbiguousAxes,
     canonicalAxes
   };
 }
@@ -104,9 +118,10 @@ const historical={
   canonicalAxisCount:0,
   canonicalLinkedAxes:0,
   canonicalDirectQuestions:0,
+  canonicalAmbiguousAxes:0,
   canonicalAxes:[]
 };
 
 const output=[...snapshots,historical];
 await fs.writeFile('data/editais.json',JSON.stringify(output,null,2)+'\n');
-console.log(`Taxonomias sincronizadas: ${snapshots.map(item=>`${item.competitionId}=${item.canonicalAxisCount} eixos/${item.canonicalDirectQuestions} vínculos`).join(' · ')}.`);
+console.log(`Taxonomias sincronizadas: ${snapshots.map(item=>`${item.competitionId}=${item.canonicalAxisCount} eixos/${item.canonicalDirectQuestions} vínculos/${item.canonicalAmbiguousAxes} ambíguos`).join(' · ')}.`);
