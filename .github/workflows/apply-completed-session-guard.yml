@@ -20,7 +20,7 @@ jobs:
         with:
           node-version: 22
       - name: Aplicar patch seguro
-        run: node scripts/apply-completed-session-guard.mjs
+        run: node scripts/apply-completed-session-guard-v2.mjs
       - name: Validar código
         run: |
           node --check assets/app.js
