@@ -72,6 +72,16 @@ for(const marker of [
 ]) requireMarker(app,marker,'Contrato de sincronização D0/D7/D20 ausente');
 if(app.includes('Number(value.dueAt)||0,Number(value.removedAt)||0'))throw new Error('dueAt voltou a ser tratado como timestamp principal de conflito.');
 
+// Facetas: reutilizam o questions.json já carregado pelo núcleo antes de recorrer ao fallback de rede/cache.
+for(const marker of [
+  "window.dispatchEvent(new CustomEvent('questions:loaded',{detail:{questions:q}}))",
+  "window.addEventListener('questions:loaded',event=>{acceptFacetQuestions(event.detail?.questions);})",
+  'function acceptFacetQuestions(questions)',
+  'if(!force&&facetRows.length)return facetRows;',
+  'if(facetRows.length){renderFacetOptions();return;}'
+]) requireMarker(app.includes(marker)?app:ux,marker,'Contrato de reutilização em memória das facetas ausente');
+if(ux.includes('readFacetDataset(true)'))throw new Error('Facetas voltaram a forçar uma segunda leitura integral de questions.json.');
+
 // Edital canônico: módulo ativo, associação estável e ambiguidade explícita.
 requireMarker(studyPlan,"import './canonical-editais.js';",'Taxonomia canônica deixou de ser carregada pela aplicação');
 for(const marker of [
@@ -123,7 +133,7 @@ requireMarker(v2,'.scorecard-grid { grid-template-columns: repeat(2, minmax(0, 1
 
 // PWA: qualquer alteração crítica no shell precisa chegar sem depender do cache anterior.
 const cacheVersion=Number(sw.match(/plataforma-questoes-v(\d+)/)?.[1]||0);
-if(cacheVersion<43)throw new Error('Cache PWA regrediu para uma versão anterior à correção de merge D0/D7/D20.');
+if(cacheVersion<45)throw new Error('Cache PWA regrediu para uma versão anterior à reutilização em memória das facetas.');
 for(const marker of ["'./assets/cloud-progress.js'","'./assets/study-plan.js'","'./assets/ux-enhancements.js'","'./assets/canonical-editais.js'"]) requireMarker(sw,marker,'Módulo crítico ausente do shell PWA');
 
 // Triagem editorial: nunca transforma heurística em writeback automático.

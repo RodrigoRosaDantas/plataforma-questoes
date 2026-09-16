@@ -300,7 +300,15 @@ function compactFacetRows(questions){
   ]));
   return rows;
 }
+function acceptFacetQuestions(questions){
+  if(!Array.isArray(questions)||!questions.length)return false;
+  facetRows=compactFacetRows(questions);
+  if(document.querySelector('#facetStatus'))renderFacetOptions();
+  return true;
+}
+window.addEventListener('questions:loaded',event=>{acceptFacetQuestions(event.detail?.questions);});
 async function readFacetDataset(force=false){
+  if(!force&&facetRows.length)return facetRows;
   const canonical=new URL('./data/questions.json',location.href);
   try{
     if(!force&&'caches' in window){
@@ -404,7 +412,8 @@ function scheduleFacetRender(delay=20){
   facetTimer=setTimeout(()=>{facetTimer=null;renderFacetOptions();},delay);
 }
 async function reloadFacetDataset(){
-  const rows=await readFacetDataset(true);
+  if(facetRows.length){renderFacetOptions();return;}
+  const rows=await readFacetDataset(false);
   if(!rows.length)return;
   facetRows=rows;
   renderFacetOptions();

@@ -204,7 +204,7 @@ async function boot(){
     const [q,m,c,e,p]=await loadRelease();
     state.questions=q; state.meta=m; state.competitions=c; state.editais=e; state.officialExams=p; state.filtered=[...q];
     state.syncLabel=state.meta.sampleMode?'Amostra local':'Release publicada';
-    renderNav(); bindGlobal(); populateFilters(); applyFilters(); renderAll();
+    renderNav(); bindGlobal(); populateFilters(); window.dispatchEvent(new CustomEvent('questions:loaded',{detail:{questions:q}})); applyFilters(); renderAll();
     const progress=store.load(); if(progress.activeSession) hydrateSession(progress.activeSession);
     const requested=routeFromUrl();
     navigate(requested==='resolver'&&!state.session?'home':requested,{history:false});
@@ -226,7 +226,7 @@ async function refreshRelease(){
     const [q,m,c,e,p]=await loadRelease();
     state.questions=q; state.meta=m; state.competitions=c; state.editais=e; state.officialExams=p; state.filtered=[...q];
     state.syncLabel='Atualizada · '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-    populateFilters(); applyFilters(); renderAll();
+    populateFilters(); window.dispatchEvent(new CustomEvent('questions:loaded',{detail:{questions:q}})); applyFilters(); renderAll();
     state.swRegistration?.update().catch(()=>{});
     toast('Release atualizada: '+fmt(q.length)+' questões disponíveis.');
   }catch(err){
