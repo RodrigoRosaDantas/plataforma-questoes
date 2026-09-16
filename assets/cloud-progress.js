@@ -135,7 +135,7 @@ async function init(){
   try{
     if(Number(session.expires_at||0)*1000<Date.now()+60000)await refreshSession();
     await ensureProfile();
-    setStatus('authenticated','');
+    setStatus('authenticated','Conta conectada. Confirmando o estado salvo na nuvem…');
   }catch(error){
     if(error.status===401){saveSession(null);user=null;profileId='';setStatus('signed_out','A sessão expirou.');}
     else setStatus('error','Sincronização indisponível agora; o progresso local continua salvo.');
@@ -213,7 +213,7 @@ async function syncLocal(history){
       headers:{Prefer:'resolution=ignore-duplicates,return=minimal'},
       body:JSON.stringify(batch)
     });
-    setStatus('authenticated','');
+    setStatus('authenticated','Tentativas enviadas. Finalizando o estado da nuvem…');
     return {synced:true,history:normalized,count:normalized.length};
   }catch(error){
     setStatus('error','Não foi possível sincronizar agora; o progresso local continua salvo.');
@@ -278,6 +278,8 @@ async function saveCloudState(stateValue,stateVersion=1){
   const updatedAt=new Date().toISOString();
   const row={profile_id:profileId,state:stateValue&&typeof stateValue==='object'?stateValue:{},state_version:Math.max(1,Number(stateVersion)||1),device_id:deviceId(),updated_at:updatedAt};
   await request('/rest/v1/student_progress_states?on_conflict=profile_id',{method:'POST',headers:{Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify(row)});
+  const clock=new Date(updatedAt).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  setStatus('authenticated','Nuvem atualizada às '+clock+'. Seu progresso está disponível para outros aparelhos conectados à mesma conta.');
   return {saved:true,updatedAt};
 }
 function mergeHistory(localHistory,remoteHistory){
