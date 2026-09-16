@@ -48,6 +48,8 @@ for(const marker of [
   'bytes[6]=(bytes[6]&0x0f)|0x40',
   'bytes[8]=(bytes[8]&0x3f)|0x80',
   'function validUuid(value)',
+  'if(validUuid(saved))return saved;',
+  'if(saved)localStorage.removeItem(DEVICE_KEY);',
   'clientEventId:validUuid(answer.clientEventId)?answer.clientEventId:uuid()',
   "setStatus('authenticated','Nuvem atualizada às '+clock+'. Seu progresso está disponível para outros aparelhos conectados à mesma conta.')"
 ]) requireMarker(cloud,marker,'Contrato de robustez Supabase ausente');
@@ -63,10 +65,9 @@ for(const marker of [
   'canonical-link-ambiguous',
   'Tópico repetido',
   "const competitionId=text(card.querySelector('[data-edital-filter]')?.dataset.editalFilter)",
-  "find(edital=>text(edital.competitionId)===competitionId)",
-  "const CLOUD_DEVICE_KEY='plataforma.questoes.device.v1'",
-  'localStorage.removeItem(CLOUD_DEVICE_KEY)'
-]) requireMarker(canonical,marker,'Contrato do edital canônico/migração local ausente');
+  "find(edital=>text(edital.competitionId)===competitionId)"
+]) requireMarker(canonical,marker,'Contrato do edital canônico ausente');
+if(canonical.includes('plataforma.questoes.device.v1')||canonical.includes('DEVICE_KEY'))throw new Error('Edital canônico voltou a manipular identidade de dispositivo da nuvem.');
 for(const marker of [
   'function topicMultiplicity(axes)',
   'directLinkAmbiguous',
@@ -106,7 +107,7 @@ requireMarker(v2,'.scorecard-grid { grid-template-columns: repeat(2, minmax(0, 1
 
 // PWA: qualquer alteração crítica no shell precisa chegar sem depender do cache anterior.
 const cacheVersion=Number(sw.match(/plataforma-questoes-v(\d+)/)?.[1]||0);
-if(cacheVersion<38)throw new Error('Cache PWA regrediu para uma versão anterior ao escopo real das trilhas.');
+if(cacheVersion<40)throw new Error('Cache PWA regrediu para uma versão anterior à separação entre nuvem e edital canônico.');
 for(const marker of ["'./assets/cloud-progress.js'","'./assets/study-plan.js'","'./assets/ux-enhancements.js'","'./assets/canonical-editais.js'"]) requireMarker(sw,marker,'Módulo crítico ausente do shell PWA');
 
 // Triagem editorial: nunca transforma heurística em writeback automático.

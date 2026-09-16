@@ -40,7 +40,8 @@ function validUuid(value){
 function deviceId(){
   try{
     const saved=localStorage.getItem(DEVICE_KEY);
-    if(saved)return saved;
+    if(validUuid(saved))return saved;
+    if(saved)localStorage.removeItem(DEVICE_KEY);
     const next=uuid();
     localStorage.setItem(DEVICE_KEY,next);
     return next;
