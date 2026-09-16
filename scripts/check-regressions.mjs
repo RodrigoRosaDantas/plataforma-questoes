@@ -7,6 +7,7 @@ const studyPlan=await fs.readFile('assets/study-plan.js','utf8');
 const canonical=await fs.readFile('assets/canonical-editais.js','utf8');
 const taxonomySync=await fs.readFile('scripts/sync-editorial-taxonomies.mjs','utf8');
 const casMigration=await fs.readFile('supabase/migrations/20260916141000_fix_progress_state_compare_and_swap_column_ambiguity.sql','utf8');
+const attemptIdempotencyMigration=await fs.readFile('supabase/migrations/20260916142500_harden_question_attempt_idempotency.sql','utf8');
 const v2=await fs.readFile('assets/v2.css','utf8');
 const sw=await fs.readFile('service-worker.js','utf8');
 const editais=JSON.parse(await fs.readFile('data/editais.json','utf8'));
@@ -80,6 +81,22 @@ for(const marker of [
   'revoke all on function public.compare_and_swap_student_progress_state(text,bigint,jsonb,text) from anon',
   'grant execute on function public.compare_and_swap_student_progress_state(text,bigint,jsonb,text) to authenticated'
 ]) requireMarker(casMigration,marker,'Contrato SQL de compare-and-swap ausente');
+
+// Histórico multiaparelho: primeira conclusão é canônica e tentativas são idempotentes por bateria/questão.
+for(const marker of [
+  "/rest/v1/question_attempts?on_conflict=profile_id,question_set_id,question_id",
+  "order=answered_at.asc",
+  'const seenAttempts=new Set()',
+  'if(seenAttempts.has(attemptKey))return;',
+  'function historyRecordTime(record)',
+  'function mergeCanonicalAnswers(canonicalAnswers,fallbackAnswers)',
+  'const canonical=remoteTime<localTime?remote:local'
+]) requireMarker(cloud,marker,'Contrato de idempotência do histórico ausente');
+if(cloud.includes("resolution=merge-duplicates"))throw new Error('Sessão concluída voltou a poder ser sobrescrita na nuvem.');
+for(const marker of [
+  'question_attempts_profile_set_question_unique',
+  'unique (profile_id, question_set_id, question_id)'
+]) requireMarker(attemptIdempotencyMigration,marker,'Constraint de idempotência das tentativas ausente');
 
 // Sessões multiaparelho: uma bateria concluída nunca pode ressurgir como ativa.
 for(const marker of [
@@ -179,7 +196,7 @@ requireMarker(v2,'.scorecard-grid { grid-template-columns: repeat(2, minmax(0, 1
 
 // PWA: qualquer alteração crítica no shell precisa chegar sem depender do cache anterior.
 const cacheVersion=Number(sw.match(/plataforma-questoes-v(\d+)/)?.[1]||0);
-if(cacheVersion<51)throw new Error('Cache PWA regrediu para uma versão anterior à proteção contra sessão concluída ressurgir.');
+if(cacheVersion<53)throw new Error('Cache PWA regrediu para uma versão anterior à idempotência do histórico multiaparelho.');
 for(const marker of ["'./assets/cloud-progress.js'","'./assets/study-plan.js'","'./assets/ux-enhancements.js'","'./assets/canonical-editais.js'"]) requireMarker(sw,marker,'Módulo crítico ausente do shell PWA');
 
 // Triagem editorial: nunca transforma heurística em writeback automático.

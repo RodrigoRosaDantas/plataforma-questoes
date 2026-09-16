@@ -195,7 +195,7 @@ async function syncLocal(history){
     }));
     for(const batch of chunks(sessionRows,50))await request('/rest/v1/study_sessions?on_conflict=profile_id,activity_id',{
       method:'POST',
-      headers:{Prefer:'resolution=merge-duplicates,return=minimal'},
+      headers:{Prefer:'resolution=ignore-duplicates,return=minimal'},
       body:JSON.stringify(batch)
     });
     const attemptRows=normalized.flatMap(record=>record.answers.map(answer=>({
@@ -209,7 +209,7 @@ async function syncLocal(history){
       answered_at:iso(record.finishedAt),
       client_event_id:answer.clientEventId
     })));
-    for(const batch of chunks(attemptRows,500))await request('/rest/v1/question_attempts',{
+    for(const batch of chunks(attemptRows,500))await request('/rest/v1/question_attempts?on_conflict=profile_id,question_set_id,question_id',{
       method:'POST',
       headers:{Prefer:'resolution=ignore-duplicates,return=minimal'},
       body:JSON.stringify(batch)
@@ -234,15 +234,19 @@ async function fetchRows(path,maxPages=20){
 async function loadCloudHistory(){
   if(!hasSession())return [];
   const sessions=await fetchRows('/rest/v1/study_sessions?select=activity_id,started_at,ended_at,duration_ms&activity_type=eq.question_set&activity_id=not.is.null&order=ended_at.desc');
-  const attempts=await fetchRows('/rest/v1/question_attempts?select=question_set_id,question_id,answer,is_correct,duration_ms,answered_at,client_event_id&question_set_id=not.is.null&order=answered_at.desc');
+  const attempts=await fetchRows('/rest/v1/question_attempts?select=question_set_id,question_id,answer,is_correct,duration_ms,answered_at,client_event_id&question_set_id=not.is.null&order=answered_at.asc');
   const sessionMap=new Map(sessions.filter(row=>row.activity_id).map(row=>[String(row.activity_id),row]));
   const answerMap=new Map();
+  const seenAttempts=new Set();
   attempts.forEach(row=>{
-    const key=String(row.question_set_id||'');
-    if(!key)return;
+    const key=String(row.question_set_id||''),questionId=String(row.question_id||'');
+    if(!key||!questionId)return;
+    const attemptKey=key+'::'+questionId;
+    if(seenAttempts.has(attemptKey))return;
+    seenAttempts.add(attemptKey);
     if(!answerMap.has(key))answerMap.set(key,[]);
     answerMap.get(key).push({
-      questionId:String(row.question_id),
+      questionId,
       given:row.answer||null,
       correctAnswer:null,
       isCorrect:row.is_correct===true,
@@ -298,6 +302,21 @@ async function saveCloudState(stateValue,expectedVersion=0){
   setStatus('syncing','Outro aparelho atualizou a nuvem. Mesclando as alterações…');
   return {saved:false,conflict:true,stateVersion:Number(row.state_version)||0,updatedAt:row.updated_at||null};
 }
+function historyRecordTime(record){
+  const value=Number(record?.finishedAt);
+  return Number.isFinite(value)&&value>0?value:Number.POSITIVE_INFINITY;
+}
+function mergeCanonicalAnswers(canonicalAnswers,fallbackAnswers){
+  const fallbackByQuestion=new Map((Array.isArray(fallbackAnswers)?fallbackAnswers:[]).map(answer=>[String(answer?.questionId||''),answer]));
+  const metadataKeys=['correctAnswer','concurso','disciplina','assunto','subassunto','questionVersion','questionHash','releaseSnapshotId','sourceSnapshot'];
+  return (Array.isArray(canonicalAnswers)?canonicalAnswers:[]).map(answer=>{
+    const fallback=fallbackByQuestion.get(String(answer?.questionId||''));
+    if(!fallback)return answer;
+    const merged={...fallback,...answer};
+    metadataKeys.forEach(key=>{if((answer?.[key]===undefined||answer?.[key]===null||answer?.[key]==='')&&fallback?.[key]!==undefined&&fallback?.[key]!==null&&fallback?.[key]!=='')merged[key]=fallback[key];});
+    return merged;
+  });
+}
 function mergeHistory(localHistory,remoteHistory){
   const merged=new Map();
   (Array.isArray(localHistory)?localHistory:[]).forEach(record=>merged.set(String(record.id),record));
@@ -305,8 +324,11 @@ function mergeHistory(localHistory,remoteHistory){
     const id=String(remote.id);
     const local=merged.get(id);
     if(!local){merged.set(id,remote);return;}
-    const answers=(local.answers?.length||0)>=(remote.answers?.length||0)?local.answers:remote.answers;
-    merged.set(id,Object.assign({},remote,local,{answers}));
+    const localTime=historyRecordTime(local),remoteTime=historyRecordTime(remote);
+    const canonical=remoteTime<localTime?remote:local;
+    const fallback=canonical===local?remote:local;
+    const answers=mergeCanonicalAnswers(canonical.answers,fallback.answers);
+    merged.set(id,Object.assign({},fallback,canonical,{answers}));
   });
   return [...merged.values()].sort((a,b)=>(Number(b.finishedAt)||0)-(Number(a.finishedAt)||0));
 }
