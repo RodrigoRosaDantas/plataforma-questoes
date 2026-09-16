@@ -1,5 +1,7 @@
 import fs from 'node:fs/promises';
 
+const app=await fs.readFile('assets/app.js','utf8');
+const ux=await fs.readFile('assets/ux-enhancements.js','utf8');
 const cloud=await fs.readFile('assets/cloud-progress.js','utf8');
 const studyPlan=await fs.readFile('assets/study-plan.js','utf8');
 const canonical=await fs.readFile('assets/canonical-editais.js','utf8');
@@ -14,6 +16,26 @@ function requireMarker(source,marker,message){
   if(!source.includes(marker))throw new Error(message+`: ${marker}`);
 }
 const normalize=value=>String(value??'').trim().normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('pt-BR');
+
+// Trilhas: SEEDF/TJDFT precisam ser recortes reais, independentes da baixa cobertura de Concurso/Edital.
+for(const marker of [
+  "competitionScope: ''",
+  "const FILTER_LABELS = {trilha:'Trilha'",
+  'function setCompetitionScope(competitionId=\'\')',
+  "document.documentElement.dataset.competitionScope=next",
+  "if(key==='trilha')setCompetitionScope('')",
+  'navigate(\'questions\'); resetQuestionFilters(); setCompetitionScope(competitionId);',
+  'if(state.competitionScope&&!questionBelongsTo(q,state.competitionScope)) return false'
+]) requireMarker(app,marker,'Contrato do escopo real de trilha ausente');
+if(app.includes("if(sample) setQuestionFilter('filterOrgao',sample.orgao)"))throw new Error('Atalho de trilha voltou a depender do órgão da primeira questão.');
+for(const marker of [
+  'trailHay:normalize([question.concurso,question.orgao,question.cargo,question.nomeMaterial].join(\' \'))',
+  'function currentCompetitionScope()',
+  'function facetBelongsToScope(row,scope)',
+  "if(!facetBelongsToScope(row,currentCompetitionScope()))return false",
+  "window.addEventListener('competition-scope:changed',()=>scheduleFacetRender(0))",
+  "document.querySelector('#clearFilters')?.click()"
+]) requireMarker(ux,marker,'Facetas/desempenho perderam sincronização com o escopo de trilha');
 
 // Supabase: sessão válida deve continuar autenticada mesmo após uma falha transitória.
 for(const marker of [
@@ -84,8 +106,8 @@ requireMarker(v2,'.scorecard-grid { grid-template-columns: repeat(2, minmax(0, 1
 
 // PWA: qualquer alteração crítica no shell precisa chegar sem depender do cache anterior.
 const cacheVersion=Number(sw.match(/plataforma-questoes-v(\d+)/)?.[1]||0);
-if(cacheVersion<37)throw new Error('Cache PWA regrediu para uma versão anterior à auditoria de vínculos canônicos.');
-for(const marker of ["'./assets/cloud-progress.js'","'./assets/study-plan.js'","'./assets/canonical-editais.js'"]) requireMarker(sw,marker,'Módulo crítico ausente do shell PWA');
+if(cacheVersion<38)throw new Error('Cache PWA regrediu para uma versão anterior ao escopo real das trilhas.');
+for(const marker of ["'./assets/cloud-progress.js'","'./assets/study-plan.js'","'./assets/ux-enhancements.js'","'./assets/canonical-editais.js'"]) requireMarker(sw,marker,'Módulo crítico ausente do shell PWA');
 
 // Triagem editorial: nunca transforma heurística em writeback automático.
 if(candidates.schemaVersion!==3)throw new Error('Schema da triagem editorial deve permanecer em v3.');
@@ -110,4 +132,4 @@ for(const group of cohesive){
   if(Number(group.classificationCounts?.strong)!==Number(group.count))throw new Error('Lote coeso contém questão que não foi classificada como forte.');
 }
 
-console.log('OK: regressões críticas de Supabase, editais canônicos, mobile, PWA e triagem editorial protegidas.');
+console.log('OK: regressões críticas de trilhas, Supabase, editais canônicos, mobile, PWA e triagem editorial protegidas.');
