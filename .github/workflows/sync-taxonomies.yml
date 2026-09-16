@@ -38,7 +38,7 @@ jobs:
       - name: Commitar dados editoriais derivados
         shell: bash
         run: |
-          if git diff --quiet -- data/editais.json data/taxonomy-candidates.json; then
+          if [ -z "$(git status --porcelain -- data/editais.json data/taxonomy-candidates.json)" ]; then
             echo "Sem alterações nas taxonomias/triagem."
             exit 0
           fi
