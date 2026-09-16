@@ -1,5 +1,5 @@
 name: Sincronizar Banco Mestre do Notion
-# Disparado para publicar auditorias editoriais do Banco Mestre.
+# Disparado para publicar auditorias editoriais do Banco Mestre; gatilho editorial SEEDF 2022 em 2026-09-16.
 on:
   workflow_dispatch:
   push:
