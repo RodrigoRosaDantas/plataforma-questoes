@@ -1,5 +1,5 @@
 name: Sincronizar Banco Mestre do Notion
-# Disparado para publicar auditorias editoriais do Banco Mestre; governança SEEDF 2022 Q31/Q113 fechada em 2026-09-16.
+# Fonte: Notion Banco Mestre → release GitHub → triagem taxonômica → Pages; a conclusão bem-sucedida encadeia os workflows derivados.
 on:
   workflow_dispatch:
   push:
