@@ -1,7 +1,9 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-16T20:30:59.197Z",
+  "generatedAt": "2026-09-16T20:33:43.387Z",
   "sourceCandidateSchemaVersion": 3,
+  "sourceReleaseSnapshotId": "25dac0518a4bb2e729fb8cd0cbd26460d768376e69ad6f702abc1b2ad6508661",
+  "sourceQuestionCount": 3697,
   "policy": {
     "writeback": false,
     "automaticApplication": false,
