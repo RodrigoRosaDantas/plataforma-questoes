@@ -113,6 +113,17 @@ for(const marker of [
   'const mergedReviewCandidates=mergeReviewMap(left.reviews,right.reviews,mergedErrors)',
   'const mergedReviews=reconcileReviewsWithErrors(mergedReviewCandidates,mergedErrors)'
 ]) requireMarker(app,marker,'Reconciliação entre caderno de erros e D0/D7/D20 ausente');
+
+// D0/D7/D20: acerto antecipado não pode encurtar o intervalo agendado.
+for(const marker of [
+  'function advanceReviewIfDue(review,finishedAt)',
+  "if(!review||review.stage==='Dominada')return false",
+  'if(dueAt>finishedAt)return false;',
+  "review.stage=review.stage==='D0'?'D7':review.stage==='D7'?'D20':'Dominada'",
+  'review.updatedAt=finishedAt',
+  'if(r)advanceReviewIfDue(r,finishedAt)'
+]) requireMarker(app,marker,'Proteção dos intervalos D0/D7/D20 ausente');
+if(app.includes("if(r){r.stage=r.stage==='D0'?'D7'"))throw new Error('Revisão voltou a avançar sem conferir o vencimento.');
 for(const marker of [
   'question_attempts_profile_set_question_unique',
   'unique (profile_id, question_set_id, question_id)'
@@ -139,7 +150,7 @@ for(const marker of [
   'function mergeReviewMap(localValue,remoteValue,errors)',
   'const mergedErrorFallback=mergeProgressMap(left.errors,right.errors)',
   'const mergedReviewCandidates=mergeReviewMap(left.reviews,right.reviews,mergedErrors)',
-  'r.updatedAt=finishedAt',
+  'review.updatedAt=finishedAt',
   "p.reviews[a.questionId]={stage:'D0',dueAt:finishedAt,updatedAt:finishedAt}"
 ]) requireMarker(app,marker,'Contrato de sincronização D0/D7/D20 ausente');
 if(app.includes('Number(value.dueAt)||0,Number(value.removedAt)||0'))throw new Error('dueAt voltou a ser tratado como timestamp principal de conflito.');
@@ -216,7 +227,7 @@ requireMarker(v2,'.scorecard-grid { grid-template-columns: repeat(2, minmax(0, 1
 
 // PWA: qualquer alteração crítica no shell precisa chegar sem depender do cache anterior.
 const cacheVersion=Number(sw.match(/plataforma-questoes-v(\d+)/)?.[1]||0);
-if(cacheVersion<57)throw new Error('Cache PWA regrediu para uma versão anterior à reconciliação entre erros e revisões.');
+if(cacheVersion<59)throw new Error('Cache PWA regrediu para uma versão anterior à proteção dos intervalos D0/D7/D20.');
 for(const marker of ["'./assets/cloud-progress.js'","'./assets/study-plan.js'","'./assets/ux-enhancements.js'","'./assets/canonical-editais.js'"]) requireMarker(sw,marker,'Módulo crítico ausente do shell PWA');
 
 // Triagem editorial: nunca transforma heurística em writeback automático.

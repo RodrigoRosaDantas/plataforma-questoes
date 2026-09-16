@@ -862,6 +862,15 @@ function saveQuestionNote(){
   renderResolver(); toast(text?'Anotação salva.':'Anotação removida.'); scheduleCloudSync();
 }
 
+function advanceReviewIfDue(review,finishedAt){
+  if(!review||review.stage==='Dominada')return false;
+  const dueAt=Math.max(0,Number(review.dueAt)||0);
+  if(dueAt>finishedAt)return false;
+  review.stage=review.stage==='D0'?'D7':review.stage==='D7'?'D20':'Dominada';
+  review.dueAt=review.stage==='D7'?finishedAt+7*864e5:review.stage==='D20'?finishedAt+20*864e5:null;
+  review.updatedAt=finishedAt;
+  return true;
+}
 function finishSession(){
   const s=state.session;if(!s)return;
   const existing=store.load().history.find(record=>String(record?.id||'')===String(s.id||''));
@@ -887,7 +896,7 @@ function finishSession(){
       if(a.isCorrect){
         if(p.errors[a.questionId])p.errors[a.questionId].lastCorrect=finishedAt;
         const r=p.reviews[a.questionId];
-        if(r){r.stage=r.stage==='D0'?'D7':r.stage==='D7'?'D20':'Dominada';r.dueAt=r.stage==='D7'?finishedAt+7*864e5:r.stage==='D20'?finishedAt+20*864e5:null;r.updatedAt=finishedAt;}
+        if(r)advanceReviewIfDue(r,finishedAt);
       }else if(a.given){
         p.errors[a.questionId]={count:(p.errors[a.questionId]?.count||0)+1,lastError:finishedAt};
         p.reviews[a.questionId]={stage:'D0',dueAt:finishedAt,updatedAt:finishedAt};
