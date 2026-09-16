@@ -134,6 +134,37 @@ function mergeProgressMap(localValue,remoteValue){
   }
   return merged;
 }
+function rebuildErrorsFromHistory(history,fallbackValue){
+  const fallback=fallbackValue&&typeof fallbackValue==='object'&&!Array.isArray(fallbackValue)?fallbackValue:{};
+  const derived={};
+  for(const record of Array.isArray(history)?history:[]){
+    const finishedAt=Math.max(0,Number(record?.finishedAt)||0);
+    const seen=new Set();
+    for(const answer of Array.isArray(record?.answers)?record.answers:[]){
+      const id=String(answer?.questionId||'');
+      if(!id||seen.has(id))continue;
+      seen.add(id);
+      const answered=(answer?.given!==undefined&&answer?.given!==null&&answer?.given!=='')||answer?.blank===false;
+      const correct=answer?.isCorrect===true;
+      const item=derived[id]||(derived[id]={count:0,lastError:0,lastCorrect:0});
+      if(answered&&!correct){item.count+=1;item.lastError=Math.max(item.lastError,finishedAt);}
+      else if(correct)item.lastCorrect=Math.max(item.lastCorrect,finishedAt);
+    }
+  }
+  const result={};
+  for(const id of new Set([...Object.keys(fallback),...Object.keys(derived)])){
+    const legacy=fallback[id]&&typeof fallback[id]==='object'?fallback[id]:{};
+    const current=derived[id]||{};
+    const count=Math.max(Number(legacy.count)||0,Number(current.count)||0);
+    const lastError=Math.max(Number(legacy.lastError)||0,Number(current.lastError)||0);
+    const lastCorrect=Math.max(Number(legacy.lastCorrect)||0,Number(current.lastCorrect)||0);
+    if(count<=0&&lastError<=0)continue;
+    result[id]={...legacy,...current,count,lastError};
+    if(lastCorrect>0)result[id].lastCorrect=lastCorrect;
+    else delete result[id].lastCorrect;
+  }
+  return result;
+}
 function mergeReviewMap(localValue,remoteValue,errors){
   const local=localValue&&typeof localValue==='object'&&!Array.isArray(localValue)?localValue:{};
   const remote=remoteValue&&typeof remoteValue==='object'&&!Array.isArray(remoteValue)?remoteValue:{};
@@ -146,9 +177,11 @@ function mergeReviewMap(localValue,remoteValue,errors){
 }
 function mergeProgressState(local,remote){
   const left=local&&typeof local==='object'?local:{},right=remote&&typeof remote==='object'?remote:{};
-  const mergedErrors=mergeProgressMap(left.errors,right.errors);
+  const mergedHistory=cloudProgress.mergeHistory(left.history,right.history);
+  const mergedErrorFallback=mergeProgressMap(left.errors,right.errors);
+  const mergedErrors=rebuildErrorsFromHistory(mergedHistory,mergedErrorFallback);
   const mergedReviews=mergeReviewMap(left.reviews,right.reviews,mergedErrors);
-  const merged={...left,version:Math.max(Number(left.version)||1,Number(right.version)||1),history:cloudProgress.mergeHistory(left.history,right.history),marked:mergeProgressMap(left.marked,right.marked),errors:mergedErrors,reviews:mergedReviews,notes:mergeProgressMap(left.notes,right.notes)};
+  const merged={...left,version:Math.max(Number(left.version)||1,Number(right.version)||1),history:mergedHistory,marked:mergeProgressMap(left.marked,right.marked),errors:mergedErrors,reviews:mergedReviews,notes:mergeProgressMap(left.notes,right.notes)};
   const cutoff=Math.max(Number(left.activeSessionClearedAt)||0,Number(right.activeSessionClearedAt)||0);
   const completedSessionIds=new Set((merged.history||[]).map(record=>String(record?.id||'')).filter(Boolean));
   const active=[left,right].filter(value=>value.activeSession&&typeof value.activeSession==='object').map(value=>value.activeSession).sort((a,b)=>entryTime(b)-entryTime(a))[0]||null;

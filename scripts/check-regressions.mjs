@@ -93,6 +93,17 @@ for(const marker of [
   'const canonical=remoteTime<localTime?remote:local'
 ]) requireMarker(cloud,marker,'Contrato de idempotência do histórico ausente');
 if(cloud.includes("resolution=merge-duplicates"))throw new Error('Sessão concluída voltou a poder ser sobrescrita na nuvem.');
+
+// Erros: contagem e relógios são reconstruídos do histórico idempotente após o merge.
+for(const marker of [
+  'function rebuildErrorsFromHistory(history,fallbackValue)',
+  'const seen=new Set()',
+  'if(answered&&!correct){item.count+=1;item.lastError=Math.max(item.lastError,finishedAt);}',
+  'const count=Math.max(Number(legacy.count)||0,Number(current.count)||0)',
+  'const mergedHistory=cloudProgress.mergeHistory(left.history,right.history)',
+  'const mergedErrorFallback=mergeProgressMap(left.errors,right.errors)',
+  'const mergedErrors=rebuildErrorsFromHistory(mergedHistory,mergedErrorFallback)'
+]) requireMarker(app,marker,'Reconstrução confiável do caderno de erros ausente');
 for(const marker of [
   'question_attempts_profile_set_question_unique',
   'unique (profile_id, question_set_id, question_id)'
@@ -117,7 +128,7 @@ for(const marker of [
   "if(stage==='D20')return Math.max(0,dueAt-20*864e5)",
   "if(stage==='D7')return Math.max(0,dueAt-7*864e5)",
   'function mergeReviewMap(localValue,remoteValue,errors)',
-  'const mergedErrors=mergeProgressMap(left.errors,right.errors)',
+  'const mergedErrorFallback=mergeProgressMap(left.errors,right.errors)',
   'const mergedReviews=mergeReviewMap(left.reviews,right.reviews,mergedErrors)',
   'r.updatedAt=finishedAt',
   "p.reviews[a.questionId]={stage:'D0',dueAt:finishedAt,updatedAt:finishedAt}"
@@ -196,7 +207,7 @@ requireMarker(v2,'.scorecard-grid { grid-template-columns: repeat(2, minmax(0, 1
 
 // PWA: qualquer alteração crítica no shell precisa chegar sem depender do cache anterior.
 const cacheVersion=Number(sw.match(/plataforma-questoes-v(\d+)/)?.[1]||0);
-if(cacheVersion<53)throw new Error('Cache PWA regrediu para uma versão anterior à idempotência do histórico multiaparelho.');
+if(cacheVersion<55)throw new Error('Cache PWA regrediu para uma versão anterior à reconstrução de erros pelo histórico.');
 for(const marker of ["'./assets/cloud-progress.js'","'./assets/study-plan.js'","'./assets/ux-enhancements.js'","'./assets/canonical-editais.js'"]) requireMarker(sw,marker,'Módulo crítico ausente do shell PWA');
 
 // Triagem editorial: nunca transforma heurística em writeback automático.
