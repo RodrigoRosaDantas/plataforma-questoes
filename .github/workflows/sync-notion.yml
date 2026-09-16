@@ -28,7 +28,9 @@ jobs:
         run: npm run sync:notion
       - name: Gerar backlog editorial
         run: node scripts/build-taxonomy-backlog.mjs
-      - name: Validar release
+      - name: Validar release antes da reconciliação taxonômica
+        env:
+          REQUIRE_TAXONOMY_FRESH: 'false'
         run: npm run validate
       - name: Commitar apenas dados derivados
         run: |
