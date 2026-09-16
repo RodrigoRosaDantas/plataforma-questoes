@@ -1,31 +1,31 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-16T17:05:53.399Z",
-  "releaseSnapshotId": "8c404ab4eb23b96b3a979d760a163f7ab1ce48d78b16632a5da2f9b4e88c4e0d",
+  "generatedAt": "2026-09-16T19:53:16.763Z",
+  "releaseSnapshotId": "2530f203c3c021b11b2294aaabded5e1da03ced899f914d7d761e51664edfc8a",
   "scope": "published-questions-without-complete-canonical-link",
   "definition": "Questões publicadas em que Concurso, Edital e Tópico do edital não estão simultaneamente preenchidos.",
   "totals": {
     "published": 3696,
-    "canonicalMapped": 232,
-    "backlog": 3464,
-    "coveragePercent": 6.28,
-    "readyForVerticalization": 3339,
+    "canonicalMapped": 350,
+    "backlog": 3346,
+    "coveragePercent": 9.47,
+    "readyForVerticalization": 3221,
     "needsBasicTaxonomy": 125
   },
   "missingDimensions": {
-    "concurso": 3464,
-    "edital": 3464,
-    "topicoEdital": 3464,
+    "concurso": 3346,
+    "edital": 3346,
+    "topicoEdital": 3346,
     "assunto": 125,
-    "subassunto": 1520
+    "subassunto": 1403
   },
   "priority": {
     "byOrgao": [
       {
         "orgao": "Secretaria de Estado de Educação do Distrito Federal — SEEDF/DF",
-        "count": 824,
-        "withAssunto": 824,
-        "withSubassunto": 315,
+        "count": 706,
+        "withAssunto": 706,
+        "withSubassunto": 314,
         "sampleIds": [
           "PROVA-QDX-SEEDF-2025-QUI-A-114",
           "PROVA-QDX-SEEDF-2025-QUI-A-111",
@@ -577,20 +577,6 @@
         ]
       },
       {
-        "cargo": "Gestor PPGE — Administração",
-        "count": 118,
-        "withAssunto": 118,
-        "withSubassunto": 1,
-        "sampleIds": [
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-120",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-117",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-119",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-118",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-116",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-101"
-        ]
-      },
-      {
         "cargo": "Assistente I",
         "count": 117,
         "withAssunto": 117,
@@ -980,8 +966,8 @@
     "byDisciplina": [
       {
         "disciplina": "Língua Portuguesa",
-        "count": 450,
-        "withAssunto": 425,
+        "count": 435,
+        "withAssunto": 410,
         "withSubassunto": 291,
         "sampleIds": [
           "PROVA-QDX-CRMVGO-2025-TECNICO-ADMINISTRATIVO-200-020",
@@ -1008,8 +994,8 @@
       },
       {
         "disciplina": "Administração",
-        "count": 185,
-        "withAssunto": 185,
+        "count": 146,
+        "withAssunto": 146,
         "withSubassunto": 61,
         "sampleIds": [
           "PROVA-QDX-CRFA1-2026-ANALISTA-ADMINISTRATIVO-400-118",
@@ -1063,20 +1049,6 @@
         ]
       },
       {
-        "disciplina": "Informática",
-        "count": 85,
-        "withAssunto": 85,
-        "withSubassunto": 43,
-        "sampleIds": [
-          "PROVA-QDX-CRMVGO-2025-TECNICO-ADMINISTRATIVO-200-038",
-          "PROVA-QDX-CRMVGO-2025-TECNICO-ADMINISTRATIVO-200-036",
-          "PROVA-QDX-CRMVGO-2025-TECNICO-ADMINISTRATIVO-200-040",
-          "PROVA-QDX-CRMVGO-2025-TECNICO-ADMINISTRATIVO-200-037",
-          "PROVA-QDX-CRMVGO-2025-TECNICO-ADMINISTRATIVO-200-035",
-          "PROVA-QDX-CRMVGO-2025-TECNICO-ADMINISTRATIVO-200-039"
-        ]
-      },
-      {
         "disciplina": "Conhecimentos Complementares e Legislação",
         "count": 83,
         "withAssunto": 83,
@@ -1102,6 +1074,20 @@
           "PROVA-QDX-CRBM6-2026-CONTADOR-402-025",
           "PROVA-QDX-CRBM6-2026-CONTADOR-402-024",
           "PROVA-QDX-CRBM6-2026-CONTADOR-402-023"
+        ]
+      },
+      {
+        "disciplina": "Informática",
+        "count": 76,
+        "withAssunto": 76,
+        "withSubassunto": 42,
+        "sampleIds": [
+          "PROVA-QDX-CRMVGO-2025-TECNICO-ADMINISTRATIVO-200-038",
+          "PROVA-QDX-CRMVGO-2025-TECNICO-ADMINISTRATIVO-200-036",
+          "PROVA-QDX-CRMVGO-2025-TECNICO-ADMINISTRATIVO-200-040",
+          "PROVA-QDX-CRMVGO-2025-TECNICO-ADMINISTRATIVO-200-037",
+          "PROVA-QDX-CRMVGO-2025-TECNICO-ADMINISTRATIVO-200-035",
+          "PROVA-QDX-CRMVGO-2025-TECNICO-ADMINISTRATIVO-200-039"
         ]
       },
       {
@@ -1354,20 +1340,6 @@
           "PROVA-QDX-CRMVGO-2025-TECNICO-ADMINISTRATIVO-200-097",
           "PROVA-QDX-CFO-2025-TECNICO-ADMINISTRATIVO-201-103",
           "PROVA-QDX-CFO-2025-TECNICO-ADMINISTRATIVO-201-101"
-        ]
-      },
-      {
-        "disciplina": "Legislação e Políticas Educacionais",
-        "count": 46,
-        "withAssunto": 46,
-        "withSubassunto": 0,
-        "sampleIds": [
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-076",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-080",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-078",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-077",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-079",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-066"
         ]
       },
       {
@@ -1791,20 +1763,6 @@
         ]
       },
       {
-        "disciplina": "Realidade do Distrito Federal",
-        "count": 13,
-        "withAssunto": 13,
-        "withSubassunto": 0,
-        "sampleIds": [
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-037",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-040",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-039",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-038",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-036",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-032"
-        ]
-      },
-      {
         "disciplina": "Assistência Social / SUAS",
         "count": 12,
         "withAssunto": 12,
@@ -2015,20 +1973,6 @@
         ]
       },
       {
-        "disciplina": "Direito Administrativo e Regime Jurídico do DF",
-        "count": 6,
-        "withAssunto": 6,
-        "withSubassunto": 0,
-        "sampleIds": [
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-028",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-026",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-029",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-027",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-030",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-025"
-        ]
-      },
-      {
         "disciplina": "Direitos e Legislação Social",
         "count": 6,
         "withAssunto": 6,
@@ -2096,6 +2040,20 @@
           "PROVA-QDX-CRBM6-2026-AUXILIAR-ADMINISTRATIVO-200-052",
           "PROVA-QDX-CRBM6-2026-AUXILIAR-ADMINISTRATIVO-200-049",
           "PROVA-QDX-CRTR12-2026-AUXILIAR-ADMINISTRATIVO-200-059"
+        ]
+      },
+      {
+        "disciplina": "Legislação e Políticas Educacionais",
+        "count": 6,
+        "withAssunto": 6,
+        "withSubassunto": 0,
+        "sampleIds": [
+          "PROVA-QDX-SEEDF-2025-PROFADM-A-019",
+          "PROVA-QDX-SEEDF-2025-PROFADM-A-016",
+          "PROVA-QDX-SEEDF-2025-PROFADM-A-015",
+          "PROVA-QDX-SEEDF-2025-PROFADM-A-017",
+          "PROVA-QDX-SEEDF-2025-PROFADM-A-018",
+          "PROVA-QDX-SEEDF-2025-PROFADM-A-014"
         ]
       },
       {
@@ -2323,6 +2281,18 @@
           "PROVA-QDX-CRBM6-2026-AGENTE-ADMINISTRATIVO-401-107",
           "PROVA-QDX-CRBM6-2026-AGENTE-ADMINISTRATIVO-401-108",
           "PROVA-QDX-CRBM6-2026-AGENTE-ADMINISTRATIVO-401-109"
+        ]
+      },
+      {
+        "disciplina": "Realidade do Distrito Federal",
+        "count": 4,
+        "withAssunto": 4,
+        "withSubassunto": 0,
+        "sampleIds": [
+          "PROVA-QDX-SEEDF-2025-PROFADM-A-011",
+          "PROVA-QDX-SEEDF-2025-PROFADM-A-013",
+          "PROVA-QDX-SEEDF-2025-PROFADM-A-012",
+          "PROVA-QDX-SEEDF-2025-PROFADM-A-010"
         ]
       },
       {
@@ -2839,6 +2809,15 @@
         "withSubassunto": 1,
         "sampleIds": [
           "PROVA-QDX-ALTOPARAISO-GO-2023-ORIENTADOR-SOCIAL-202-028"
+        ]
+      },
+      {
+        "disciplina": "Gestão da Qualidade e Processos",
+        "count": 1,
+        "withAssunto": 1,
+        "withSubassunto": 1,
+        "sampleIds": [
+          "PROVA-QDX-CRBM6-2026-AGENTE-ADMINISTRATIVO-401-084"
         ]
       }
     ],
@@ -3564,51 +3543,6 @@
         ]
       },
       {
-        "disciplina": "Legislação e Políticas Educacionais",
-        "assunto": "Constituição Federal — educação",
-        "count": 10,
-        "withAssunto": 10,
-        "withSubassunto": 0,
-        "sampleIds": [
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-046",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-048",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-049",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-047",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-050",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-045"
-        ]
-      },
-      {
-        "disciplina": "Legislação e Políticas Educacionais",
-        "assunto": "Lei de Diretrizes e Bases da Educação Nacional",
-        "count": 10,
-        "withAssunto": 10,
-        "withSubassunto": 0,
-        "sampleIds": [
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-058",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-056",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-060",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-057",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-059",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-053"
-        ]
-      },
-      {
-        "disciplina": "Legislação e Políticas Educacionais",
-        "assunto": "Regimento Escolar da Rede Pública de Ensino do Distrito Federal",
-        "count": 10,
-        "withAssunto": 10,
-        "withSubassunto": 0,
-        "sampleIds": [
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-066",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-067",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-068",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-062",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-064",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-063"
-        ]
-      },
-      {
         "disciplina": "Língua Portuguesa",
         "assunto": "Classes de palavras",
         "count": 10,
@@ -4015,21 +3949,6 @@
       },
       {
         "disciplina": "Língua Portuguesa",
-        "assunto": "Interpretação de texto",
-        "count": 7,
-        "withAssunto": 7,
-        "withSubassunto": 2,
-        "sampleIds": [
-          "PROVA-QDX-CRFA1-2026-ANALISTA-ADMINISTRATIVO-400-003",
-          "PROVA-QDX-ALTOPARAISO-GO-2023-ORIENTADOR-SOCIAL-202-008",
-          "PROVA-IADES-SEECDF-2023-PPGGADM-A-002",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-004",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-001",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-002"
-        ]
-      },
-      {
-        "disciplina": "Língua Portuguesa",
         "assunto": "Tipologia textual",
         "count": 7,
         "withAssunto": 7,
@@ -4281,21 +4200,6 @@
           "PROVA-QDX-SEEDF-2025-PROFADM-A-017",
           "PROVA-QDX-SEEDF-2025-PROFADM-A-018",
           "PROVA-QDX-SEEDF-2025-PROFADM-A-014"
-        ]
-      },
-      {
-        "disciplina": "Língua Portuguesa",
-        "assunto": "Aspectos linguísticos do texto",
-        "count": 6,
-        "withAssunto": 6,
-        "withSubassunto": 0,
-        "sampleIds": [
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-010",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-009",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-007",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-008",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-006",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-005"
         ]
       },
       {
@@ -4778,20 +4682,6 @@
       },
       {
         "disciplina": "Informática",
-        "assunto": "Informática: backup e Google Workspace",
-        "count": 5,
-        "withAssunto": 5,
-        "withSubassunto": 0,
-        "sampleIds": [
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-020",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-018",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-019",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-017",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-016"
-        ]
-      },
-      {
-        "disciplina": "Informática",
         "assunto": "Segurança da informação",
         "count": 5,
         "withAssunto": 5,
@@ -4802,20 +4692,6 @@
           "PROVA-QDX-CRFA1-2026-ANALISTA-ADMINISTRATIVO-400-031",
           "PROVA-QDX-CRFA1-2026-ANALISTA-ADMINISTRATIVO-400-030",
           "PROVA-QDX-CREMAM-2025-ADMINISTRADOR-400-015"
-        ]
-      },
-      {
-        "disciplina": "Língua Portuguesa",
-        "assunto": "Correção gramatical e coerência textual",
-        "count": 5,
-        "withAssunto": 5,
-        "withSubassunto": 0,
-        "sampleIds": [
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-015",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-013",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-014",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-012",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-011"
         ]
       },
       {
@@ -4858,20 +4734,6 @@
           "PROVA-QDX-CFO-2025-TECNICO-ADMINISTRATIVO-201-017",
           "PROVA-QDX-CREMAM-2025-ADMINISTRADOR-400-009",
           "PROVA-QDX-ALTOPARAISO-GO-2023-ORIENTADOR-SOCIAL-202-021"
-        ]
-      },
-      {
-        "disciplina": "Realidade do Distrito Federal",
-        "assunto": "Realidade histórica e social do Distrito Federal",
-        "count": 5,
-        "withAssunto": 5,
-        "withSubassunto": 0,
-        "sampleIds": [
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-037",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-040",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-039",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-038",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-036"
         ]
       },
       {
@@ -5145,19 +5007,6 @@
           "PROVA-QDX-CREFITO17-2026-AGENTE-FISCAL-401-079",
           "PROVA-QDX-CREFITO17-2026-AGENTE-FISCAL-401-081",
           "PROVA-QDX-CREFITO17-2026-AGENTE-FISCAL-401-080"
-        ]
-      },
-      {
-        "disciplina": "Direito Administrativo e Regime Jurídico do DF",
-        "assunto": "Direito Administrativo",
-        "count": 4,
-        "withAssunto": 4,
-        "withSubassunto": 0,
-        "sampleIds": [
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-028",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-026",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-027",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-025"
         ]
       },
       {
@@ -5470,19 +5319,6 @@
           "PROVA-QDX-CREFITO17-2026-AGENTE-FISCAL-401-018",
           "PROVA-QDX-CREFITO17-2026-ADVOGADO-400-018",
           "PROVA-QDX-CREFITO17-2026-ADVOGADO-400-019"
-        ]
-      },
-      {
-        "disciplina": "Realidade do Distrito Federal",
-        "assunto": "Geografia do Distrito Federal",
-        "count": 4,
-        "withAssunto": 4,
-        "withSubassunto": 0,
-        "sampleIds": [
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-032",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-034",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-033",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-035"
         ]
       },
       {
@@ -5983,18 +5819,6 @@
       },
       {
         "disciplina": "Informática",
-        "assunto": "Direito Administrativo",
-        "count": 3,
-        "withAssunto": 3,
-        "withSubassunto": 0,
-        "sampleIds": [
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-022",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-021",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-024"
-        ]
-      },
-      {
-        "disciplina": "Informática",
         "assunto": "Hardware e software",
         "count": 3,
         "withAssunto": 3,
@@ -6015,18 +5839,6 @@
           "PROVA-QDX-CRFDF-2026-ASSISTENTE-I-200-065",
           "PROVA-QDX-CRFDF-2026-ASSISTENTE-I-200-067",
           "PROVA-QDX-CRFDF-2026-ASSISTENTE-I-200-066"
-        ]
-      },
-      {
-        "disciplina": "Legislação e Políticas Educacionais",
-        "assunto": "Evolução da Administração Pública e reformas administrativas",
-        "count": 3,
-        "withAssunto": 3,
-        "withSubassunto": 0,
-        "sampleIds": [
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-073",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-074",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-075"
         ]
       },
       {
@@ -6075,6 +5887,18 @@
           "PROVA-QDX-CRBM6-2026-CONTADOR-402-015",
           "PROVA-QDX-CRBM6-2026-ADVOGADO-400-015",
           "PROVA-IADES-SEECDF-2023-PPGGADM-A-003"
+        ]
+      },
+      {
+        "disciplina": "Língua Portuguesa",
+        "assunto": "Interpretação de texto",
+        "count": 3,
+        "withAssunto": 3,
+        "withSubassunto": 2,
+        "sampleIds": [
+          "PROVA-QDX-CRFA1-2026-ANALISTA-ADMINISTRATIVO-400-003",
+          "PROVA-QDX-ALTOPARAISO-GO-2023-ORIENTADOR-SOCIAL-202-008",
+          "PROVA-IADES-SEECDF-2023-PPGGADM-A-002"
         ]
       },
       {
@@ -6265,6 +6089,127 @@
         "sampleIds": [
           "PROVA-QDX-SEEDF-2025-PROFADM-A-103",
           "PROVA-QDX-SEEDF-2025-PROFADM-A-083"
+        ]
+      },
+      {
+        "disciplina": "Administração",
+        "assunto": "Desempenho de processos",
+        "count": 2,
+        "withAssunto": 2,
+        "withSubassunto": 2,
+        "sampleIds": [
+          "PROVA-QDX-CREMAM-2025-ADMINISTRADOR-400-033",
+          "PROVA-QDX-CREMAM-2025-ADMINISTRADOR-400-032"
+        ]
+      },
+      {
+        "disciplina": "Administração",
+        "assunto": "Gestão de pessoas no setor público",
+        "count": 2,
+        "withAssunto": 2,
+        "withSubassunto": 0,
+        "sampleIds": [
+          "PROVA-QDX-SEEDF-2025-PROFADM-A-099",
+          "PROVA-QDX-SEEDF-2025-PROFADM-A-100"
+        ]
+      },
+      {
+        "disciplina": "Administração",
+        "assunto": "Mapeamento e gestão de processos",
+        "count": 2,
+        "withAssunto": 2,
+        "withSubassunto": 0,
+        "sampleIds": [
+          "PROVA-QDX-SEEDF-2025-PROFADM-A-079",
+          "PROVA-QDX-SEEDF-2025-PROFADM-A-078"
+        ]
+      },
+      {
+        "disciplina": "Administração de Materiais",
+        "assunto": "Inventário físico de estoques",
+        "count": 2,
+        "withAssunto": 2,
+        "withSubassunto": 0,
+        "sampleIds": [
+          "PROVA-QDX-CRTR12-2026-AUXILIAR-ADMINISTRATIVO-200-088",
+          "PROVA-QDX-CRMVRN-2026-AGENTE-ADMINISTRATIVO-200-079"
+        ]
+      },
+      {
+        "disciplina": "Administração Estratégica",
+        "assunto": "Diagnóstico estratégico",
+        "count": 2,
+        "withAssunto": 2,
+        "withSubassunto": 2,
+        "sampleIds": [
+          "PROVA-QDX-CRBM6-2026-AGENTE-ADMINISTRATIVO-401-114",
+          "PROVA-QDX-CRBM6-2026-AGENTE-ADMINISTRATIVO-401-073"
+        ]
+      },
+      {
+        "disciplina": "Administração Financeira",
+        "assunto": "Demonstrações contábeis",
+        "count": 2,
+        "withAssunto": 2,
+        "withSubassunto": 2,
+        "sampleIds": [
+          "PROVA-QDX-CRASP-2025-ANACOB-400-039",
+          "PROVA-QDX-CRFDF-2026-ASSISTENTE-I-200-074"
+        ]
+      },
+      {
+        "disciplina": "Administração Geral",
+        "assunto": "Departamentalização",
+        "count": 2,
+        "withAssunto": 2,
+        "withSubassunto": 2,
+        "sampleIds": [
+          "PROVA-QDX-CRBM6-2026-AGENTE-ADMINISTRATIVO-401-075",
+          "PROVA-QDX-CRBM6-2026-AGENTE-ADMINISTRATIVO-401-079"
+        ]
+      },
+      {
+        "disciplina": "Administração Geral",
+        "assunto": "Gestão de Pessoas",
+        "count": 2,
+        "withAssunto": 2,
+        "withSubassunto": 2,
+        "sampleIds": [
+          "PROVA-QDX-CRESSPR-2018-ASSISTENTE-ADMINISTRATIVO-400-112",
+          "PROVA-QDX-CRESSPR-2018-ASSISTENTE-ADMINISTRATIVO-400-111"
+        ]
+      },
+      {
+        "disciplina": "Administração Pública Municipal",
+        "assunto": "Lei Orgânica Municipal",
+        "count": 2,
+        "withAssunto": 2,
+        "withSubassunto": 2,
+        "sampleIds": [
+          "PROVA-QDX-ALTOPARAISO-GO-2023-ORIENTADOR-SOCIAL-202-011",
+          "PROVA-QDX-ALTOPARAISO-GO-2023-ORIENTADOR-SOCIAL-202-010"
+        ]
+      },
+      {
+        "disciplina": "Agente Fiscal",
+        "assunto": "Administração e atendimento",
+        "count": 2,
+        "withAssunto": 2,
+        "withSubassunto": 0,
+        "sampleIds": [
+          "PROVA-QDX-CRMVRN-2026-AGENTE-FISCAL-201-080",
+          "PROVA-QDX-CRMVRN-2026-AGENTE-FISCAL-201-071"
+        ]
+      },
+      {
+        "disciplina": "Arquivologia",
+        "assunto": "Método numérico simples",
+        "count": 2,
+        "withAssunto": 2,
+        "withSubassunto": 1,
+        "sampleIds": [
+          "PROVA-QDX-CRBM6-2026-AUXILIAR-ADMINISTRATIVO-200-116",
+          "PROVA-QDX-CRMVRN-2026-AGENTE-ADMINISTRATIVO-200-108"
         ]
       }
     ],
@@ -6964,57 +6909,6 @@
           "PROVA-QDX-CRMVGO-2025-TECNICO-ADMINISTRATIVO-200-037",
           "PROVA-QDX-CRMVGO-2025-TECNICO-ADMINISTRATIVO-200-035",
           "PROVA-QDX-CRMVGO-2025-TECNICO-ADMINISTRATIVO-200-039"
-        ]
-      },
-      {
-        "orgao": "Secretaria de Estado de Educação do Distrito Federal — SEEDF/DF",
-        "cargo": "Gestor PPGE — Administração",
-        "disciplina": "Legislação e Políticas Educacionais",
-        "assunto": "Constituição Federal — educação",
-        "count": 10,
-        "withAssunto": 10,
-        "withSubassunto": 0,
-        "sampleIds": [
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-046",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-048",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-049",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-047",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-050",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-045"
-        ]
-      },
-      {
-        "orgao": "Secretaria de Estado de Educação do Distrito Federal — SEEDF/DF",
-        "cargo": "Gestor PPGE — Administração",
-        "disciplina": "Legislação e Políticas Educacionais",
-        "assunto": "Lei de Diretrizes e Bases da Educação Nacional",
-        "count": 10,
-        "withAssunto": 10,
-        "withSubassunto": 0,
-        "sampleIds": [
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-058",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-056",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-060",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-057",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-059",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-053"
-        ]
-      },
-      {
-        "orgao": "Secretaria de Estado de Educação do Distrito Federal — SEEDF/DF",
-        "cargo": "Gestor PPGE — Administração",
-        "disciplina": "Legislação e Políticas Educacionais",
-        "assunto": "Regimento Escolar da Rede Pública de Ensino do Distrito Federal",
-        "count": 10,
-        "withAssunto": 10,
-        "withSubassunto": 0,
-        "sampleIds": [
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-066",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-067",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-068",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-062",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-064",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-063"
         ]
       },
       {
@@ -7767,23 +7661,6 @@
       },
       {
         "orgao": "Secretaria de Estado de Educação do Distrito Federal — SEEDF/DF",
-        "cargo": "Gestor PPGE — Administração",
-        "disciplina": "Língua Portuguesa",
-        "assunto": "Aspectos linguísticos do texto",
-        "count": 6,
-        "withAssunto": 6,
-        "withSubassunto": 0,
-        "sampleIds": [
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-010",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-009",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-007",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-008",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-006",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-005"
-        ]
-      },
-      {
-        "orgao": "Secretaria de Estado de Educação do Distrito Federal — SEEDF/DF",
         "cargo": "Professor de Educação Básica — Área de Formação: Administração",
         "disciplina": "Educação Especial e Políticas Educacionais",
         "assunto": "Educação de Jovens e Adultos e inclusão",
@@ -8267,54 +8144,6 @@
           "PROVA-QDX-PRODAM-2022-AS-003",
           "PROVA-QDX-PRODAM-2022-AS-006",
           "PROVA-QDX-PRODAM-2022-AS-005"
-        ]
-      },
-      {
-        "orgao": "Secretaria de Estado de Educação do Distrito Federal — SEEDF/DF",
-        "cargo": "Gestor PPGE — Administração",
-        "disciplina": "Informática",
-        "assunto": "Informática: backup e Google Workspace",
-        "count": 5,
-        "withAssunto": 5,
-        "withSubassunto": 0,
-        "sampleIds": [
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-020",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-018",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-019",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-017",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-016"
-        ]
-      },
-      {
-        "orgao": "Secretaria de Estado de Educação do Distrito Federal — SEEDF/DF",
-        "cargo": "Gestor PPGE — Administração",
-        "disciplina": "Língua Portuguesa",
-        "assunto": "Correção gramatical e coerência textual",
-        "count": 5,
-        "withAssunto": 5,
-        "withSubassunto": 0,
-        "sampleIds": [
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-015",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-013",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-014",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-012",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-011"
-        ]
-      },
-      {
-        "orgao": "Secretaria de Estado de Educação do Distrito Federal — SEEDF/DF",
-        "cargo": "Gestor PPGE — Administração",
-        "disciplina": "Realidade do Distrito Federal",
-        "assunto": "Realidade histórica e social do Distrito Federal",
-        "count": 5,
-        "withAssunto": 5,
-        "withSubassunto": 0,
-        "sampleIds": [
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-037",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-040",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-039",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-038",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-036"
         ]
       },
       {
@@ -9080,51 +8909,6 @@
       },
       {
         "orgao": "Secretaria de Estado de Educação do Distrito Federal — SEEDF/DF",
-        "cargo": "Gestor PPGE — Administração",
-        "disciplina": "Direito Administrativo e Regime Jurídico do DF",
-        "assunto": "Direito Administrativo",
-        "count": 4,
-        "withAssunto": 4,
-        "withSubassunto": 0,
-        "sampleIds": [
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-028",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-026",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-027",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-025"
-        ]
-      },
-      {
-        "orgao": "Secretaria de Estado de Educação do Distrito Federal — SEEDF/DF",
-        "cargo": "Gestor PPGE — Administração",
-        "disciplina": "Língua Portuguesa",
-        "assunto": "Interpretação de texto",
-        "count": 4,
-        "withAssunto": 4,
-        "withSubassunto": 0,
-        "sampleIds": [
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-004",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-001",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-002",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-003"
-        ]
-      },
-      {
-        "orgao": "Secretaria de Estado de Educação do Distrito Federal — SEEDF/DF",
-        "cargo": "Gestor PPGE — Administração",
-        "disciplina": "Realidade do Distrito Federal",
-        "assunto": "Geografia do Distrito Federal",
-        "count": 4,
-        "withAssunto": 4,
-        "withSubassunto": 0,
-        "sampleIds": [
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-032",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-034",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-033",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-035"
-        ]
-      },
-      {
-        "orgao": "Secretaria de Estado de Educação do Distrito Federal — SEEDF/DF",
         "cargo": "Professor de Educação Básica — Área de Formação: Administração",
         "disciplina": "Realidade do Distrito Federal",
         "assunto": "Realidade do Distrito Federal",
@@ -9756,34 +9540,6 @@
           "PROVA-QDX-CRFDF-2026-ASSISTENTE-I-200-069",
           "PROVA-QDX-CRFDF-2026-ASSISTENTE-I-200-070",
           "PROVA-QDX-CRFDF-2026-ASSISTENTE-I-200-068"
-        ]
-      },
-      {
-        "orgao": "Secretaria de Estado de Educação do Distrito Federal — SEEDF/DF",
-        "cargo": "Gestor PPGE — Administração",
-        "disciplina": "Informática",
-        "assunto": "Direito Administrativo",
-        "count": 3,
-        "withAssunto": 3,
-        "withSubassunto": 0,
-        "sampleIds": [
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-022",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-021",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-024"
-        ]
-      },
-      {
-        "orgao": "Secretaria de Estado de Educação do Distrito Federal — SEEDF/DF",
-        "cargo": "Gestor PPGE — Administração",
-        "disciplina": "Legislação e Políticas Educacionais",
-        "assunto": "Evolução da Administração Pública e reformas administrativas",
-        "count": 3,
-        "withAssunto": 3,
-        "withSubassunto": 0,
-        "sampleIds": [
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-073",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-074",
-          "PROVA-QDX-SEEDF-2022-GPPGADM-A-075"
         ]
       },
       {
@@ -10814,6 +10570,162 @@
         "sampleIds": [
           "PROVA-QDX-ALTOPARAISO-GO-2023-ORIENTADOR-SOCIAL-202-007",
           "PROVA-QDX-ALTOPARAISO-GO-2023-ORIENTADOR-SOCIAL-202-001"
+        ]
+      },
+      {
+        "orgao": "Prefeitura Municipal de Alto Paraíso de Goiás/GO",
+        "cargo": "Orientador Social",
+        "disciplina": "Língua Portuguesa",
+        "assunto": "Semântica",
+        "count": 2,
+        "withAssunto": 2,
+        "withSubassunto": 2,
+        "sampleIds": [
+          "PROVA-QDX-ALTOPARAISO-GO-2023-ORIENTADOR-SOCIAL-202-006",
+          "PROVA-QDX-ALTOPARAISO-GO-2023-ORIENTADOR-SOCIAL-202-004"
+        ]
+      },
+      {
+        "orgao": "Secretaria de Estado de Economia do Distrito Federal — SEEC/DF",
+        "cargo": "Gestor em Políticas Públicas e Gestão Governamental — Administração",
+        "disciplina": "Administração",
+        "assunto": "Administração Financeira e Orçamentária — suprimento de fundos",
+        "count": 2,
+        "withAssunto": 2,
+        "withSubassunto": 0,
+        "sampleIds": [
+          "PROVA-IADES-SEECDF-2023-PPGGADM-A-056",
+          "PROVA-IADES-SEECDF-2023-PPGGADM-A-040"
+        ]
+      },
+      {
+        "orgao": "Secretaria de Estado de Economia do Distrito Federal — SEEC/DF",
+        "cargo": "Gestor em Políticas Públicas e Gestão Governamental — Administração",
+        "disciplina": "Políticas para as Mulheres",
+        "assunto": "II Plano Distrital de Políticas para as Mulheres",
+        "count": 2,
+        "withAssunto": 2,
+        "withSubassunto": 0,
+        "sampleIds": [
+          "PROVA-IADES-SEECDF-2023-PPGGADM-A-024",
+          "PROVA-IADES-SEECDF-2023-PPGGADM-A-023"
+        ]
+      },
+      {
+        "orgao": "Secretaria de Estado de Economia do Distrito Federal — SEEC/DF",
+        "cargo": "Gestor em Políticas Públicas e Gestão Governamental — Administração",
+        "disciplina": "Realidade do Distrito Federal e RIDE",
+        "assunto": "Região Integrada de Desenvolvimento do Distrito Federal e Entorno",
+        "count": 2,
+        "withAssunto": 2,
+        "withSubassunto": 0,
+        "sampleIds": [
+          "PROVA-IADES-SEECDF-2023-PPGGADM-A-012",
+          "PROVA-IADES-SEECDF-2023-PPGGADM-A-011"
+        ]
+      },
+      {
+        "orgao": "Secretaria de Estado de Educação do Distrito Federal — SEEDF/DF",
+        "cargo": "Professor de Educação Básica — Área de Formação: Administração",
+        "disciplina": "Administração",
+        "assunto": "Administração por objetivos",
+        "count": 2,
+        "withAssunto": 2,
+        "withSubassunto": 0,
+        "sampleIds": [
+          "PROVA-QDX-SEEDF-2025-PROFADM-A-103",
+          "PROVA-QDX-SEEDF-2025-PROFADM-A-083"
+        ]
+      },
+      {
+        "orgao": "Secretaria de Estado de Educação do Distrito Federal — SEEDF/DF",
+        "cargo": "Professor de Educação Básica — Área de Formação: Administração",
+        "disciplina": "Administração",
+        "assunto": "Gestão de pessoas no setor público",
+        "count": 2,
+        "withAssunto": 2,
+        "withSubassunto": 0,
+        "sampleIds": [
+          "PROVA-QDX-SEEDF-2025-PROFADM-A-099",
+          "PROVA-QDX-SEEDF-2025-PROFADM-A-100"
+        ]
+      },
+      {
+        "orgao": "Secretaria de Estado de Educação do Distrito Federal — SEEDF/DF",
+        "cargo": "Professor de Educação Básica — Área de Formação: Administração",
+        "disciplina": "Administração",
+        "assunto": "Mapeamento e gestão de processos",
+        "count": 2,
+        "withAssunto": 2,
+        "withSubassunto": 0,
+        "sampleIds": [
+          "PROVA-QDX-SEEDF-2025-PROFADM-A-079",
+          "PROVA-QDX-SEEDF-2025-PROFADM-A-078"
+        ]
+      },
+      {
+        "orgao": "Secretaria de Estado de Educação do Distrito Federal — SEEDF/DF",
+        "cargo": "Professor de Educação Básica — Área de Formação: Administração",
+        "disciplina": "Legislação educacional e políticas públicas distritais",
+        "assunto": "Legislação educacional e políticas públicas distritais",
+        "count": 2,
+        "withAssunto": 2,
+        "withSubassunto": 0,
+        "sampleIds": [
+          "PROVA-QDX-SEEDF-2025-PROFADM-A-021",
+          "PROVA-QDX-SEEDF-2025-PROFADM-A-020"
+        ]
+      },
+      {
+        "orgao": "Secretaria de Estado de Educação do Distrito Federal — SEEDF/DF",
+        "cargo": "Professor de Educação Básica — Área de Formação: Biologia",
+        "disciplina": "Biologia",
+        "assunto": "Taxonomia",
+        "count": 2,
+        "withAssunto": 2,
+        "withSubassunto": 2,
+        "sampleIds": [
+          "PROVA-QDX-SEEDF-2025-BIO-A-098",
+          "PROVA-QDX-SEEDF-2025-BIO-A-097"
+        ]
+      },
+      {
+        "orgao": "Secretaria de Estado de Educação do Distrito Federal — SEEDF/DF",
+        "cargo": "Professor de Educação Básica — Área de Formação: Biomedicina",
+        "disciplina": "Biomedicina",
+        "assunto": "Citopatologia",
+        "count": 2,
+        "withAssunto": 2,
+        "withSubassunto": 2,
+        "sampleIds": [
+          "PROVA-QDX-SEEDF-2025-BIOMED-A-088",
+          "PROVA-QDX-SEEDF-2025-BIOMED-A-089"
+        ]
+      },
+      {
+        "orgao": "Secretaria de Estado de Educação do Distrito Federal — SEEDF/DF",
+        "cargo": "Professor de Educação Básica — Área de Formação: Biomedicina",
+        "disciplina": "Biomedicina",
+        "assunto": "Educação Profissional e Tecnológica",
+        "count": 2,
+        "withAssunto": 2,
+        "withSubassunto": 2,
+        "sampleIds": [
+          "PROVA-QDX-SEEDF-2025-BIOMED-A-119",
+          "PROVA-QDX-SEEDF-2025-BIOMED-A-120"
+        ]
+      },
+      {
+        "orgao": "Secretaria de Estado de Educação do Distrito Federal — SEEDF/DF",
+        "cargo": "Professor de Educação Básica — Área de Formação: Biomedicina",
+        "disciplina": "Biomedicina",
+        "assunto": "Gestão da Qualidade",
+        "count": 2,
+        "withAssunto": 2,
+        "withSubassunto": 2,
+        "sampleIds": [
+          "PROVA-QDX-SEEDF-2025-BIOMED-A-113",
+          "PROVA-QDX-SEEDF-2025-BIOMED-A-111"
         ]
       }
     ]

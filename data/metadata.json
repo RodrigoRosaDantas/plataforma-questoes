@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-16T17:05:53.399Z",
-  "releaseSnapshotId": "8c404ab4eb23b96b3a979d760a163f7ab1ce48d78b16632a5da2f9b4e88c4e0d",
+  "generatedAt": "2026-09-16T19:53:16.763Z",
+  "releaseSnapshotId": "2530f203c3c021b11b2294aaabded5e1da03ced899f914d7d761e51664edfc8a",
   "scoringPolicy": {
     "version": 1,
     "blankCountsAsWrong": false,
@@ -32,43 +32,43 @@
     "missing": {
       "enunciado": 0,
       "gabarito": 8,
-      "concurso": 3525,
-      "edital": 3525,
-      "topicoEdital": 3525,
+      "concurso": 3406,
+      "edital": 3406,
+      "topicoEdital": 3406,
       "disciplina": 0,
       "assunto": 125,
-      "subassunto": 1752,
+      "subassunto": 1744,
       "cargo": 0,
       "fonte": 0
     },
     "publishedMissing": {
       "enunciado": 0,
       "gabarito": 0,
-      "concurso": 3464,
-      "edital": 3464,
-      "topicoEdital": 3464,
+      "concurso": 3346,
+      "edital": 3346,
+      "topicoEdital": 3346,
       "disciplina": 0,
       "assunto": 125,
-      "subassunto": 1742,
+      "subassunto": 1734,
       "cargo": 0,
       "fonte": 0
     },
     "taxonomy": {
       "source": {
         "concurso": {
-          "filled": 240,
-          "missing": 3525,
-          "coveragePercent": 6.37
+          "filled": 359,
+          "missing": 3406,
+          "coveragePercent": 9.54
         },
         "edital": {
-          "filled": 240,
-          "missing": 3525,
-          "coveragePercent": 6.37
+          "filled": 359,
+          "missing": 3406,
+          "coveragePercent": 9.54
         },
         "topicoEdital": {
-          "filled": 240,
-          "missing": 3525,
-          "coveragePercent": 6.37
+          "filled": 359,
+          "missing": 3406,
+          "coveragePercent": 9.54
         },
         "disciplina": {
           "filled": 3765,
@@ -81,9 +81,9 @@
           "coveragePercent": 96.68
         },
         "subassunto": {
-          "filled": 2013,
-          "missing": 1752,
-          "coveragePercent": 53.47
+          "filled": 2021,
+          "missing": 1744,
+          "coveragePercent": 53.68
         },
         "cargo": {
           "filled": 3765,
@@ -93,19 +93,19 @@
       },
       "published": {
         "concurso": {
-          "filled": 232,
-          "missing": 3464,
-          "coveragePercent": 6.28
+          "filled": 350,
+          "missing": 3346,
+          "coveragePercent": 9.47
         },
         "edital": {
-          "filled": 232,
-          "missing": 3464,
-          "coveragePercent": 6.28
+          "filled": 350,
+          "missing": 3346,
+          "coveragePercent": 9.47
         },
         "topicoEdital": {
-          "filled": 232,
-          "missing": 3464,
-          "coveragePercent": 6.28
+          "filled": 350,
+          "missing": 3346,
+          "coveragePercent": 9.47
         },
         "disciplina": {
           "filled": 3696,
@@ -118,9 +118,9 @@
           "coveragePercent": 96.62
         },
         "subassunto": {
-          "filled": 1954,
-          "missing": 1742,
-          "coveragePercent": 52.87
+          "filled": 1962,
+          "missing": 1734,
+          "coveragePercent": 53.08
         },
         "cargo": {
           "filled": 3696,
