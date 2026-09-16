@@ -24,6 +24,12 @@ app=replaceOnce(
   'merge de erros derivado do histórico'
 );
 
+checks=replaceOnce(
+  checks,
+  `'const mergedErrors=mergeProgressMap(left.errors,right.errors)'`,
+  `'const mergedErrorFallback=mergeProgressMap(left.errors,right.errors)'`,
+  'contrato D0/D7/D20 atualizado para o fallback de erros'
+);
 const anchor=`if(cloud.includes("resolution=merge-duplicates"))throw new Error('Sessão concluída voltou a poder ser sobrescrita na nuvem.');`;
 checks=replaceOnce(
   checks,
