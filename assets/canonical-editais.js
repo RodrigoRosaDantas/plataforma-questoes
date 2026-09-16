@@ -1,5 +1,4 @@
 const CANONICAL_DATA='./data/editais.json';
-const QUESTIONS_DATA='./data/questions.json';
 let canonicalState=null;
 let canonicalTimer=null;
 
@@ -8,41 +7,13 @@ const normalize=value=>text(value).normalize('NFD').replace(/[\u0300-\u036f]/g,'
 const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const fmt=value=>Number(value||0).toLocaleString('pt-BR');
 
-function belongsToCompetition(question,competitionId){
-  const hay=[question.concurso,question.orgao,question.cargo,question.nomeMaterial].filter(Boolean).join(' ');
-  if(competitionId==='seedf')return /SEEDF|Secretaria de Estado de Educação do Distrito Federal/i.test(hay);
-  if(competitionId==='tjdft')return /TJDFT|Tribunal de Justiça do Distrito Federal/i.test(hay);
-  if(competitionId==='sedes-df-2026')return /SEDES/i.test(hay);
-  return false;
-}
-
-function directLinkIndex(editais,questions){
-  const index=new Map();
-  for(const edital of editais){
-    const canonicalTopics=new Set((edital.canonicalAxes||[]).map(axis=>normalize(axis.topic)).filter(Boolean));
-    if(!canonicalTopics.size)continue;
-    for(const question of questions){
-      if(!belongsToCompetition(question,edital.competitionId))continue;
-      const topic=normalize(question.topicoEdital);
-      if(!topic||!canonicalTopics.has(topic))continue;
-      const key=edital.competitionId+'::'+topic;
-      index.set(key,(index.get(key)||0)+1);
-    }
-  }
-  return index;
-}
-
 async function loadCanonicalState(force=false){
   const suffix=force?`?canonical=${Date.now()}`:'';
-  const [editalResponse,questionResponse]=await Promise.all([
-    fetch(CANONICAL_DATA+suffix,{cache:force?'no-store':'force-cache'}),
-    fetch(QUESTIONS_DATA+suffix,{cache:force?'no-store':'force-cache'})
-  ]);
-  if(!editalResponse.ok||!questionResponse.ok)throw new Error('Taxonomia canônica indisponível.');
-  const editais=await editalResponse.json();
-  const questions=await questionResponse.json();
-  if(!Array.isArray(editais)||!Array.isArray(questions))throw new Error('Dados canônicos inválidos.');
-  canonicalState={editais,questions,directLinks:directLinkIndex(editais,questions)};
+  const response=await fetch(CANONICAL_DATA+suffix,{cache:force?'no-store':'force-cache'});
+  if(!response.ok)throw new Error('Taxonomia canônica indisponível.');
+  const editais=await response.json();
+  if(!Array.isArray(editais))throw new Error('Dados canônicos inválidos.');
+  canonicalState={editais};
   return canonicalState;
 }
 
@@ -66,11 +37,9 @@ function groupAxes(axes){
   }
   return [...groups.entries()].sort(([a],[b])=>a.localeCompare(b,'pt-BR',{numeric:true}));
 }
-function linkedCount(edital,axis){
-  return canonicalState?.directLinks?.get(edital.competitionId+'::'+normalize(axis.topic))||0;
-}
-function axisMarkup(edital,axis){
-  const linked=linkedCount(edital,axis);
+function linkedCount(axis){return Math.max(0,Number(axis.directQuestionCount)||0);}
+function axisMarkup(axis){
+  const linked=linkedCount(axis);
   const cargos=(axis.cargos||[]).filter(Boolean);
   const badges=[axis.layer,axis.sourceBase,...cargos].filter(Boolean);
   const linkState=linked
@@ -88,8 +57,8 @@ function axisMarkup(edital,axis){
 function canonicalMarkup(edital){
   const axes=Array.isArray(edital.canonicalAxes)?edital.canonicalAxes:[];
   if(!axes.length)return '';
-  const direct=axes.reduce((sum,axis)=>sum+linkedCount(edital,axis),0);
-  const linkedAxes=axes.filter(axis=>linkedCount(edital,axis)>0).length;
+  const direct=Number(edital.canonicalDirectQuestions)||axes.reduce((sum,axis)=>sum+linkedCount(axis),0);
+  const linkedAxes=Number(edital.canonicalLinkedAxes)||axes.filter(axis=>linkedCount(axis)>0).length;
   const groups=groupAxes(axes);
   const note=text(edital.editorialPolicy?.note)||'Taxonomia editorial da trilha.';
   return `<section class="canonical-edital" data-canonical-section="${escapeHtml(edital.competitionId)}">
@@ -98,7 +67,7 @@ function canonicalMarkup(edital){
       <div class="canonical-summary"><span>${escapeHtml(policyLabel(edital))}</span><strong>${fmt(linkedAxes)}/${fmt(axes.length)}</strong><small>eixos com vínculo direto · ${fmt(direct)} questões</small></div>
     </div>
     <div class="canonical-legend"><span><i class="canonical-dot historical"></i>Base histórica</span><span><i class="canonical-dot current"></i>Atualização/legislação atual</span><span><i class="canonical-dot radar"></i>Radar/projeção</span></div>
-    <div class="canonical-groups">${groups.map(([subject,items],index)=>`<details class="canonical-group" ${index===0?'open':''}><summary><div><strong>${escapeHtml(subject)}</strong><small>${fmt(items.length)} eixo${items.length===1?'':'s'}</small></div><span>${fmt(items.reduce((sum,item)=>sum+linkedCount(edital,item),0))} questões ligadas</span></summary><div class="canonical-topic-list">${items.map(axis=>axisMarkup(edital,axis)).join('')}</div></details>`).join('')}</div>
+    <div class="canonical-groups">${groups.map(([subject,items],index)=>`<details class="canonical-group" ${index===0?'open':''}><summary><div><strong>${escapeHtml(subject)}</strong><small>${fmt(items.length)} eixo${items.length===1?'':'s'}</small></div><span>${fmt(items.reduce((sum,item)=>sum+linkedCount(item),0))} questões ligadas</span></summary><div class="canonical-topic-list">${items.map(axis=>axisMarkup(axis)).join('')}</div></details>`).join('')}</div>
     <p class="canonical-footnote"><strong>Vínculo direto</strong> significa correspondência exata entre o campo “Tópico do edital” da questão e o eixo canônico. A plataforma não cria correspondências aproximadas automaticamente.</p>
   </section>`;
 }
@@ -114,7 +83,7 @@ function renderCanonicalSections(){
   for(const card of root.querySelectorAll('.edital-card')){
     const edital=findEditalForCard(card);
     if(!edital||!(edital.canonicalAxes||[]).length)continue;
-    const stamp=[edital.competitionId,edital.sourceGeneratedAt,edital.canonicalAxisCount,canonicalState.questions.length].join('|');
+    const stamp=[edital.competitionId,edital.sourceGeneratedAt,edital.canonicalAxisCount,edital.canonicalDirectQuestions].join('|');
     let section=card.querySelector(':scope > .canonical-edital');
     if(section?.dataset.canonicalStamp===stamp)continue;
     const wrapper=document.createElement('div');
