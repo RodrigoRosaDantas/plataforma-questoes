@@ -1,0 +1,3444 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-16T03:04:38.299Z",
+  "sourceCandidateSchemaVersion": 3,
+  "policy": {
+    "writeback": false,
+    "automaticApplication": false,
+    "cohesiveDefinition": "Mesmo concurso, tipo de pendência, cargo, disciplina e rótulo atual; todas as questões fortes, com evidência textual e o mesmo melhor eixo canônico.",
+    "note": "Lotes coesos reduzem a fila de revisão, mas ainda não autorizam alteração automática do Banco Mestre."
+  },
+  "totals": {
+    "groups": 111,
+    "cohesiveStrongGroups": 28,
+    "questionsInCohesiveStrongGroups": 92,
+    "unresolvedGroups": 83
+  },
+  "byCompetition": {
+    "seedf": {
+      "groups": 59,
+      "cohesiveStrongGroups": 4,
+      "questionsInCohesiveStrongGroups": 19,
+      "unresolvedGroups": 55
+    },
+    "tjdft": {
+      "groups": 52,
+      "cohesiveStrongGroups": 24,
+      "questionsInCohesiveStrongGroups": 73,
+      "unresolvedGroups": 28
+    }
+  },
+  "cohesiveStrongGroups": [
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Legislação e Políticas Educacionais",
+      "currentLabel": "Constituição Federal — educação",
+      "count": 10,
+      "classificationCounts": {
+        "strong": 10
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d4cf5a2-6731-8196-90d5-fbebf3ee6729",
+        "topic": "Constituição Federal — educação",
+        "subject": "Direito Constitucional",
+        "cargos": [
+          "Gestor — Administração",
+          "Núcleo comum"
+        ],
+        "layer": "Base histórica",
+        "sourceBase": "Edital 2022 — Gestor"
+      },
+      "evidence": {
+        "minTokenCoverage": 1,
+        "exactTopicCount": 10,
+        "phraseMatchCount": 10
+      },
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-046",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-048",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-049",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-047",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-050",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-045",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-041",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-043"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Analista Judiciário — Administração",
+      "disciplina": "Língua Portuguesa",
+      "currentLabel": "Língua Portuguesa — interpretação e gramática",
+      "count": 10,
+      "classificationCounts": {
+        "strong": 10
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d5cf5a2-6731-81cc-93e6-cfefcadee490",
+        "topic": "TJ2022-A — Língua Portuguesa",
+        "subject": "Língua Portuguesa",
+        "cargos": [
+          "Analista Judiciário — Apoio Especializado — Administração"
+        ],
+        "layer": "Edital histórico",
+        "sourceBase": "Edital 2022"
+      },
+      "evidence": {
+        "minTokenCoverage": 0.75,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 0
+      },
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-AADM-T1-Q09",
+        "FGV-TJDFT-2022-AADM-T1-Q03",
+        "FGV-TJDFT-2022-AADM-T1-Q07",
+        "FGV-TJDFT-2022-AADM-T1-Q06",
+        "FGV-TJDFT-2022-AADM-T1-Q01",
+        "FGV-TJDFT-2022-AADM-T1-Q08",
+        "FGV-TJDFT-2022-AADM-T1-Q10",
+        "FGV-TJDFT-2022-AADM-T1-Q05"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Técnico Judiciário — Área Administrativa",
+      "disciplina": "Língua Portuguesa",
+      "currentLabel": "Língua Portuguesa — interpretação e gramática",
+      "count": 10,
+      "classificationCounts": {
+        "strong": 10
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d5cf5a2-6731-8143-8781-cd99249a33b3",
+        "topic": "TJ2022-T — Língua Portuguesa",
+        "subject": "Língua Portuguesa",
+        "cargos": [
+          "Técnico Judiciário — Área Administrativa — sem especialidade"
+        ],
+        "layer": "Edital histórico",
+        "sourceBase": "Edital 2022"
+      },
+      "evidence": {
+        "minTokenCoverage": 0.75,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 0
+      },
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-TADM-T1-Q04",
+        "FGV-TJDFT-2022-TADM-T1-Q02",
+        "FGV-TJDFT-2022-TADM-T1-Q08",
+        "FGV-TJDFT-2022-TADM-T1-Q01",
+        "FGV-TJDFT-2022-TADM-T1-Q09",
+        "FGV-TJDFT-2022-TADM-T1-Q06",
+        "FGV-TJDFT-2022-TADM-T1-Q10",
+        "FGV-TJDFT-2022-TADM-T1-Q07"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Técnico Judiciário — Área Administrativa",
+      "disciplina": "Direito Processual Civil",
+      "currentLabel": "Direito Processual Civil",
+      "count": 8,
+      "classificationCounts": {
+        "strong": 8
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d5cf5a2-6731-81de-a4fb-d4d8d414d064",
+        "topic": "TJ2022-T — Direito Processual Civil",
+        "subject": "Direito Processual Civil",
+        "cargos": [
+          "Técnico Judiciário — Área Administrativa — sem especialidade"
+        ],
+        "layer": "Edital histórico",
+        "sourceBase": "Edital 2022"
+      },
+      "evidence": {
+        "minTokenCoverage": 1,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 8
+      },
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-TADM-T1-Q44",
+        "FGV-TJDFT-2022-TADM-T1-Q41",
+        "FGV-TJDFT-2022-TADM-T1-Q48",
+        "FGV-TJDFT-2022-TADM-T1-Q45",
+        "FGV-TJDFT-2022-TADM-T1-Q43",
+        "FGV-TJDFT-2022-TADM-T1-Q42",
+        "FGV-TJDFT-2022-TADM-T1-Q46",
+        "FGV-TJDFT-2022-TADM-T1-Q47"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Analista Judiciário — Administração",
+      "disciplina": "Direito Administrativo",
+      "currentLabel": "Direito Administrativo",
+      "count": 7,
+      "classificationCounts": {
+        "strong": 7
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d5cf5a2-6731-8127-a8cc-e793fcd432fe",
+        "topic": "TJ2022-A — Constitucional e Administrativo",
+        "subject": "Direito Constitucional; Direito Administrativo",
+        "cargos": [
+          "Analista Judiciário — Apoio Especializado — Administração"
+        ],
+        "layer": "Edital histórico",
+        "sourceBase": "Edital 2022"
+      },
+      "evidence": {
+        "minTokenCoverage": 1,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 7
+      },
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-AADM-T1-Q41",
+        "FGV-TJDFT-2022-AADM-T1-Q46",
+        "FGV-TJDFT-2022-AADM-T1-Q47",
+        "FGV-TJDFT-2022-AADM-T1-Q42",
+        "FGV-TJDFT-2022-AADM-T1-Q43",
+        "FGV-TJDFT-2022-AADM-T1-Q44",
+        "FGV-TJDFT-2022-AADM-T1-Q45"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Técnico Judiciário — Área Administrativa",
+      "disciplina": "Direito Penal",
+      "currentLabel": "Direito Penal",
+      "count": 6,
+      "classificationCounts": {
+        "strong": 6
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d5cf5a2-6731-813e-8a7e-ea172225aa47",
+        "topic": "TJ2022-T — Direito Penal",
+        "subject": "Direito Penal",
+        "cargos": [
+          "Técnico Judiciário — Área Administrativa — sem especialidade"
+        ],
+        "layer": "Edital histórico",
+        "sourceBase": "Edital 2022"
+      },
+      "evidence": {
+        "minTokenCoverage": 1,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 6
+      },
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-TADM-T1-Q52",
+        "FGV-TJDFT-2022-TADM-T1-Q54",
+        "FGV-TJDFT-2022-TADM-T1-Q51",
+        "FGV-TJDFT-2022-TADM-T1-Q53",
+        "FGV-TJDFT-2022-TADM-T1-Q50",
+        "FGV-TJDFT-2022-TADM-T1-Q49"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Técnico Judiciário — Área Administrativa",
+      "disciplina": "Direito Processual Penal",
+      "currentLabel": "Direito Processual Penal",
+      "count": 6,
+      "classificationCounts": {
+        "strong": 6
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d5cf5a2-6731-8168-901f-d3176338cec6",
+        "topic": "TJ2022-T — Direito Processual Penal",
+        "subject": "Direito Processual Penal",
+        "cargos": [
+          "Técnico Judiciário — Área Administrativa — sem especialidade"
+        ],
+        "layer": "Edital histórico",
+        "sourceBase": "Edital 2022"
+      },
+      "evidence": {
+        "minTokenCoverage": 1,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 6
+      },
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-TADM-T1-Q59",
+        "FGV-TJDFT-2022-TADM-T1-Q56",
+        "FGV-TJDFT-2022-TADM-T1-Q58",
+        "FGV-TJDFT-2022-TADM-T1-Q60",
+        "FGV-TJDFT-2022-TADM-T1-Q57",
+        "FGV-TJDFT-2022-TADM-T1-Q55"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Informática",
+      "currentLabel": "Informática: backup e Google Workspace",
+      "count": 5,
+      "classificationCounts": {
+        "strong": 5
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d4cf5a2-6731-8123-a151-c23f043ea5ba",
+        "topic": "Informática — desenho real da prova Gestor 2022",
+        "subject": "Informática",
+        "cargos": [
+          "Gestor — Administração",
+          "Núcleo comum"
+        ],
+        "layer": "Atualização obrigatória",
+        "sourceBase": "Edital 2022 — Gestor"
+      },
+      "evidence": {
+        "minTokenCoverage": 0.75,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 0
+      },
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-020",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-018",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-019",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-017",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-016"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Técnico Judiciário — Área Administrativa",
+      "disciplina": "Direito Constitucional",
+      "currentLabel": "Direito Constitucional",
+      "count": 4,
+      "classificationCounts": {
+        "strong": 4
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d5cf5a2-6731-8143-930a-c165c0cc25c7",
+        "topic": "TJ2022-T — Direito Constitucional",
+        "subject": "Direito Constitucional",
+        "cargos": [
+          "Técnico Judiciário — Área Administrativa — sem especialidade"
+        ],
+        "layer": "Edital histórico",
+        "sourceBase": "Edital 2022"
+      },
+      "evidence": {
+        "minTokenCoverage": 1,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 4
+      },
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-TADM-T1-Q31",
+        "FGV-TJDFT-2022-TADM-T1-Q32",
+        "FGV-TJDFT-2022-TADM-T1-Q30",
+        "FGV-TJDFT-2022-TADM-T1-Q29"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Informática",
+      "currentLabel": "Direito Administrativo",
+      "count": 3,
+      "classificationCounts": {
+        "strong": 3
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d4cf5a2-6731-81c0-9e48-f745f53c2a9f",
+        "topic": "Direito Administrativo aplicado à gestão",
+        "subject": "Direito Administrativo",
+        "cargos": [
+          "Gestor — Administração"
+        ],
+        "layer": "Base histórica",
+        "sourceBase": "Edital 2022 — Gestor"
+      },
+      "evidence": {
+        "minTokenCoverage": 1,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 3
+      },
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-022",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-021",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-024"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Analista Judiciário — Administração",
+      "disciplina": "Gestão de processos",
+      "currentLabel": "Gestão de processos",
+      "count": 3,
+      "classificationCounts": {
+        "strong": 3
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d5cf5a2-6731-8161-9507-cdc4c6d141b8",
+        "topic": "TJ2022-A — Gestão pública, governança e processos",
+        "subject": "Gestão pública; governança; gestão de processos",
+        "cargos": [
+          "Analista Judiciário — Apoio Especializado — Administração"
+        ],
+        "layer": "Edital histórico",
+        "sourceBase": "Edital 2022"
+      },
+      "evidence": {
+        "minTokenCoverage": 1,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 3
+      },
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-AADM-T1-Q58",
+        "FGV-TJDFT-2022-AADM-T1-Q59",
+        "FGV-TJDFT-2022-AADM-T1-Q57"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Técnico Judiciário — Área Administrativa",
+      "disciplina": "Direito Administrativo",
+      "currentLabel": "Direito Administrativo",
+      "count": 2,
+      "classificationCounts": {
+        "strong": 2
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d5cf5a2-6731-81e8-a06b-d1195a3b67b8",
+        "topic": "TJ2022-T — Direito Administrativo",
+        "subject": "Direito Administrativo",
+        "cargos": [
+          "Técnico Judiciário — Área Administrativa — sem especialidade"
+        ],
+        "layer": "Edital histórico",
+        "sourceBase": "Edital 2022"
+      },
+      "evidence": {
+        "minTokenCoverage": 1,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 2
+      },
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-TADM-T1-Q34",
+        "FGV-TJDFT-2022-TADM-T1-Q33"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Analista Judiciário — Administração",
+      "disciplina": "Direito Constitucional",
+      "currentLabel": "Direitos fundamentais e direitos políticos",
+      "count": 2,
+      "classificationCounts": {
+        "strong": 2
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d5cf5a2-6731-8127-a8cc-e793fcd432fe",
+        "topic": "TJ2022-A — Constitucional e Administrativo",
+        "subject": "Direito Constitucional; Direito Administrativo",
+        "cargos": [
+          "Analista Judiciário — Apoio Especializado — Administração"
+        ],
+        "layer": "Edital histórico",
+        "sourceBase": "Edital 2022"
+      },
+      "evidence": {
+        "minTokenCoverage": 0.667,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 0
+      },
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-AADM-T1-Q14",
+        "FGV-TJDFT-2022-AADM-T1-Q15"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Técnico Judiciário — Área Administrativa",
+      "disciplina": "Provimento Geral da Corregedoria",
+      "currentLabel": "Provimento Geral da Corregedoria",
+      "count": 2,
+      "classificationCounts": {
+        "strong": 2
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d5cf5a2-6731-815f-9561-fd79464335c3",
+        "topic": "TJ2022-T — Provimentos e processo eletrônico",
+        "subject": "Provimento Geral da Corregedoria; Provimento Judicial aplicado ao PJe",
+        "cargos": [
+          "Técnico Judiciário — Área Administrativa — sem especialidade"
+        ],
+        "layer": "Edital histórico",
+        "sourceBase": "Edital 2022"
+      },
+      "evidence": {
+        "minTokenCoverage": 1,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 2
+      },
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-TADM-T1-Q19",
+        "FGV-TJDFT-2022-TADM-T1-Q18"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Administração",
+      "currentLabel": "Ética no serviço público",
+      "count": 1,
+      "classificationCounts": {
+        "strong": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d4cf5a2-6731-8154-902d-e2c62865e1ea",
+        "topic": "Ética no serviço público",
+        "subject": "Administração Pública",
+        "cargos": [
+          "Gestor — Administração"
+        ],
+        "layer": "Base histórica",
+        "sourceBase": "Edital 2022 — Gestor"
+      },
+      "evidence": {
+        "minTokenCoverage": 1,
+        "exactTopicCount": 1,
+        "phraseMatchCount": 1
+      },
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-120"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Analista Judiciário — Administração",
+      "disciplina": "Direito Administrativo",
+      "currentLabel": "Administração indireta — descentralização e desconcentração",
+      "count": 1,
+      "classificationCounts": {
+        "strong": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d5cf5a2-6731-8127-a8cc-e793fcd432fe",
+        "topic": "TJ2022-A — Constitucional e Administrativo",
+        "subject": "Direito Constitucional; Direito Administrativo",
+        "cargos": [
+          "Analista Judiciário — Apoio Especializado — Administração"
+        ],
+        "layer": "Edital histórico",
+        "sourceBase": "Edital 2022"
+      },
+      "evidence": {
+        "minTokenCoverage": 1,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 0
+      },
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-AADM-T1-Q11"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Técnico Judiciário — Área Administrativa",
+      "disciplina": "Gestão de Pessoas",
+      "currentLabel": "Avaliação de desempenho",
+      "count": 1,
+      "classificationCounts": {
+        "strong": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d5cf5a2-6731-8165-ad5e-e812d70dea26",
+        "topic": "TJ2022-T — Administração pública, pessoas e orçamento",
+        "subject": "Administração Pública; gestão de pessoas; orçamento público",
+        "cargos": [
+          "Técnico Judiciário — Área Administrativa — sem especialidade"
+        ],
+        "layer": "Edital histórico",
+        "sourceBase": "Edital 2022"
+      },
+      "evidence": {
+        "minTokenCoverage": 1,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 1
+      },
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-TADM-T1-Q23"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Analista Judiciário — Administração",
+      "disciplina": "Comportamento organizacional",
+      "currentLabel": "Cultura organizacional",
+      "count": 1,
+      "classificationCounts": {
+        "strong": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d5cf5a2-6731-81c6-b990-f9689a9f4b36",
+        "topic": "TJ2022-A — Administração geral e comportamento organizacional",
+        "subject": "Administração geral; comportamento organizacional",
+        "cargos": [
+          "Analista Judiciário — Apoio Especializado — Administração"
+        ],
+        "layer": "Edital histórico",
+        "sourceBase": "Edital 2022"
+      },
+      "evidence": {
+        "minTokenCoverage": 1,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 0
+      },
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-AADM-T1-Q30"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Analista Judiciário — Administração",
+      "disciplina": "Comportamento organizacional",
+      "currentLabel": "Decisão em grupo",
+      "count": 1,
+      "classificationCounts": {
+        "strong": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d5cf5a2-6731-81c6-b990-f9689a9f4b36",
+        "topic": "TJ2022-A — Administração geral e comportamento organizacional",
+        "subject": "Administração geral; comportamento organizacional",
+        "cargos": [
+          "Analista Judiciário — Apoio Especializado — Administração"
+        ],
+        "layer": "Edital histórico",
+        "sourceBase": "Edital 2022"
+      },
+      "evidence": {
+        "minTokenCoverage": 1,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 1
+      },
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-AADM-T1-Q23"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Analista Judiciário — Administração",
+      "disciplina": "Direito Constitucional",
+      "currentLabel": "Direitos autorais",
+      "count": 1,
+      "classificationCounts": {
+        "strong": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d5cf5a2-6731-8127-a8cc-e793fcd432fe",
+        "topic": "TJ2022-A — Constitucional e Administrativo",
+        "subject": "Direito Constitucional; Direito Administrativo",
+        "cargos": [
+          "Analista Judiciário — Apoio Especializado — Administração"
+        ],
+        "layer": "Edital histórico",
+        "sourceBase": "Edital 2022"
+      },
+      "evidence": {
+        "minTokenCoverage": 0.5,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 0
+      },
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-AADM-T1-Q13"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Técnico Judiciário — Área Administrativa",
+      "disciplina": "Gestão de Pessoas",
+      "currentLabel": "Gestão da mudança",
+      "count": 1,
+      "classificationCounts": {
+        "strong": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d5cf5a2-6731-8165-ad5e-e812d70dea26",
+        "topic": "TJ2022-T — Administração pública, pessoas e orçamento",
+        "subject": "Administração Pública; gestão de pessoas; orçamento público",
+        "cargos": [
+          "Técnico Judiciário — Área Administrativa — sem especialidade"
+        ],
+        "layer": "Edital histórico",
+        "sourceBase": "Edital 2022"
+      },
+      "evidence": {
+        "minTokenCoverage": 1,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 0
+      },
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-TADM-T1-Q21"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Analista Judiciário — Administração",
+      "disciplina": "Administração de materiais",
+      "currentLabel": "Gestão de estoques",
+      "count": 1,
+      "classificationCounts": {
+        "strong": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d5cf5a2-6731-81d0-b051-c363f8321b90",
+        "topic": "TJ2022-A — Gestão de pessoas e materiais",
+        "subject": "Gestão de pessoas; administração de materiais",
+        "cargos": [
+          "Analista Judiciário — Apoio Especializado — Administração"
+        ],
+        "layer": "Edital histórico",
+        "sourceBase": "Edital 2022"
+      },
+      "evidence": {
+        "minTokenCoverage": 1,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 0
+      },
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-AADM-T1-Q26"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Analista Judiciário — Administração",
+      "disciplina": "Gestão de projetos",
+      "currentLabel": "Gestão de projetos",
+      "count": 1,
+      "classificationCounts": {
+        "strong": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d5cf5a2-6731-815e-a36e-ed3549f9d9ab",
+        "topic": "TJ2022-A — Planejamento, indicadores e projetos",
+        "subject": "Planejamento; indicadores; gestão de projetos",
+        "cargos": [
+          "Analista Judiciário — Apoio Especializado — Administração"
+        ],
+        "layer": "Edital histórico",
+        "sourceBase": "Edital 2022"
+      },
+      "evidence": {
+        "minTokenCoverage": 1,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 1
+      },
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-AADM-T1-Q60"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Analista Judiciário — Administração",
+      "disciplina": "Gestão de Pessoas",
+      "currentLabel": "Indicadores de RH",
+      "count": 1,
+      "classificationCounts": {
+        "strong": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d5cf5a2-6731-81d0-b051-c363f8321b90",
+        "topic": "TJ2022-A — Gestão de pessoas e materiais",
+        "subject": "Gestão de pessoas; administração de materiais",
+        "cargos": [
+          "Analista Judiciário — Apoio Especializado — Administração"
+        ],
+        "layer": "Edital histórico",
+        "sourceBase": "Edital 2022"
+      },
+      "evidence": {
+        "minTokenCoverage": 1,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 0
+      },
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-AADM-T1-Q32"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Técnico Judiciário — Área Administrativa",
+      "disciplina": "Gestão de Pessoas",
+      "currentLabel": "Motivação e metas",
+      "count": 1,
+      "classificationCounts": {
+        "strong": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d5cf5a2-6731-8165-ad5e-e812d70dea26",
+        "topic": "TJ2022-T — Administração pública, pessoas e orçamento",
+        "subject": "Administração Pública; gestão de pessoas; orçamento público",
+        "cargos": [
+          "Técnico Judiciário — Área Administrativa — sem especialidade"
+        ],
+        "layer": "Edital histórico",
+        "sourceBase": "Edital 2022"
+      },
+      "evidence": {
+        "minTokenCoverage": 0.5,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 0
+      },
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-TADM-T1-Q24"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Analista Judiciário — Administração",
+      "disciplina": "Gestão de Pessoas",
+      "currentLabel": "Recrutamento e seleção",
+      "count": 1,
+      "classificationCounts": {
+        "strong": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d5cf5a2-6731-81d0-b051-c363f8321b90",
+        "topic": "TJ2022-A — Gestão de pessoas e materiais",
+        "subject": "Gestão de pessoas; administração de materiais",
+        "cargos": [
+          "Analista Judiciário — Apoio Especializado — Administração"
+        ],
+        "layer": "Edital histórico",
+        "sourceBase": "Edital 2022"
+      },
+      "evidence": {
+        "minTokenCoverage": 1,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 1
+      },
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-AADM-T1-Q31"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Analista Judiciário — Administração",
+      "disciplina": "Comportamento organizacional",
+      "currentLabel": "Redes de comunicação",
+      "count": 1,
+      "classificationCounts": {
+        "strong": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d5cf5a2-6731-81c6-b990-f9689a9f4b36",
+        "topic": "TJ2022-A — Administração geral e comportamento organizacional",
+        "subject": "Administração geral; comportamento organizacional",
+        "cargos": [
+          "Analista Judiciário — Apoio Especializado — Administração"
+        ],
+        "layer": "Edital histórico",
+        "sourceBase": "Edital 2022"
+      },
+      "evidence": {
+        "minTokenCoverage": 0.5,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 0
+      },
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-AADM-T1-Q29"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Técnico Judiciário — Área Administrativa",
+      "disciplina": "Gestão de Pessoas",
+      "currentLabel": "Treinamento e desenvolvimento",
+      "count": 1,
+      "classificationCounts": {
+        "strong": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d5cf5a2-6731-8165-ad5e-e812d70dea26",
+        "topic": "TJ2022-T — Administração pública, pessoas e orçamento",
+        "subject": "Administração Pública; gestão de pessoas; orçamento público",
+        "cargos": [
+          "Técnico Judiciário — Área Administrativa — sem especialidade"
+        ],
+        "layer": "Edital histórico",
+        "sourceBase": "Edital 2022"
+      },
+      "evidence": {
+        "minTokenCoverage": 1,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 1
+      },
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-TADM-T1-Q22"
+      ]
+    }
+  ],
+  "groups": [
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Legislação e Políticas Educacionais",
+      "currentLabel": "Constituição Federal — educação",
+      "count": 10,
+      "classificationCounts": {
+        "strong": 10
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d4cf5a2-6731-8196-90d5-fbebf3ee6729",
+        "topic": "Constituição Federal — educação",
+        "subject": "Direito Constitucional",
+        "cargos": [
+          "Gestor — Administração",
+          "Núcleo comum"
+        ],
+        "layer": "Base histórica",
+        "sourceBase": "Edital 2022 — Gestor"
+      },
+      "evidence": {
+        "minTokenCoverage": 1,
+        "exactTopicCount": 10,
+        "phraseMatchCount": 10
+      },
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-046",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-048",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-049",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-047",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-050",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-045",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-041",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-043"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Analista Judiciário — Administração",
+      "disciplina": "Língua Portuguesa",
+      "currentLabel": "Língua Portuguesa — interpretação e gramática",
+      "count": 10,
+      "classificationCounts": {
+        "strong": 10
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d5cf5a2-6731-81cc-93e6-cfefcadee490",
+        "topic": "TJ2022-A — Língua Portuguesa",
+        "subject": "Língua Portuguesa",
+        "cargos": [
+          "Analista Judiciário — Apoio Especializado — Administração"
+        ],
+        "layer": "Edital histórico",
+        "sourceBase": "Edital 2022"
+      },
+      "evidence": {
+        "minTokenCoverage": 0.75,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 0
+      },
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-AADM-T1-Q09",
+        "FGV-TJDFT-2022-AADM-T1-Q03",
+        "FGV-TJDFT-2022-AADM-T1-Q07",
+        "FGV-TJDFT-2022-AADM-T1-Q06",
+        "FGV-TJDFT-2022-AADM-T1-Q01",
+        "FGV-TJDFT-2022-AADM-T1-Q08",
+        "FGV-TJDFT-2022-AADM-T1-Q10",
+        "FGV-TJDFT-2022-AADM-T1-Q05"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Técnico Judiciário — Área Administrativa",
+      "disciplina": "Língua Portuguesa",
+      "currentLabel": "Língua Portuguesa — interpretação e gramática",
+      "count": 10,
+      "classificationCounts": {
+        "strong": 10
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d5cf5a2-6731-8143-8781-cd99249a33b3",
+        "topic": "TJ2022-T — Língua Portuguesa",
+        "subject": "Língua Portuguesa",
+        "cargos": [
+          "Técnico Judiciário — Área Administrativa — sem especialidade"
+        ],
+        "layer": "Edital histórico",
+        "sourceBase": "Edital 2022"
+      },
+      "evidence": {
+        "minTokenCoverage": 0.75,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 0
+      },
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-TADM-T1-Q04",
+        "FGV-TJDFT-2022-TADM-T1-Q02",
+        "FGV-TJDFT-2022-TADM-T1-Q08",
+        "FGV-TJDFT-2022-TADM-T1-Q01",
+        "FGV-TJDFT-2022-TADM-T1-Q09",
+        "FGV-TJDFT-2022-TADM-T1-Q06",
+        "FGV-TJDFT-2022-TADM-T1-Q10",
+        "FGV-TJDFT-2022-TADM-T1-Q07"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Técnico Judiciário — Área Administrativa",
+      "disciplina": "Direito Processual Civil",
+      "currentLabel": "Direito Processual Civil",
+      "count": 8,
+      "classificationCounts": {
+        "strong": 8
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d5cf5a2-6731-81de-a4fb-d4d8d414d064",
+        "topic": "TJ2022-T — Direito Processual Civil",
+        "subject": "Direito Processual Civil",
+        "cargos": [
+          "Técnico Judiciário — Área Administrativa — sem especialidade"
+        ],
+        "layer": "Edital histórico",
+        "sourceBase": "Edital 2022"
+      },
+      "evidence": {
+        "minTokenCoverage": 1,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 8
+      },
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-TADM-T1-Q44",
+        "FGV-TJDFT-2022-TADM-T1-Q41",
+        "FGV-TJDFT-2022-TADM-T1-Q48",
+        "FGV-TJDFT-2022-TADM-T1-Q45",
+        "FGV-TJDFT-2022-TADM-T1-Q43",
+        "FGV-TJDFT-2022-TADM-T1-Q42",
+        "FGV-TJDFT-2022-TADM-T1-Q46",
+        "FGV-TJDFT-2022-TADM-T1-Q47"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Analista Judiciário — Administração",
+      "disciplina": "Direito Administrativo",
+      "currentLabel": "Direito Administrativo",
+      "count": 7,
+      "classificationCounts": {
+        "strong": 7
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d5cf5a2-6731-8127-a8cc-e793fcd432fe",
+        "topic": "TJ2022-A — Constitucional e Administrativo",
+        "subject": "Direito Constitucional; Direito Administrativo",
+        "cargos": [
+          "Analista Judiciário — Apoio Especializado — Administração"
+        ],
+        "layer": "Edital histórico",
+        "sourceBase": "Edital 2022"
+      },
+      "evidence": {
+        "minTokenCoverage": 1,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 7
+      },
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-AADM-T1-Q41",
+        "FGV-TJDFT-2022-AADM-T1-Q46",
+        "FGV-TJDFT-2022-AADM-T1-Q47",
+        "FGV-TJDFT-2022-AADM-T1-Q42",
+        "FGV-TJDFT-2022-AADM-T1-Q43",
+        "FGV-TJDFT-2022-AADM-T1-Q44",
+        "FGV-TJDFT-2022-AADM-T1-Q45"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Técnico Judiciário — Área Administrativa",
+      "disciplina": "Direito Penal",
+      "currentLabel": "Direito Penal",
+      "count": 6,
+      "classificationCounts": {
+        "strong": 6
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d5cf5a2-6731-813e-8a7e-ea172225aa47",
+        "topic": "TJ2022-T — Direito Penal",
+        "subject": "Direito Penal",
+        "cargos": [
+          "Técnico Judiciário — Área Administrativa — sem especialidade"
+        ],
+        "layer": "Edital histórico",
+        "sourceBase": "Edital 2022"
+      },
+      "evidence": {
+        "minTokenCoverage": 1,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 6
+      },
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-TADM-T1-Q52",
+        "FGV-TJDFT-2022-TADM-T1-Q54",
+        "FGV-TJDFT-2022-TADM-T1-Q51",
+        "FGV-TJDFT-2022-TADM-T1-Q53",
+        "FGV-TJDFT-2022-TADM-T1-Q50",
+        "FGV-TJDFT-2022-TADM-T1-Q49"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Técnico Judiciário — Área Administrativa",
+      "disciplina": "Direito Processual Penal",
+      "currentLabel": "Direito Processual Penal",
+      "count": 6,
+      "classificationCounts": {
+        "strong": 6
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d5cf5a2-6731-8168-901f-d3176338cec6",
+        "topic": "TJ2022-T — Direito Processual Penal",
+        "subject": "Direito Processual Penal",
+        "cargos": [
+          "Técnico Judiciário — Área Administrativa — sem especialidade"
+        ],
+        "layer": "Edital histórico",
+        "sourceBase": "Edital 2022"
+      },
+      "evidence": {
+        "minTokenCoverage": 1,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 6
+      },
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-TADM-T1-Q59",
+        "FGV-TJDFT-2022-TADM-T1-Q56",
+        "FGV-TJDFT-2022-TADM-T1-Q58",
+        "FGV-TJDFT-2022-TADM-T1-Q60",
+        "FGV-TJDFT-2022-TADM-T1-Q57",
+        "FGV-TJDFT-2022-TADM-T1-Q55"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Informática",
+      "currentLabel": "Informática: backup e Google Workspace",
+      "count": 5,
+      "classificationCounts": {
+        "strong": 5
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d4cf5a2-6731-8123-a151-c23f043ea5ba",
+        "topic": "Informática — desenho real da prova Gestor 2022",
+        "subject": "Informática",
+        "cargos": [
+          "Gestor — Administração",
+          "Núcleo comum"
+        ],
+        "layer": "Atualização obrigatória",
+        "sourceBase": "Edital 2022 — Gestor"
+      },
+      "evidence": {
+        "minTokenCoverage": 0.75,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 0
+      },
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-020",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-018",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-019",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-017",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-016"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Técnico Judiciário — Área Administrativa",
+      "disciplina": "Direito Constitucional",
+      "currentLabel": "Direito Constitucional",
+      "count": 4,
+      "classificationCounts": {
+        "strong": 4
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d5cf5a2-6731-8143-930a-c165c0cc25c7",
+        "topic": "TJ2022-T — Direito Constitucional",
+        "subject": "Direito Constitucional",
+        "cargos": [
+          "Técnico Judiciário — Área Administrativa — sem especialidade"
+        ],
+        "layer": "Edital histórico",
+        "sourceBase": "Edital 2022"
+      },
+      "evidence": {
+        "minTokenCoverage": 1,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 4
+      },
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-TADM-T1-Q31",
+        "FGV-TJDFT-2022-TADM-T1-Q32",
+        "FGV-TJDFT-2022-TADM-T1-Q30",
+        "FGV-TJDFT-2022-TADM-T1-Q29"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Informática",
+      "currentLabel": "Direito Administrativo",
+      "count": 3,
+      "classificationCounts": {
+        "strong": 3
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d4cf5a2-6731-81c0-9e48-f745f53c2a9f",
+        "topic": "Direito Administrativo aplicado à gestão",
+        "subject": "Direito Administrativo",
+        "cargos": [
+          "Gestor — Administração"
+        ],
+        "layer": "Base histórica",
+        "sourceBase": "Edital 2022 — Gestor"
+      },
+      "evidence": {
+        "minTokenCoverage": 1,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 3
+      },
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-022",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-021",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-024"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Analista Judiciário — Administração",
+      "disciplina": "Gestão de processos",
+      "currentLabel": "Gestão de processos",
+      "count": 3,
+      "classificationCounts": {
+        "strong": 3
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d5cf5a2-6731-8161-9507-cdc4c6d141b8",
+        "topic": "TJ2022-A — Gestão pública, governança e processos",
+        "subject": "Gestão pública; governança; gestão de processos",
+        "cargos": [
+          "Analista Judiciário — Apoio Especializado — Administração"
+        ],
+        "layer": "Edital histórico",
+        "sourceBase": "Edital 2022"
+      },
+      "evidence": {
+        "minTokenCoverage": 1,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 3
+      },
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-AADM-T1-Q58",
+        "FGV-TJDFT-2022-AADM-T1-Q59",
+        "FGV-TJDFT-2022-AADM-T1-Q57"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Técnico Judiciário — Área Administrativa",
+      "disciplina": "Direito Administrativo",
+      "currentLabel": "Direito Administrativo",
+      "count": 2,
+      "classificationCounts": {
+        "strong": 2
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d5cf5a2-6731-81e8-a06b-d1195a3b67b8",
+        "topic": "TJ2022-T — Direito Administrativo",
+        "subject": "Direito Administrativo",
+        "cargos": [
+          "Técnico Judiciário — Área Administrativa — sem especialidade"
+        ],
+        "layer": "Edital histórico",
+        "sourceBase": "Edital 2022"
+      },
+      "evidence": {
+        "minTokenCoverage": 1,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 2
+      },
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-TADM-T1-Q34",
+        "FGV-TJDFT-2022-TADM-T1-Q33"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Analista Judiciário — Administração",
+      "disciplina": "Direito Constitucional",
+      "currentLabel": "Direitos fundamentais e direitos políticos",
+      "count": 2,
+      "classificationCounts": {
+        "strong": 2
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d5cf5a2-6731-8127-a8cc-e793fcd432fe",
+        "topic": "TJ2022-A — Constitucional e Administrativo",
+        "subject": "Direito Constitucional; Direito Administrativo",
+        "cargos": [
+          "Analista Judiciário — Apoio Especializado — Administração"
+        ],
+        "layer": "Edital histórico",
+        "sourceBase": "Edital 2022"
+      },
+      "evidence": {
+        "minTokenCoverage": 0.667,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 0
+      },
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-AADM-T1-Q14",
+        "FGV-TJDFT-2022-AADM-T1-Q15"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Técnico Judiciário — Área Administrativa",
+      "disciplina": "Provimento Geral da Corregedoria",
+      "currentLabel": "Provimento Geral da Corregedoria",
+      "count": 2,
+      "classificationCounts": {
+        "strong": 2
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d5cf5a2-6731-815f-9561-fd79464335c3",
+        "topic": "TJ2022-T — Provimentos e processo eletrônico",
+        "subject": "Provimento Geral da Corregedoria; Provimento Judicial aplicado ao PJe",
+        "cargos": [
+          "Técnico Judiciário — Área Administrativa — sem especialidade"
+        ],
+        "layer": "Edital histórico",
+        "sourceBase": "Edital 2022"
+      },
+      "evidence": {
+        "minTokenCoverage": 1,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 2
+      },
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-TADM-T1-Q19",
+        "FGV-TJDFT-2022-TADM-T1-Q18"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Administração",
+      "currentLabel": "Ética no serviço público",
+      "count": 1,
+      "classificationCounts": {
+        "strong": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d4cf5a2-6731-8154-902d-e2c62865e1ea",
+        "topic": "Ética no serviço público",
+        "subject": "Administração Pública",
+        "cargos": [
+          "Gestor — Administração"
+        ],
+        "layer": "Base histórica",
+        "sourceBase": "Edital 2022 — Gestor"
+      },
+      "evidence": {
+        "minTokenCoverage": 1,
+        "exactTopicCount": 1,
+        "phraseMatchCount": 1
+      },
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-120"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Analista Judiciário — Administração",
+      "disciplina": "Direito Administrativo",
+      "currentLabel": "Administração indireta — descentralização e desconcentração",
+      "count": 1,
+      "classificationCounts": {
+        "strong": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d5cf5a2-6731-8127-a8cc-e793fcd432fe",
+        "topic": "TJ2022-A — Constitucional e Administrativo",
+        "subject": "Direito Constitucional; Direito Administrativo",
+        "cargos": [
+          "Analista Judiciário — Apoio Especializado — Administração"
+        ],
+        "layer": "Edital histórico",
+        "sourceBase": "Edital 2022"
+      },
+      "evidence": {
+        "minTokenCoverage": 1,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 0
+      },
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-AADM-T1-Q11"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Técnico Judiciário — Área Administrativa",
+      "disciplina": "Gestão de Pessoas",
+      "currentLabel": "Avaliação de desempenho",
+      "count": 1,
+      "classificationCounts": {
+        "strong": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d5cf5a2-6731-8165-ad5e-e812d70dea26",
+        "topic": "TJ2022-T — Administração pública, pessoas e orçamento",
+        "subject": "Administração Pública; gestão de pessoas; orçamento público",
+        "cargos": [
+          "Técnico Judiciário — Área Administrativa — sem especialidade"
+        ],
+        "layer": "Edital histórico",
+        "sourceBase": "Edital 2022"
+      },
+      "evidence": {
+        "minTokenCoverage": 1,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 1
+      },
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-TADM-T1-Q23"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Analista Judiciário — Administração",
+      "disciplina": "Comportamento organizacional",
+      "currentLabel": "Cultura organizacional",
+      "count": 1,
+      "classificationCounts": {
+        "strong": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d5cf5a2-6731-81c6-b990-f9689a9f4b36",
+        "topic": "TJ2022-A — Administração geral e comportamento organizacional",
+        "subject": "Administração geral; comportamento organizacional",
+        "cargos": [
+          "Analista Judiciário — Apoio Especializado — Administração"
+        ],
+        "layer": "Edital histórico",
+        "sourceBase": "Edital 2022"
+      },
+      "evidence": {
+        "minTokenCoverage": 1,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 0
+      },
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-AADM-T1-Q30"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Analista Judiciário — Administração",
+      "disciplina": "Comportamento organizacional",
+      "currentLabel": "Decisão em grupo",
+      "count": 1,
+      "classificationCounts": {
+        "strong": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d5cf5a2-6731-81c6-b990-f9689a9f4b36",
+        "topic": "TJ2022-A — Administração geral e comportamento organizacional",
+        "subject": "Administração geral; comportamento organizacional",
+        "cargos": [
+          "Analista Judiciário — Apoio Especializado — Administração"
+        ],
+        "layer": "Edital histórico",
+        "sourceBase": "Edital 2022"
+      },
+      "evidence": {
+        "minTokenCoverage": 1,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 1
+      },
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-AADM-T1-Q23"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Analista Judiciário — Administração",
+      "disciplina": "Direito Constitucional",
+      "currentLabel": "Direitos autorais",
+      "count": 1,
+      "classificationCounts": {
+        "strong": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d5cf5a2-6731-8127-a8cc-e793fcd432fe",
+        "topic": "TJ2022-A — Constitucional e Administrativo",
+        "subject": "Direito Constitucional; Direito Administrativo",
+        "cargos": [
+          "Analista Judiciário — Apoio Especializado — Administração"
+        ],
+        "layer": "Edital histórico",
+        "sourceBase": "Edital 2022"
+      },
+      "evidence": {
+        "minTokenCoverage": 0.5,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 0
+      },
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-AADM-T1-Q13"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Técnico Judiciário — Área Administrativa",
+      "disciplina": "Gestão de Pessoas",
+      "currentLabel": "Gestão da mudança",
+      "count": 1,
+      "classificationCounts": {
+        "strong": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d5cf5a2-6731-8165-ad5e-e812d70dea26",
+        "topic": "TJ2022-T — Administração pública, pessoas e orçamento",
+        "subject": "Administração Pública; gestão de pessoas; orçamento público",
+        "cargos": [
+          "Técnico Judiciário — Área Administrativa — sem especialidade"
+        ],
+        "layer": "Edital histórico",
+        "sourceBase": "Edital 2022"
+      },
+      "evidence": {
+        "minTokenCoverage": 1,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 0
+      },
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-TADM-T1-Q21"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Analista Judiciário — Administração",
+      "disciplina": "Administração de materiais",
+      "currentLabel": "Gestão de estoques",
+      "count": 1,
+      "classificationCounts": {
+        "strong": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d5cf5a2-6731-81d0-b051-c363f8321b90",
+        "topic": "TJ2022-A — Gestão de pessoas e materiais",
+        "subject": "Gestão de pessoas; administração de materiais",
+        "cargos": [
+          "Analista Judiciário — Apoio Especializado — Administração"
+        ],
+        "layer": "Edital histórico",
+        "sourceBase": "Edital 2022"
+      },
+      "evidence": {
+        "minTokenCoverage": 1,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 0
+      },
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-AADM-T1-Q26"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Analista Judiciário — Administração",
+      "disciplina": "Gestão de projetos",
+      "currentLabel": "Gestão de projetos",
+      "count": 1,
+      "classificationCounts": {
+        "strong": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d5cf5a2-6731-815e-a36e-ed3549f9d9ab",
+        "topic": "TJ2022-A — Planejamento, indicadores e projetos",
+        "subject": "Planejamento; indicadores; gestão de projetos",
+        "cargos": [
+          "Analista Judiciário — Apoio Especializado — Administração"
+        ],
+        "layer": "Edital histórico",
+        "sourceBase": "Edital 2022"
+      },
+      "evidence": {
+        "minTokenCoverage": 1,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 1
+      },
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-AADM-T1-Q60"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Analista Judiciário — Administração",
+      "disciplina": "Gestão de Pessoas",
+      "currentLabel": "Indicadores de RH",
+      "count": 1,
+      "classificationCounts": {
+        "strong": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d5cf5a2-6731-81d0-b051-c363f8321b90",
+        "topic": "TJ2022-A — Gestão de pessoas e materiais",
+        "subject": "Gestão de pessoas; administração de materiais",
+        "cargos": [
+          "Analista Judiciário — Apoio Especializado — Administração"
+        ],
+        "layer": "Edital histórico",
+        "sourceBase": "Edital 2022"
+      },
+      "evidence": {
+        "minTokenCoverage": 1,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 0
+      },
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-AADM-T1-Q32"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Técnico Judiciário — Área Administrativa",
+      "disciplina": "Gestão de Pessoas",
+      "currentLabel": "Motivação e metas",
+      "count": 1,
+      "classificationCounts": {
+        "strong": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d5cf5a2-6731-8165-ad5e-e812d70dea26",
+        "topic": "TJ2022-T — Administração pública, pessoas e orçamento",
+        "subject": "Administração Pública; gestão de pessoas; orçamento público",
+        "cargos": [
+          "Técnico Judiciário — Área Administrativa — sem especialidade"
+        ],
+        "layer": "Edital histórico",
+        "sourceBase": "Edital 2022"
+      },
+      "evidence": {
+        "minTokenCoverage": 0.5,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 0
+      },
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-TADM-T1-Q24"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Analista Judiciário — Administração",
+      "disciplina": "Gestão de Pessoas",
+      "currentLabel": "Recrutamento e seleção",
+      "count": 1,
+      "classificationCounts": {
+        "strong": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d5cf5a2-6731-81d0-b051-c363f8321b90",
+        "topic": "TJ2022-A — Gestão de pessoas e materiais",
+        "subject": "Gestão de pessoas; administração de materiais",
+        "cargos": [
+          "Analista Judiciário — Apoio Especializado — Administração"
+        ],
+        "layer": "Edital histórico",
+        "sourceBase": "Edital 2022"
+      },
+      "evidence": {
+        "minTokenCoverage": 1,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 1
+      },
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-AADM-T1-Q31"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Analista Judiciário — Administração",
+      "disciplina": "Comportamento organizacional",
+      "currentLabel": "Redes de comunicação",
+      "count": 1,
+      "classificationCounts": {
+        "strong": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d5cf5a2-6731-81c6-b990-f9689a9f4b36",
+        "topic": "TJ2022-A — Administração geral e comportamento organizacional",
+        "subject": "Administração geral; comportamento organizacional",
+        "cargos": [
+          "Analista Judiciário — Apoio Especializado — Administração"
+        ],
+        "layer": "Edital histórico",
+        "sourceBase": "Edital 2022"
+      },
+      "evidence": {
+        "minTokenCoverage": 0.5,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 0
+      },
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-AADM-T1-Q29"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Técnico Judiciário — Área Administrativa",
+      "disciplina": "Gestão de Pessoas",
+      "currentLabel": "Treinamento e desenvolvimento",
+      "count": 1,
+      "classificationCounts": {
+        "strong": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": true,
+      "proposedAxis": {
+        "axisId": "3d5cf5a2-6731-8165-ad5e-e812d70dea26",
+        "topic": "TJ2022-T — Administração pública, pessoas e orçamento",
+        "subject": "Administração Pública; gestão de pessoas; orçamento público",
+        "cargos": [
+          "Técnico Judiciário — Área Administrativa — sem especialidade"
+        ],
+        "layer": "Edital histórico",
+        "sourceBase": "Edital 2022"
+      },
+      "evidence": {
+        "minTokenCoverage": 1,
+        "exactTopicCount": 0,
+        "phraseMatchCount": 1
+      },
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-TADM-T1-Q22"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Legislação e Políticas Educacionais",
+      "currentLabel": "Lei de Diretrizes e Bases da Educação Nacional",
+      "count": 10,
+      "classificationCounts": {
+        "none": 10
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-058",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-056",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-060",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-057",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-059",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-053",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-051",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-055"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Legislação e Políticas Educacionais",
+      "currentLabel": "Regimento Escolar da Rede Pública de Ensino do Distrito Federal",
+      "count": 10,
+      "classificationCounts": {
+        "none": 10
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-066",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-067",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-068",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-062",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-064",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-063",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-069",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-061"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Analista Judiciário — Administração",
+      "disciplina": "Orçamento Público e MCASP",
+      "currentLabel": "Orçamento público e MCASP",
+      "count": 7,
+      "classificationCounts": {
+        "ambiguous": 7
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-AADM-T1-Q55",
+        "FGV-TJDFT-2022-AADM-T1-Q54",
+        "FGV-TJDFT-2022-AADM-T1-Q51",
+        "FGV-TJDFT-2022-AADM-T1-Q52",
+        "FGV-TJDFT-2022-AADM-T1-Q53",
+        "FGV-TJDFT-2022-AADM-T1-Q56",
+        "FGV-TJDFT-2022-AADM-T1-Q50"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Língua Portuguesa",
+      "currentLabel": "Aspectos linguísticos do texto",
+      "count": 6,
+      "classificationCounts": {
+        "none": 6
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-010",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-009",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-007",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-008",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-006",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-005"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Língua Portuguesa",
+      "currentLabel": "Correção gramatical e coerência textual",
+      "count": 5,
+      "classificationCounts": {
+        "none": 5
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-015",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-013",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-014",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-012",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-011"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Realidade do Distrito Federal",
+      "currentLabel": "Realidade histórica e social do Distrito Federal",
+      "count": 5,
+      "classificationCounts": {
+        "none": 5
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-037",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-040",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-039",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-038",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-036"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Técnico Judiciário — Área Administrativa",
+      "disciplina": "Direito Civil e LINDB",
+      "currentLabel": "Direito Civil e LINDB",
+      "count": 5,
+      "classificationCounts": {
+        "ambiguous": 5
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-TADM-T1-Q39",
+        "FGV-TJDFT-2022-TADM-T1-Q40",
+        "FGV-TJDFT-2022-TADM-T1-Q38",
+        "FGV-TJDFT-2022-TADM-T1-Q36",
+        "FGV-TJDFT-2022-TADM-T1-Q37"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Direito Administrativo e Regime Jurídico do DF",
+      "currentLabel": "Direito Administrativo",
+      "count": 4,
+      "classificationCounts": {
+        "ambiguous": 4
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-028",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-026",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-027",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-025"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Realidade do Distrito Federal",
+      "currentLabel": "Geografia do Distrito Federal",
+      "count": 4,
+      "classificationCounts": {
+        "none": 4
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-032",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-034",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-033",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-035"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Língua Portuguesa",
+      "currentLabel": "Interpretação de texto",
+      "count": 4,
+      "classificationCounts": {
+        "ambiguous": 4
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-004",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-001",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-002",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-003"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Legislação e Políticas Educacionais",
+      "currentLabel": "Evolução da Administração Pública e reformas administrativas",
+      "count": 3,
+      "classificationCounts": {
+        "none": 3
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-073",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-074",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-075"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Analista Judiciário — Administração",
+      "disciplina": "Governança pública",
+      "currentLabel": "Governança, riscos e integridade",
+      "count": 3,
+      "classificationCounts": {
+        "none": 3
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-AADM-T1-Q38",
+        "FGV-TJDFT-2022-AADM-T1-Q39",
+        "FGV-TJDFT-2022-AADM-T1-Q40"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Analista Judiciário — Administração",
+      "disciplina": "Planejamento e estratégia",
+      "currentLabel": "Planejamento estratégico, BSC e matriz BCG",
+      "count": 3,
+      "classificationCounts": {
+        "none": 3
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-AADM-T1-Q34",
+        "FGV-TJDFT-2022-AADM-T1-Q33",
+        "FGV-TJDFT-2022-AADM-T1-Q35"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Técnico Judiciário — Área Administrativa",
+      "disciplina": "Regimento e organização judiciária",
+      "currentLabel": "Regimento Interno do TJDFT",
+      "count": 3,
+      "classificationCounts": {
+        "none": 3
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-TADM-T1-Q14",
+        "FGV-TJDFT-2022-TADM-T1-Q13",
+        "FGV-TJDFT-2022-TADM-T1-Q15"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Analista Judiciário — Administração",
+      "disciplina": "Regimento e organização judiciária",
+      "currentLabel": "Regimento Interno e organização judiciária do TJDFT",
+      "count": 3,
+      "classificationCounts": {
+        "none": 3
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-AADM-T1-Q19",
+        "FGV-TJDFT-2022-AADM-T1-Q18",
+        "FGV-TJDFT-2022-AADM-T1-Q20"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Legislação e Políticas Educacionais",
+      "currentLabel": "Planejamento organizacional",
+      "count": 2,
+      "classificationCounts": {
+        "none": 2
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-076",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-078"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Direito Administrativo e Regime Jurídico do DF",
+      "currentLabel": "Regime Jurídico dos Servidores Públicos do Distrito Federal — LC nº 840/2011",
+      "count": 2,
+      "classificationCounts": {
+        "none": 2
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-029",
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-030"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Analista Judiciário — Administração",
+      "disciplina": "Licitações e contratos",
+      "currentLabel": "Licitações e contratos — Lei nº 14.133/2021",
+      "count": 2,
+      "classificationCounts": {
+        "ambiguous": 2
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-AADM-T1-Q48",
+        "FGV-TJDFT-2022-AADM-T1-Q49"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Legislação e Políticas Educacionais",
+      "currentLabel": "Abordagens da administração e autoridade burocrática",
+      "count": 1,
+      "classificationCounts": {
+        "none": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-072"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Legislação e Políticas Educacionais",
+      "currentLabel": "Abordagens da administração e motivação",
+      "count": 1,
+      "classificationCounts": {
+        "none": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-071"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Legislação e Políticas Educacionais",
+      "currentLabel": "Administração por objetivos",
+      "count": 1,
+      "classificationCounts": {
+        "none": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-079"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Legislação e Políticas Educacionais",
+      "currentLabel": "Análise SWOT",
+      "count": 1,
+      "classificationCounts": {
+        "ambiguous": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-077"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Legislação e Políticas Educacionais",
+      "currentLabel": "Balanced Scorecard",
+      "count": 1,
+      "classificationCounts": {
+        "none": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-080"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Administração",
+      "currentLabel": "Controle e desempenho organizacional",
+      "count": 1,
+      "classificationCounts": {
+        "none": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-084"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Administração",
+      "currentLabel": "Estrutura organizacional",
+      "count": 1,
+      "classificationCounts": {
+        "ambiguous": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-081"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Administração",
+      "currentLabel": "Ética no serviço público — hierarquia e conduta ética",
+      "count": 1,
+      "classificationCounts": {
+        "none": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-118"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Administração",
+      "currentLabel": "Ética no serviço público — prestação de contas e conciliação",
+      "count": 1,
+      "classificationCounts": {
+        "none": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-119"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Administração",
+      "currentLabel": "Gestão corporativa de processos",
+      "count": 1,
+      "classificationCounts": {
+        "none": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-099"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Administração",
+      "currentLabel": "Gestão da qualidade — ciclo PDCA",
+      "count": 1,
+      "classificationCounts": {
+        "none": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-092"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Administração",
+      "currentLabel": "Gestão da qualidade — diagrama de Ishikawa",
+      "count": 1,
+      "classificationCounts": {
+        "none": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-093"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Administração",
+      "currentLabel": "Gestão da qualidade total",
+      "count": 1,
+      "classificationCounts": {
+        "none": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-091"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Administração",
+      "currentLabel": "Gestão de desempenho",
+      "count": 1,
+      "classificationCounts": {
+        "none": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-090"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Administração",
+      "currentLabel": "Gestão de pessoas — análise de cargos",
+      "count": 1,
+      "classificationCounts": {
+        "none": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-088"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Administração",
+      "currentLabel": "Gestão de pessoas — capacitação",
+      "count": 1,
+      "classificationCounts": {
+        "none": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-086"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Administração",
+      "currentLabel": "Gestão de pessoas — capacitação e competências",
+      "count": 1,
+      "classificationCounts": {
+        "none": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-089"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Administração",
+      "currentLabel": "Gestão de pessoas — seleção",
+      "count": 1,
+      "classificationCounts": {
+        "none": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-087"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Administração",
+      "currentLabel": "Gestão de projetos — estimativa de prazos",
+      "count": 1,
+      "classificationCounts": {
+        "none": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-096"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Administração",
+      "currentLabel": "Gestão de projetos — planejamento dos trabalhos",
+      "count": 1,
+      "classificationCounts": {
+        "none": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-098"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Administração",
+      "currentLabel": "Gestão de projetos em ambiente global",
+      "count": 1,
+      "classificationCounts": {
+        "none": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-097"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Administração",
+      "currentLabel": "Gestão e mapeamento de processos",
+      "count": 1,
+      "classificationCounts": {
+        "ambiguous": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-100"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Administração",
+      "currentLabel": "Indicadores de desempenho organizacional",
+      "count": 1,
+      "classificationCounts": {
+        "none": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-085"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Administração",
+      "currentLabel": "Legislação administrativa — atributos do ato administrativo",
+      "count": 1,
+      "classificationCounts": {
+        "none": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-102"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Administração",
+      "currentLabel": "Legislação administrativa — estágio probatório",
+      "count": 1,
+      "classificationCounts": {
+        "none": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-104"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Administração",
+      "currentLabel": "Legislação administrativa — licença por motivo de afastamento do cônjuge",
+      "count": 1,
+      "classificationCounts": {
+        "none": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-105"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Administração",
+      "currentLabel": "Legislação administrativa — organização da Administração Pública",
+      "count": 1,
+      "classificationCounts": {
+        "none": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-101"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Administração",
+      "currentLabel": "Legislação administrativa — requisição administrativa",
+      "count": 1,
+      "classificationCounts": {
+        "none": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-103"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Administração",
+      "currentLabel": "Licitações — convocação de licitantes remanescentes",
+      "count": 1,
+      "classificationCounts": {
+        "none": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-116"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Administração",
+      "currentLabel": "Licitações — diálogo competitivo",
+      "count": 1,
+      "classificationCounts": {
+        "none": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-112"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Administração",
+      "currentLabel": "Licitações — garantia contratual",
+      "count": 1,
+      "classificationCounts": {
+        "none": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-117"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Administração",
+      "currentLabel": "Licitações — parcelamento de compras",
+      "count": 1,
+      "classificationCounts": {
+        "none": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-115"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Administração",
+      "currentLabel": "Licitações — pregão eletrônico",
+      "count": 1,
+      "classificationCounts": {
+        "none": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-114"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Administração",
+      "currentLabel": "Liderança organizacional",
+      "count": 1,
+      "classificationCounts": {
+        "none": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-083"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Informática",
+      "currentLabel": "Microsoft Excel 2016 — Análise Rápida",
+      "count": 1,
+      "classificationCounts": {
+        "ambiguous": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-023"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Administração",
+      "currentLabel": "Modelo da Fundação Nacional da Qualidade",
+      "count": 1,
+      "classificationCounts": {
+        "ambiguous": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-094"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Administração",
+      "currentLabel": "Modelo de excelência em gestão pública",
+      "count": 1,
+      "classificationCounts": {
+        "ambiguous": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-095"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Administração",
+      "currentLabel": "Orçamento público — Conta Única do Tesouro Nacional",
+      "count": 1,
+      "classificationCounts": {
+        "none": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-111"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Administração",
+      "currentLabel": "Orçamento público — estágios da despesa",
+      "count": 1,
+      "classificationCounts": {
+        "none": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-110"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Administração",
+      "currentLabel": "Orçamento público — PPA, LDO e LOA",
+      "count": 1,
+      "classificationCounts": {
+        "none": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-107"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Administração",
+      "currentLabel": "Orçamento público — princípios orçamentários",
+      "count": 1,
+      "classificationCounts": {
+        "none": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-106"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Administração",
+      "currentLabel": "Orçamento público — receitas públicas",
+      "count": 1,
+      "classificationCounts": {
+        "none": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-109"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Administração",
+      "currentLabel": "Orçamento público — Sistema Integrado de Planejamento e Orçamento",
+      "count": 1,
+      "classificationCounts": {
+        "none": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-108"
+      ]
+    },
+    {
+      "competitionId": "seedf",
+      "issue": "incomplete",
+      "cargo": "Gestor PPGE — Administração",
+      "disciplina": "Administração",
+      "currentLabel": "Organização formal e informal",
+      "count": 1,
+      "classificationCounts": {
+        "none": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "PROVA-QDX-SEEDF-2022-GPPGADM-A-082"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Técnico Judiciário — Área Administrativa",
+      "disciplina": "Regimento e organização judiciária",
+      "currentLabel": "Competência e organização judiciária",
+      "count": 1,
+      "classificationCounts": {
+        "none": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-TADM-T1-Q16"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Analista Judiciário — Administração",
+      "disciplina": "Gestão da qualidade",
+      "currentLabel": "Correlação e análise de processos",
+      "count": 1,
+      "classificationCounts": {
+        "none": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-AADM-T1-Q24"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Analista Judiciário — Administração",
+      "disciplina": "Administração e operações",
+      "currentLabel": "Decisão sob incerteza",
+      "count": 1,
+      "classificationCounts": {
+        "none": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-AADM-T1-Q22"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Técnico Judiciário — Área Administrativa",
+      "disciplina": "Ética e improbidade",
+      "currentLabel": "Ética, improbidade e regime disciplinar",
+      "count": 1,
+      "classificationCounts": {
+        "ambiguous": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-TADM-T1-Q12"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Analista Judiciário — Administração",
+      "disciplina": "Gestão da qualidade",
+      "currentLabel": "Folha de verificação",
+      "count": 1,
+      "classificationCounts": {
+        "none": 1
+      },
+      "uniqueBestAxes": 0,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-AADM-T1-Q25"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Analista Judiciário — Administração",
+      "disciplina": "Administração Pública",
+      "currentLabel": "Fundações públicas",
+      "count": 1,
+      "classificationCounts": {
+        "none": 1
+      },
+      "uniqueBestAxes": 0,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-AADM-T1-Q36"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Analista Judiciário — Administração",
+      "disciplina": "Regimento e organização judiciária",
+      "currentLabel": "Lei nº 11.697/2008 — organização judiciária",
+      "count": 1,
+      "classificationCounts": {
+        "none": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-AADM-T1-Q17"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Analista Judiciário — Administração",
+      "disciplina": "Ética e regime disciplinar",
+      "currentLabel": "Lei nº 8.112/1990 — regime disciplinar",
+      "count": 1,
+      "classificationCounts": {
+        "ambiguous": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-AADM-T1-Q16"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Técnico Judiciário — Área Administrativa",
+      "disciplina": "Ética e regime disciplinar",
+      "currentLabel": "Lei nº 8.112/1990 — regime disciplinar",
+      "count": 1,
+      "classificationCounts": {
+        "ambiguous": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-TADM-T1-Q11"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Técnico Judiciário — Área Administrativa",
+      "disciplina": "Licitações e contratos",
+      "currentLabel": "Licitações e contratos",
+      "count": 1,
+      "classificationCounts": {
+        "ambiguous": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-TADM-T1-Q35"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Analista Judiciário — Administração",
+      "disciplina": "Comportamento organizacional",
+      "currentLabel": "Liderança — grade gerencial",
+      "count": 1,
+      "classificationCounts": {
+        "ambiguous": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-AADM-T1-Q27"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Técnico Judiciário — Área Administrativa",
+      "disciplina": "Orçamento Público e MCASP",
+      "currentLabel": "MCASP — classificação da receita",
+      "count": 1,
+      "classificationCounts": {
+        "ambiguous": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-TADM-T1-Q26"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Técnico Judiciário — Área Administrativa",
+      "disciplina": "Orçamento Público e MCASP",
+      "currentLabel": "MCASP — transações intraorçamentárias",
+      "count": 1,
+      "classificationCounts": {
+        "none": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-TADM-T1-Q28"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Analista Judiciário — Administração",
+      "disciplina": "Direito Constitucional",
+      "currentLabel": "Ministério Público e organização do Estado",
+      "count": 1,
+      "classificationCounts": {
+        "ambiguous": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-AADM-T1-Q37"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Analista Judiciário — Administração",
+      "disciplina": "Gestão de Pessoas",
+      "currentLabel": "Motivação — Teoria da Expectativa",
+      "count": 1,
+      "classificationCounts": {
+        "ambiguous": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-AADM-T1-Q28"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Técnico Judiciário — Área Administrativa",
+      "disciplina": "Orçamento Público e MCASP",
+      "currentLabel": "Orçamento público — emendas à LOA",
+      "count": 1,
+      "classificationCounts": {
+        "none": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-TADM-T1-Q25"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Técnico Judiciário — Área Administrativa",
+      "disciplina": "Regimento e organização judiciária",
+      "currentLabel": "Organização Judiciária do DF — secretarias",
+      "count": 1,
+      "classificationCounts": {
+        "none": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-TADM-T1-Q17"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Técnico Judiciário — Área Administrativa",
+      "disciplina": "Provimento e PJe",
+      "currentLabel": "PJe e disponibilidade do sistema",
+      "count": 1,
+      "classificationCounts": {
+        "none": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-TADM-T1-Q20"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Analista Judiciário — Administração",
+      "disciplina": "Direito Administrativo",
+      "currentLabel": "Provimento — reversão",
+      "count": 1,
+      "classificationCounts": {
+        "ambiguous": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-AADM-T1-Q12"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Analista Judiciário — Administração",
+      "disciplina": "Gestão de Pessoas",
+      "currentLabel": "Remuneração e decisão gerencial",
+      "count": 1,
+      "classificationCounts": {
+        "ambiguous": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-AADM-T1-Q21"
+      ]
+    },
+    {
+      "competitionId": "tjdft",
+      "issue": "filled-noncanonical",
+      "cargo": "Técnico Judiciário — Área Administrativa",
+      "disciplina": "Orçamento Público e MCASP",
+      "currentLabel": "Suprimento de fundos",
+      "count": 1,
+      "classificationCounts": {
+        "ambiguous": 1
+      },
+      "uniqueBestAxes": 1,
+      "cohesiveStrong": false,
+      "proposedAxis": null,
+      "evidence": null,
+      "sampleQuestionIds": [
+        "FGV-TJDFT-2022-TADM-T1-Q27"
+      ]
+    }
+  ]
+}
