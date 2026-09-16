@@ -243,7 +243,7 @@ async function syncCloudProgress(options={}){
 }
 function renderCloudAccount(){
   const cloud=state.cloud||cloudProgress.snapshot;
-  const statusLabels={loading:'Conectando…',signed_out:'Modo local',pending:'Link enviado',authenticated:'Sincronizado',syncing:'Sincronizando…',error:'Indisponível'};
+  const statusLabels={loading:'Conectando…',signed_out:'Modo local',pending:'Link enviado',authenticated:'Conta conectada',syncing:'Sincronizando…',error:'Nuvem indisponível'};
   const statusEl=$('#cloudStatus'); if(statusEl)statusEl.textContent=statusLabels[cloud.status]||'Modo local';
   const description=$('#cloudDescription');
   if(description){

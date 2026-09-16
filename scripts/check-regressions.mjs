@@ -55,6 +55,8 @@ for(const marker of [
 ]) requireMarker(cloud,marker,'Contrato de robustez Supabase ausente');
 if(cloud.includes('options:{email_redirect_to'))throw new Error('Magic Link voltou ao payload de redirect legado no corpo da requisição.');
 if(/authenticated\s*:\s*status===['"]authenticated['"]/.test(cloud))throw new Error('Autenticação não pode depender apenas do estado visual da sincronização.');
+requireMarker(app,"authenticated:'Conta conectada'",'Interface voltou a chamar mera autenticação de sincronização concluída');
+if(app.includes("authenticated:'Sincronizado'"))throw new Error('Conta autenticada não pode ser apresentada como sincronizada sem confirmação de gravação.');
 
 // Edital canônico: módulo ativo, associação estável e ambiguidade explícita.
 requireMarker(studyPlan,"import './canonical-editais.js';",'Taxonomia canônica deixou de ser carregada pela aplicação');
@@ -107,7 +109,7 @@ requireMarker(v2,'.scorecard-grid { grid-template-columns: repeat(2, minmax(0, 1
 
 // PWA: qualquer alteração crítica no shell precisa chegar sem depender do cache anterior.
 const cacheVersion=Number(sw.match(/plataforma-questoes-v(\d+)/)?.[1]||0);
-if(cacheVersion<40)throw new Error('Cache PWA regrediu para uma versão anterior à separação entre nuvem e edital canônico.');
+if(cacheVersion<41)throw new Error('Cache PWA regrediu para uma versão anterior ao status explícito da nuvem.');
 for(const marker of ["'./assets/cloud-progress.js'","'./assets/study-plan.js'","'./assets/ux-enhancements.js'","'./assets/canonical-editais.js'"]) requireMarker(sw,marker,'Módulo crítico ausente do shell PWA');
 
 // Triagem editorial: nunca transforma heurística em writeback automático.
