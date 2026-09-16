@@ -1,5 +1,6 @@
 name: Reconstruir erros pelo histórico
 
+# Reexecução após atualização do contrato de regressão.
 on:
   push:
     paths:
