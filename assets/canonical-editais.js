@@ -79,6 +79,11 @@ function canonicalMarkup(edital){
 }
 
 function findEditalForCard(card){
+  const competitionId=text(card.querySelector('[data-edital-filter]')?.dataset.editalFilter);
+  if(competitionId){
+    const byId=canonicalState?.editais?.find(edital=>text(edital.competitionId)===competitionId);
+    if(byId)return byId;
+  }
   const title=normalize(card.querySelector('.edital-card-head h2')?.textContent);
   return canonicalState?.editais?.find(edital=>normalize(edital.title)===title)||null;
 }
