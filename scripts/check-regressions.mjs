@@ -93,6 +93,13 @@ for(const marker of [
   'const canonical=remoteTime<localTime?remote:local'
 ]) requireMarker(cloud,marker,'Contrato de idempotência do histórico ausente');
 if(cloud.includes("resolution=merge-duplicates"))throw new Error('Sessão concluída voltou a poder ser sobrescrita na nuvem.');
+for(const marker of [
+  'const canonicalIds=new Set(canonicalList.map',
+  'const missingFallback=fallbackList.filter',
+  'canonicalIds.add(id);',
+  'return [...mergedCanonical,...missingFallback];',
+  'a cópia completa posterior cura apenas questionIds ausentes'
+]) requireMarker(cloud,marker,'Cura de upload parcial multi-lote ausente');
 
 // Paginação da nuvem: nunca aceitar histórico parcialmente carregado como se estivesse completo.
 for(const marker of [
@@ -114,6 +121,14 @@ for(const marker of [
   'const finishedAt=Number.isFinite(endedAt)&&endedAt>0?endedAt:attemptFinishedAt'
 ]) requireMarker(cloud,marker,'Ordenação/fallback temporal confiável do histórico cloud ausente');
 if(cloud.includes("row.ended_at?new Date(row.ended_at).getTime():Date.now()"))throw new Error('Histórico cloud voltou a inventar finishedAt com Date.now().');
+if(cloud.includes('Number(value)||Date.now()'))throw new Error('Upload relacional voltou a inventar timestamp atual para histórico legado.');
+for(const marker of [
+  'const relational=normalized.filter(record=>{',
+  'return Number.isFinite(finishedAt)&&finishedAt>0;',
+  'const sessionRows=relational.map(record=>({',
+  'started_at:iso(record.startedAt)||iso(record.finishedAt)',
+  'const attemptRows=relational.flatMap(record=>record.answers.map(answer=>({'
+]) requireMarker(cloud,marker,'Proteção temporal do upload relacional ausente');
 
 // Upload parcial: study_session sem nenhuma tentativa não pode virar bateria concluída de 0 questões.
 for(const marker of [
@@ -265,7 +280,7 @@ requireMarker(v2,'.scorecard-grid { grid-template-columns: repeat(2, minmax(0, 1
 
 // PWA: qualquer alteração crítica no shell precisa chegar sem depender do cache anterior.
 const cacheVersion=Number(sw.match(/plataforma-questoes-v(\d+)/)?.[1]||0);
-if(cacheVersion<65)throw new Error('Cache PWA regrediu para uma versão anterior à proteção contra sessões órfãs.');
+if(cacheVersion<67)throw new Error('Cache PWA regrediu para uma versão anterior à cura do histórico cloud.');
 for(const marker of ["'./assets/cloud-progress.js'","'./assets/study-plan.js'","'./assets/ux-enhancements.js'","'./assets/canonical-editais.js'"]) requireMarker(sw,marker,'Módulo crítico ausente do shell PWA');
 
 // Triagem editorial: nunca transforma heurística em writeback automático.

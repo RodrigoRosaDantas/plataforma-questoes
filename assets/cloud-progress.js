@@ -166,8 +166,10 @@ async function signOut(){
   saveSession(null);user=null;pendingEmail='';profileId='';setStatus('signed_out','');
 }
 function iso(value){
-  const date=new Date(Number(value)||Date.now());
-  return Number.isNaN(date.getTime())?new Date().toISOString():date.toISOString();
+  const numeric=Number(value);
+  if(!Number.isFinite(numeric)||numeric<=0)return null;
+  const date=new Date(numeric);
+  return Number.isNaN(date.getTime())?null:date.toISOString();
 }
 function normalizedHistory(history){
   return (Array.isArray(history)?history:[]).map(record=>({
@@ -185,11 +187,16 @@ async function syncLocal(history){
   setStatus('syncing','Sincronizando progresso…');
   try{
     await ensureProfile();
-    const sessionRows=normalized.map(record=>({
+    // A camada relacional só recebe conclusões com relógio real; o CAS JSON preserva legado sem inventar data.
+    const relational=normalized.filter(record=>{
+      const finishedAt=Number(record?.finishedAt);
+      return Number.isFinite(finishedAt)&&finishedAt>0;
+    });
+    const sessionRows=relational.map(record=>({
       profile_id:profileId,
       activity_type:'question_set',
       activity_id:String(record.id),
-      started_at:iso(record.startedAt),
+      started_at:iso(record.startedAt)||iso(record.finishedAt),
       ended_at:iso(record.finishedAt),
       duration_ms:Math.max(0,Number(record.elapsedMs)||0)
     }));
@@ -198,7 +205,7 @@ async function syncLocal(history){
       headers:{Prefer:'resolution=ignore-duplicates,return=minimal'},
       body:JSON.stringify(batch)
     });
-    const attemptRows=normalized.flatMap(record=>record.answers.map(answer=>({
+    const attemptRows=relational.flatMap(record=>record.answers.map(answer=>({
       profile_id:profileId,
       question_id:String(answer.questionId),
       question_set_id:String(record.id),
@@ -322,15 +329,26 @@ function historyRecordTime(record){
   return Number.isFinite(value)&&value>0?value:Number.POSITIVE_INFINITY;
 }
 function mergeCanonicalAnswers(canonicalAnswers,fallbackAnswers){
-  const fallbackByQuestion=new Map((Array.isArray(fallbackAnswers)?fallbackAnswers:[]).map(answer=>[String(answer?.questionId||''),answer]));
+  const canonicalList=Array.isArray(canonicalAnswers)?canonicalAnswers:[];
+  const fallbackList=Array.isArray(fallbackAnswers)?fallbackAnswers:[];
+  const fallbackByQuestion=new Map(fallbackList.map(answer=>[String(answer?.questionId||''),answer]));
   const metadataKeys=['correctAnswer','concurso','disciplina','assunto','subassunto','questionVersion','questionHash','releaseSnapshotId','sourceSnapshot'];
-  return (Array.isArray(canonicalAnswers)?canonicalAnswers:[]).map(answer=>{
+  const canonicalIds=new Set(canonicalList.map(answer=>String(answer?.questionId||'')).filter(Boolean));
+  const mergedCanonical=canonicalList.map(answer=>{
     const fallback=fallbackByQuestion.get(String(answer?.questionId||''));
     if(!fallback)return answer;
     const merged={...fallback,...answer};
     metadataKeys.forEach(key=>{if((answer?.[key]===undefined||answer?.[key]===null||answer?.[key]==='')&&fallback?.[key]!==undefined&&fallback?.[key]!==null&&fallback?.[key]!=='')merged[key]=fallback[key];});
     return merged;
   });
+  // Se um upload em lotes falhar no meio, a cópia completa posterior cura apenas questionIds ausentes.
+  const missingFallback=fallbackList.filter(answer=>{
+    const id=String(answer?.questionId||'');
+    if(!id||canonicalIds.has(id))return false;
+    canonicalIds.add(id);
+    return true;
+  });
+  return [...mergedCanonical,...missingFallback];
 }
 function mergeHistory(localHistory,remoteHistory){
   const merged=new Map();
