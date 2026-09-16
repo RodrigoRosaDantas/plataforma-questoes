@@ -1,4 +1,4 @@
-const CACHE_PREFIX='plataforma-questoes-v29';
+const CACHE_PREFIX='plataforma-questoes-v30';
 const SHELL_CACHE=CACHE_PREFIX+'-shell';
 const DATA_CACHE=CACHE_PREFIX+'-data';
 
@@ -11,6 +11,7 @@ const SHELL=[
   './assets/cloud-progress.js',
   './assets/study-plan.js',
   './assets/ux-enhancements.js',
+  './assets/canonical-editais.js',
   './assets/logo.svg',
   './assets/icon-180.png',
   './assets/icon-192.png',
@@ -23,6 +24,7 @@ const DATA_FILES=[
   './data/metadata.json',
   './data/competitions.json',
   './data/editais.json',
+  './data/taxonomy-backlog.json',
   './data/tjdft-provas.json'
 ];
 const DATA_PATHS=DATA_FILES.map(path=>new URL(path,self.registration.scope).pathname);
