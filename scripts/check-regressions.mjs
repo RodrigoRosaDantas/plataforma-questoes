@@ -29,12 +29,14 @@ for(const marker of [
 if(cloud.includes('options:{email_redirect_to'))throw new Error('Magic Link voltou ao payload de redirect legado no corpo da requisição.');
 if(/authenticated\s*:\s*status===['"]authenticated['"]/.test(cloud))throw new Error('Autenticação não pode depender apenas do estado visual da sincronização.');
 
-// Edital canônico: o módulo precisa estar no grafo executado e não apenas armazenado no repositório.
+// Edital canônico: módulo ativo e associação primária por identificador estável.
 requireMarker(studyPlan,"import './canonical-editais.js';",'Taxonomia canônica deixou de ser carregada pela aplicação');
 for(const marker of [
   "const CANONICAL_DATA='./data/editais.json'",
   'data-canonical-section',
   'Vínculo direto',
+  "const competitionId=text(card.querySelector('[data-edital-filter]')?.dataset.editalFilter)",
+  "find(edital=>text(edital.competitionId)===competitionId)",
   "const CLOUD_DEVICE_KEY='plataforma.questoes.device.v1'",
   'localStorage.removeItem(CLOUD_DEVICE_KEY)'
 ]) requireMarker(canonical,marker,'Contrato do edital canônico/migração local ausente');
@@ -46,7 +48,7 @@ requireMarker(v2,'.scorecard-grid { grid-template-columns: repeat(2, minmax(0, 1
 
 // PWA: qualquer alteração crítica no shell precisa chegar sem depender do cache anterior.
 const cacheVersion=Number(sw.match(/plataforma-questoes-v(\d+)/)?.[1]||0);
-if(cacheVersion<35)throw new Error('Cache PWA regrediu para uma versão anterior à ativação do edital canônico.');
+if(cacheVersion<36)throw new Error('Cache PWA regrediu para uma versão anterior ao vínculo canônico estável.');
 for(const marker of ["'./assets/cloud-progress.js'","'./assets/study-plan.js'","'./assets/canonical-editais.js'"]) requireMarker(sw,marker,'Módulo crítico ausente do shell PWA');
 
 // Triagem editorial: nunca transforma heurística em writeback automático.
