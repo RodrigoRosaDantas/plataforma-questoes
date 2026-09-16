@@ -14,17 +14,25 @@ let status='loading';
 let message='';
 const listeners=new Set();
 
+const hasSession=()=>Boolean(session?.access_token);
 const snapshot=()=>({
   status,
   email:user?.email||pendingEmail||'',
   profileId,
   message,
-  authenticated:status==='authenticated'||status==='syncing'
+  authenticated:hasSession()
 });
 function emit(){const value=snapshot();listeners.forEach(listener=>listener(value));}
 function setStatus(next,text=''){status=next;message=text;emit();}
 function uuid(){
-  return globalThis.crypto?.randomUUID?.()||('evt-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2));
+  if(globalThis.crypto?.randomUUID)return globalThis.crypto.randomUUID();
+  const bytes=new Uint8Array(16);
+  if(globalThis.crypto?.getRandomValues)globalThis.crypto.getRandomValues(bytes);
+  else for(let index=0;index<bytes.length;index++)bytes[index]=Math.floor(Math.random()*256);
+  bytes[6]=(bytes[6]&0x0f)|0x40;
+  bytes[8]=(bytes[8]&0x3f)|0x80;
+  const hex=[...bytes].map(value=>value.toString(16).padStart(2,'0')).join('');
+  return `${hex.slice(0,8)}-${hex.slice(8,12)}-${hex.slice(12,16)}-${hex.slice(16,20)}-${hex.slice(20)}`;
 }
 function deviceId(){
   try{
@@ -106,6 +114,16 @@ async function request(path,options={},retry=true){
 function redirectTarget(){
   return new URL('./',location.href).href;
 }
+async function ensureProfile(){
+  if(!hasSession())throw new Error('Sessão de nuvem indisponível.');
+  if(profileId)return profileId;
+  user=user||await request('/auth/v1/user');
+  const ensured=await request('/rest/v1/rpc/ensure_student_profile',{method:'POST',body:'{}'});
+  profileId=typeof ensured==='string'?ensured:(ensured?.id||ensured?.profile_id||'');
+  if(!profileId)throw new Error('Não foi possível preparar o perfil de estudo.');
+  pendingEmail='';
+  return profileId;
+}
 async function init(){
   setStatus('loading','Verificando conta…');
   readRedirectSession();
@@ -113,11 +131,7 @@ async function init(){
   if(!session){setStatus('signed_out','');return snapshot();}
   try{
     if(Number(session.expires_at||0)*1000<Date.now()+60000)await refreshSession();
-    user=await request('/auth/v1/user');
-    const ensured=await request('/rest/v1/rpc/ensure_student_profile',{method:'POST',body:'{}'});
-    profileId=typeof ensured==='string'?ensured:(ensured?.id||ensured?.profile_id||'');
-    if(!profileId)throw new Error('Não foi possível preparar o perfil de estudo.');
-    pendingEmail='';
+    await ensureProfile();
     setStatus('authenticated','');
   }catch(error){
     if(error.status===401){saveSession(null);user=null;profileId='';setStatus('signed_out','A sessão expirou.');}
@@ -131,9 +145,10 @@ async function requestMagicLink(email){
   pendingEmail=normalized;
   setStatus('loading','Enviando link de acesso…');
   try{
-    await request('/auth/v1/otp',{
+    const redirect=encodeURIComponent(redirectTarget());
+    await request('/auth/v1/otp?redirect_to='+redirect,{
       method:'POST',
-      body:JSON.stringify({email:normalized,create_user:true,options:{email_redirect_to:redirectTarget()}})
+      body:JSON.stringify({email:normalized,create_user:true})
     });
     setStatus('pending','Link enviado. Verifique sua caixa de entrada.');
     return snapshot();
@@ -162,9 +177,10 @@ function normalizedHistory(history){
 function chunks(values,size){const result=[];for(let i=0;i<values.length;i+=size)result.push(values.slice(i,i+size));return result;}
 async function syncLocal(history){
   const normalized=normalizedHistory(history);
-  if(!snapshot().authenticated)return {synced:false,history:normalized,count:0};
+  if(!hasSession())return {synced:false,history:normalized,count:0};
   setStatus('syncing','Sincronizando progresso…');
   try{
+    await ensureProfile();
     const sessionRows=normalized.map(record=>({
       profile_id:profileId,
       activity_type:'question_set',
@@ -212,7 +228,7 @@ async function fetchRows(path,maxPages=20){
   return rows;
 }
 async function loadCloudHistory(){
-  if(!snapshot().authenticated)return [];
+  if(!hasSession())return [];
   const sessions=await fetchRows('/rest/v1/study_sessions?select=activity_id,started_at,ended_at,duration_ms&activity_type=eq.question_set&activity_id=not.is.null&order=ended_at.desc');
   const attempts=await fetchRows('/rest/v1/question_attempts?select=question_set_id,question_id,answer,is_correct,duration_ms,answered_at,client_event_id&question_set_id=not.is.null&order=answered_at.desc');
   const sessionMap=new Map(sessions.filter(row=>row.activity_id).map(row=>[String(row.activity_id),row]));
@@ -248,12 +264,14 @@ async function loadCloudHistory(){
 }
 
 async function loadCloudState(){
-  if(!snapshot().authenticated||!profileId)return null;
+  if(!hasSession())return null;
+  await ensureProfile();
   const rows=await request('/rest/v1/student_progress_states?select=state,state_version,updated_at,device_id&profile_id=eq.'+encodeURIComponent(profileId)+'&limit=1');
   return Array.isArray(rows)?rows[0]||null:null;
 }
 async function saveCloudState(stateValue,stateVersion=1){
-  if(!snapshot().authenticated||!profileId)return {saved:false};
+  if(!hasSession())return {saved:false};
+  await ensureProfile();
   const updatedAt=new Date().toISOString();
   const row={profile_id:profileId,state:stateValue&&typeof stateValue==='object'?stateValue:{},state_version:Math.max(1,Number(stateVersion)||1),device_id:deviceId(),updated_at:updatedAt};
   await request('/rest/v1/student_progress_states?on_conflict=profile_id',{method:'POST',headers:{Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify(row)});
