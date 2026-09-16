@@ -24,11 +24,18 @@ app=replaceOnce(
   'avanço de revisão no fechamento da bateria'
 );
 
+checks=replaceOnce(
+  checks,
+  `'r.updatedAt=finishedAt'`,
+  `'review.updatedAt=finishedAt'`,
+  'contrato de timestamp de avanço da revisão'
+);
+
 const anchor=`]) requireMarker(app,marker,'Reconciliação entre caderno de erros e D0/D7/D20 ausente');`;
 checks=replaceOnce(
   checks,
   anchor,
-  `${anchor}\n\n// D0/D7/D20: acerto antecipado não pode encurtar o intervalo agendado.\nfor(const marker of [\n  'function advanceReviewIfDue(review,finishedAt)',\n  \"if(!review||review.stage==='Dominada')return false\",\n  'if(dueAt>finishedAt)return false;',\n  \"review.stage=review.stage==='D0'?'D7':review.stage==='D7'?'D20':'Dominada'\",\n  'if(r)advanceReviewIfDue(r,finishedAt)'\n]) requireMarker(app,marker,'Proteção dos intervalos D0/D7/D20 ausente');\nif(app.includes(\"if(r){r.stage=r.stage==='D0'?'D7'\"))throw new Error('Revisão voltou a avançar sem conferir o vencimento.');`,
+  `${anchor}\n\n// D0/D7/D20: acerto antecipado não pode encurtar o intervalo agendado.\nfor(const marker of [\n  'function advanceReviewIfDue(review,finishedAt)',\n  \"if(!review||review.stage==='Dominada')return false\",\n  'if(dueAt>finishedAt)return false;',\n  \"review.stage=review.stage==='D0'?'D7':review.stage==='D7'?'D20':'Dominada'\",\n  'review.updatedAt=finishedAt',\n  'if(r)advanceReviewIfDue(r,finishedAt)'\n]) requireMarker(app,marker,'Proteção dos intervalos D0/D7/D20 ausente');\nif(app.includes(\"if(r){r.stage=r.stage==='D0'?'D7'\"))throw new Error('Revisão voltou a avançar sem conferir o vencimento.');`,
   'proteção dos intervalos no CI'
 );
 checks=replaceOnce(
