@@ -2,7 +2,9 @@ import fs from 'node:fs/promises';
 
 const questions=JSON.parse(await fs.readFile('data/questions.json','utf8'));
 const editais=JSON.parse(await fs.readFile('data/editais.json','utf8'));
+const metadata=JSON.parse(await fs.readFile('data/metadata.json','utf8'));
 if(!Array.isArray(questions)||!Array.isArray(editais))throw new Error('Dados editoriais inválidos.');
+if(!metadata?.releaseSnapshotId)throw new Error('Release de origem ausente no metadata.json.');
 
 const TARGETS=new Set(['seedf','tjdft']);
 const STOPWORDS=new Set(['a','as','o','os','e','de','da','das','do','dos','em','no','nos','na','nas','para','por','com','sem','ao','aos','um','uma','uns','umas','que','ou','se','sobre','entre','conforme','aplicado','aplicada','aplicaveis','aplicavel','nocao','nocoes']);
@@ -218,6 +220,8 @@ const outsideScopeByCargo=Object.fromEntries([...outsideScope.reduce((map,item)=
 const output={
   schemaVersion:3,
   generatedAt:new Date().toISOString(),
+  sourceReleaseSnapshotId:metadata.releaseSnapshotId,
+  sourceQuestionCount:Number(metadata.questionCount),
   policy:{
     writeback:false,
     automaticApplication:false,
