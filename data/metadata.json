@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-16T20:03:13.029Z",
+  "generatedAt": "2026-09-16T20:09:58.639Z",
   "releaseSnapshotId": "25dac0518a4bb2e729fb8cd0cbd26460d768376e69ad6f702abc1b2ad6508661",
   "scoringPolicy": {
     "version": 1,
@@ -17,7 +17,9 @@
     "excludesAnuladas": true,
     "excludesSemGabarito": true,
     "excludesDiscursivas": true,
-    "requiresEssentialFields": true
+    "requiresEssentialFields": true,
+    "canonicalTaxonomyRequiresExportApproval": true,
+    "legacyCompatibilityUntilCanonicalMigration": true
   },
   "sampleMode": false,
   "questionCount": 3697,
@@ -128,6 +130,12 @@
           "coveragePercent": 100
         }
       }
+    },
+    "governance": {
+      "canonicalRecords": 360,
+      "canonicalApproved": 351,
+      "canonicalBlockedByApproval": 9,
+      "legacyCompatibilityRecords": 3406
     }
   }
 }
