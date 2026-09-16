@@ -8,6 +8,7 @@ const canonical=await fs.readFile('assets/canonical-editais.js','utf8');
 const taxonomySync=await fs.readFile('scripts/sync-editorial-taxonomies.mjs','utf8');
 const casMigration=await fs.readFile('supabase/migrations/20260916141000_fix_progress_state_compare_and_swap_column_ambiguity.sql','utf8');
 const attemptIdempotencyMigration=await fs.readFile('supabase/migrations/20260916142500_harden_question_attempt_idempotency.sql','utf8');
+const profilePrivilegeMigration=await fs.readFile('supabase/migrations/20260916181501_restore_column_scoped_student_profile_write.sql','utf8');
 const v2=await fs.readFile('assets/v2.css','utf8');
 const sw=await fs.readFile('service-worker.js','utf8');
 const editais=JSON.parse(await fs.readFile('data/editais.json','utf8'));
@@ -59,6 +60,14 @@ if(cloud.includes('options:{email_redirect_to'))throw new Error('Magic Link volt
 if(/authenticated\s*:\s*status===['"]authenticated['"]/.test(cloud))throw new Error('Autenticação não pode depender apenas do estado visual da sincronização.');
 requireMarker(app,"authenticated:'Conta conectada'",'Interface voltou a chamar mera autenticação de sincronização concluída');
 if(app.includes("authenticated:'Sincronizado'"))throw new Error('Conta autenticada não pode ser apresentada como sincronizada sem confirmação de gravação.');
+
+// Supabase: provisionamento do perfil usa grants por coluna, nunca escrita ampla na tabela.
+for(const marker of [
+  'revoke insert, update on table public.student_profiles from authenticated;',
+  'grant insert (id, user_id, is_active) on table public.student_profiles to authenticated;',
+  'grant update (is_active, updated_at) on table public.student_profiles to authenticated;'
+]) requireMarker(profilePrivilegeMigration,marker,'Contrato de privilégios por coluna do perfil ausente');
+if(/grant\s+(?:insert\s*,\s*update|update\s*,\s*insert)\s+on\s+table\s+public\.student_profiles\s+to\s+authenticated/i.test(profilePrivilegeMigration))throw new Error('Migration de perfil voltou a conceder escrita ampla na tabela.');
 
 // Concorrência multiaparelho: gravação do estado usa compare-and-swap + merge/retry.
 for(const marker of [
