@@ -1,5 +1,6 @@
 name: Proteger intervalos de revisão
 
+# Reexecução após atualização do contrato de regressão.
 on:
   push:
     paths:
