@@ -82,6 +82,17 @@ for(const marker of [
 ]) requireMarker(app.includes(marker)?app:ux,marker,'Contrato de reutilização em memória das facetas ausente');
 if(ux.includes('readFacetDataset(true)'))throw new Error('Facetas voltaram a forçar uma segunda leitura integral de questions.json.');
 
+// Precisão: brancos não entram no denominador nem aparecem como erradas na leitura analítica.
+for(const marker of [
+  "['Erradas',rawWrong]",
+  'const answered=Math.max(0,v.total-v.blank)',
+  'function recordPrecision(record)',
+  'const rawWrong=Number.isFinite(record?.rawWrong)?Number(record.rawWrong):Number(record?.wrong)||0',
+  'const best=history.length?Math.max(...history.map(recordPrecision)):0',
+  'value:recordPrecision(record)'
+]) requireMarker(app,marker,'Contrato de precisão sem brancos ausente');
+if(app.includes("['Erradas',wrong]"))throw new Error('Resultado voltou a misturar brancos com respostas erradas.');
+
 // Edital canônico: módulo ativo, associação estável e ambiguidade explícita.
 requireMarker(studyPlan,"import './canonical-editais.js';",'Taxonomia canônica deixou de ser carregada pela aplicação');
 for(const marker of [
@@ -133,7 +144,7 @@ requireMarker(v2,'.scorecard-grid { grid-template-columns: repeat(2, minmax(0, 1
 
 // PWA: qualquer alteração crítica no shell precisa chegar sem depender do cache anterior.
 const cacheVersion=Number(sw.match(/plataforma-questoes-v(\d+)/)?.[1]||0);
-if(cacheVersion<45)throw new Error('Cache PWA regrediu para uma versão anterior à reutilização em memória das facetas.');
+if(cacheVersion<47)throw new Error('Cache PWA regrediu para uma versão anterior à correção de precisão e brancos.');
 for(const marker of ["'./assets/cloud-progress.js'","'./assets/study-plan.js'","'./assets/ux-enhancements.js'","'./assets/canonical-editais.js'"]) requireMarker(sw,marker,'Módulo crítico ausente do shell PWA');
 
 // Triagem editorial: nunca transforma heurística em writeback automático.

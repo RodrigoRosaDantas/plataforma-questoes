@@ -827,23 +827,29 @@ function renderResult(r){
   const answered=Number.isFinite(r.answered)?r.answered:correct+rawWrong,precision=answered?correct/answered*100:0;
   const score=Number.isFinite(r.score)?r.score:correct-(Number(policy.negativeMarking)||0)*(policy.blankCountsAsWrong?wrong:rawWrong);
   const percent=Number.isFinite(r.scorePercent)?r.scorePercent:(r.total?score/r.total*100:0),elapsed=seconds(r.elapsedMs??(r.finishedAt-r.startedAt));
-  $('#resultMetrics').innerHTML=[['Corretas',correct],['Erradas',wrong],['Em branco',blank],['Pontuação',`${percent.toFixed(1)}%`],['Precisão',`${precision.toFixed(1)}%`],['Tempo',clock(elapsed)],['Média/questão',clock(r.total?Math.round(elapsed/r.total):0)],['Total',r.total]].map(metricHtml).join('');
+  $('#resultMetrics').innerHTML=[['Corretas',correct],['Erradas',rawWrong],['Em branco',blank],['Pontuação',`${percent.toFixed(1)}%`],['Precisão',`${precision.toFixed(1)}%`],['Tempo',clock(elapsed)],['Média/questão',clock(r.total?Math.round(elapsed/r.total):0)],['Total',r.total]].map(metricHtml).join('');
   const by=aggregateBy(r.answers,'disciplina');
-  $('#resultBreakdown').innerHTML=Object.entries(by).map(([k,v])=>`<article class="card"><h2>${escapeHtml(k||'Sem disciplina')}</h2><p>${v.correct}/${v.total} corretas · ${Math.round(v.correct/v.total*100)}%</p></article>`).join('')||'<div class="card empty-state">Sem dados.</div>';
+  $('#resultBreakdown').innerHTML=Object.entries(by).map(([k,v])=>{const answered=Math.max(0,v.total-v.blank),percent=answered?Math.round(v.correct/answered*100):0;return `<article class="card"><h2>${escapeHtml(k||'Sem disciplina')}</h2><p>${v.correct}/${answered} corretas · ${percent}%${v.blank?` · ${v.blank} em branco`:``}</p></article>`;}).join('')||'<div class="card empty-state">Sem dados.</div>';
 }
 function redoErrors(){ const h=store.load().history[0]; if(!h)return; const qs=h.answers.filter(a=>!a.isCorrect&&a.given).map(a=>state.questions.find(q=>q.id===a.questionId)).filter(q=>q&&answerOptions(q).length); if(!qs.length){toast('Não há erradas objetivas nessa sessão.');return;} createSession(qs,'training'); }
 
 function renderReview(){ const p=store.load(); const ids=uniq([...Object.keys(p.errors||{}),...Object.keys(p.marked||{}).filter(id=>!p.marked[id]?.removed),...Object.keys(p.reviews||{})]); const root=$('#reviewList'); if(!ids.length){root.innerHTML='<div class="card empty-state">Nenhuma questão em revisão ainda.</div>';return;} root.innerHTML=ids.map(id=>{const q=state.questions.find(x=>x.id===id);if(!q)return'';const e=p.errors[id],r=p.reviews[id],m=p.marked[id];return `<article class="card"><div class="chips">${e?chip(`${e.count} erro(s)`):''}${r?chip(r.stage):''}${m?chip('Marcada'):''}</div><h2>${escapeHtml(q.disciplina||'Questão')}</h2><p>${escapeHtml(q.enunciado)}</p><button class="secondary" data-review-one="${escapeHtml(id)}">Resolver agora</button></article>`;}).join(''); $$('[data-review-one]').forEach(b=>b.addEventListener('click',()=>{const q=state.questions.find(x=>x.id===b.dataset.reviewOne);if(q)createSession([q],'training');})); }
+function recordPrecision(record){
+  const correct=Number(record?.correct)||0;
+  const rawWrong=Number.isFinite(record?.rawWrong)?Number(record.rawWrong):Number(record?.wrong)||0;
+  const answered=correct+rawWrong;
+  return answered?correct/answered*100:0;
+}
 function renderPerformance(){
   const history=store.load().history;
   const all=history.flatMap(record=>(record.answers||[]).map(enrichAnswer));
   const total=all.length,attempted=all.filter(answer=>!answer.blank),correct=all.filter(answer=>answer.isCorrect).length;
   const answeredCount=attempted.length,precision=answeredCount?correct/answeredCount*100:0;
   const avg=total?all.reduce((sum,answer)=>sum+(answer.time||0),0)/total:0;
-  const best=history.length?Math.max(...history.map(record=>{const answered=(record.correct||0)+(record.wrong||0);return answered?record.correct/answered*100:0;})):0;
+  const best=history.length?Math.max(...history.map(recordPrecision)):0;
   $('#performanceMetrics').innerHTML=[['Respondidas',answeredCount],['Acertos',correct],['Precisão',precision.toFixed(1)+'%'],['Tempo médio',clock(Math.round(avg))],['Sessões',history.length],['Melhor sessão',best.toFixed(1)+'%']].map(metricHtml).join('');
   const sessions=[...history].sort((a,b)=>(a.finishedAt||0)-(b.finishedAt||0)).slice(-12);
-  const trend=sessions.map((record,index)=>{const answered=(record.correct||0)+(record.wrong||0);return {value:answered?record.correct/answered*100:0,label:new Date(record.finishedAt||Date.now()).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})+' · '+(index+1)};});
+  const trend=sessions.map((record,index)=>({value:recordPrecision(record),label:new Date(record.finishedAt||Date.now()).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})+' · '+(index+1)}));
   const by=aggregateBy(all,'disciplina');
   const entries=Object.entries(by).sort((a,b)=>{const pa=a[1].correct/Math.max(1,a[1].total-a[1].blank),pb=b[1].correct/Math.max(1,b[1].total-b[1].blank);return pa-pb||b[1].total-a[1].total;});
   const insightRoot=$('#performanceInsights');
