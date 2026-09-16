@@ -14,6 +14,8 @@
       "note": "Edital projetado pré-edital. Base histórica, atualização obrigatória e radar provável permanecem identificados separadamente."
     },
     "canonicalAxisCount": 60,
+    "canonicalLinkedAxes": 0,
+    "canonicalDirectQuestions": 0,
     "canonicalAxes": [
       {
         "id": "3d4cf5a2-6731-815b-b089-ee5e6dd53561",
@@ -27,7 +29,8 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://economia.df.gov.br/documents/d/seec/dodf-122-01-07-2022-integra",
-        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-8155-ad44-e56215f4c607",
@@ -41,7 +44,8 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://economia.df.gov.br/documents/d/seec/dodf-122-01-07-2022-integra",
-        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-8160-9c97-f8d126a24ff0",
@@ -55,7 +59,8 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://economia.df.gov.br/documents/d/seec/dodf-122-01-07-2022-integra",
-        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-811e-9a76-e1ba7b94a458",
@@ -69,7 +74,8 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:51:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:51:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-81fc-ab95-e22d69c0383e",
@@ -83,7 +89,8 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://economia.df.gov.br/documents/d/seec/dodf-122-01-07-2022-integra",
-        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-81fb-b346-d592709b7c73",
@@ -97,7 +104,8 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://economia.df.gov.br/documents/d/seec/dodf-122-01-07-2022-integra",
-        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-8123-aeb8-c47d7da571f8",
@@ -111,7 +119,8 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://economia.df.gov.br/documents/d/seec/dodf-122-01-07-2022-integra",
-        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-8169-af6f-d629415641c0",
@@ -125,7 +134,8 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:51:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:51:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-8154-902d-e2c62865e1ea",
@@ -139,7 +149,8 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://economia.df.gov.br/documents/d/seec/dodf-122-01-07-2022-integra",
-        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-819d-84e7-c3687788710f",
@@ -153,7 +164,8 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://economia.df.gov.br/documents/d/seec/dodf-122-01-07-2022-integra",
-        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-81c3-bb6c-c273d8d53963",
@@ -167,7 +179,8 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:51:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:51:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-814e-bf27-db7a2719f84d",
@@ -181,7 +194,8 @@
         "layer": "Atualização obrigatória",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-81ed-b6f2-d1e41903da7c",
@@ -195,7 +209,8 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-81a9-bde0-c6d7eec6b2dd",
@@ -209,7 +224,8 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-81e6-bc10-d693d7011110",
@@ -223,7 +239,8 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-8160-93af-d00488f8031c",
@@ -237,7 +254,8 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-8177-802a-e89ae5860710",
@@ -251,7 +269,8 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-815b-9a22-e423f9b1b993",
@@ -265,7 +284,8 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-81c0-9e48-f745f53c2a9f",
@@ -279,7 +299,8 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://economia.df.gov.br/documents/d/seec/dodf-122-01-07-2022-integra",
-        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-81d4-a2d3-cd1b32c03289",
@@ -293,7 +314,8 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-8196-90d5-fbebf3ee6729",
@@ -308,7 +330,8 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://app.notion.com/p/3a6cf5a26731812d92f1e1a33e258eda",
-        "sourceLastEditedAt": "2026-09-07T13:42:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:42:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-81e3-aab3-f18e7e2eabf7",
@@ -322,7 +345,8 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-8197-b3d1-cf486876f375",
@@ -336,7 +360,8 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-8110-a29c-ce67c4e6a809",
@@ -350,7 +375,8 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-8111-8188-d1e9c664f073",
@@ -364,7 +390,8 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:51:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:51:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-8137-9b4a-f771bf8d6152",
@@ -378,7 +405,8 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-81d8-9929-ef9c02756811",
@@ -392,7 +420,8 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-8171-9fe4-e7bcc4e21e3c",
@@ -406,7 +435,8 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://economia.df.gov.br/documents/d/seec/dodf-122-01-07-2022-integra",
-        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-8164-a58d-ddf79346d4fb",
@@ -420,7 +450,8 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-819b-9852-e11387366047",
@@ -434,7 +465,8 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-81de-9439-c7e75259e134",
@@ -449,7 +481,8 @@
         "layer": "Atualização obrigatória",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-816e-ab67-e5144ac83aca",
@@ -463,7 +496,8 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-81d1-897a-e2350e78b330",
@@ -478,7 +512,8 @@
         "layer": "Atualização obrigatória",
         "level": "",
         "sourceUrl": "https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2015/lei/l13146.htm",
-        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-8123-a151-c23f043ea5ba",
@@ -493,7 +528,8 @@
         "layer": "Atualização obrigatória",
         "level": "",
         "sourceUrl": "https://app.notion.com/p/3a6cf5a2673181148accc8d3b59f3606",
-        "sourceLastEditedAt": "2026-09-07T13:42:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:42:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-811d-a16b-fa44a0ec844b",
@@ -507,7 +543,8 @@
         "layer": "Atualização obrigatória",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:51:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:51:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-81aa-bad7-f8f250e5fd48",
@@ -521,7 +558,8 @@
         "layer": "Atualização obrigatória",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-818e-913e-c266f3fde939",
@@ -535,7 +573,8 @@
         "layer": "Atualização obrigatória",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-81da-9a99-c05350a9c977",
@@ -550,7 +589,8 @@
         "layer": "Atualização obrigatória",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-818d-aa26-d3d1ea852483",
@@ -566,7 +606,8 @@
         "layer": "Atualização obrigatória",
         "level": "",
         "sourceUrl": "https://www.sinj.df.gov.br/sinj/Norma/177e453f9f784e1fbecce53d12c966a7/Lei_7142_19_05_2022.html",
-        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-816c-b07a-c046d5ae8402",
@@ -580,7 +621,8 @@
         "layer": "Atualização obrigatória",
         "level": "",
         "sourceUrl": "https://www.educacao.df.gov.br/pde-2/",
-        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-817c-8628-d1d1d375fc03",
@@ -594,7 +636,8 @@
         "layer": "Atualização obrigatória",
         "level": "",
         "sourceUrl": "https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2026/lei/l15388.htm",
-        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-814c-9fb1-dab980d92eea",
@@ -609,7 +652,8 @@
         "layer": "Radar provável",
         "level": "",
         "sourceUrl": "https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2023/lei/l14533.htm",
-        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-810f-aeed-d795aca915e3",
@@ -624,7 +668,8 @@
         "layer": "Atualização obrigatória",
         "level": "",
         "sourceUrl": "https://app.notion.com/p/3a6cf5a26731812d92f1e1a33e258eda",
-        "sourceLastEditedAt": "2026-09-07T13:42:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:42:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-815d-a70f-e3a58d145574",
@@ -638,7 +683,8 @@
         "layer": "Atualização obrigatória",
         "level": "",
         "sourceUrl": "https://economia.df.gov.br/documents/d/seec/dodf-122-01-07-2022-integra",
-        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-814a-8b05-f6cb887c7be9",
@@ -652,7 +698,8 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-81a6-8575-ddbf805c37e9",
@@ -666,7 +713,8 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-81c6-a811-df2172e343da",
@@ -680,7 +728,8 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://app.notion.com/p/3a6cf5a26731816d80a3f8794e083a47",
-        "sourceLastEditedAt": "2026-09-07T13:42:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:42:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-8188-97f7-d54ecba709d2",
@@ -694,7 +743,8 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-81eb-9732-cc4e83242d84",
@@ -708,7 +758,8 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-8133-aafb-d1c93f50aa5c",
@@ -723,7 +774,8 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://app.notion.com/p/3a6cf5a2673181148accc8d3b59f3606",
-        "sourceLastEditedAt": "2026-09-07T13:42:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:42:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-81ed-a527-f60c9c5bb69b",
@@ -737,7 +789,8 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-81ad-bf8b-dee5b231458a",
@@ -751,7 +804,8 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-8139-8f3c-cc40ac503a6a",
@@ -765,7 +819,8 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-818e-bdf6-d19d3a841d77",
@@ -779,7 +834,8 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-8165-b48c-dd2a71b1c561",
@@ -793,7 +849,8 @@
         "layer": "Atualização obrigatória",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-81e0-abc7-eb3326f89163",
@@ -807,7 +864,8 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-81f5-ad94-ee9893559367",
@@ -821,7 +879,8 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-81b6-bcbb-fd42b5979aea",
@@ -835,7 +894,8 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-8173-82ee-ed4a67d8f997",
@@ -849,7 +909,8 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-8131-84b3-c401e8795691",
@@ -863,7 +924,8 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z"
+        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
+        "directQuestionCount": 0
       }
     ]
   },
@@ -882,6 +944,8 @@
       "note": "Pré-edital. O Edital 2022 é base histórica; alterações legais e eventual edital futuro prevalecem quando publicados."
     },
     "canonicalAxisCount": 22,
+    "canonicalLinkedAxes": 0,
+    "canonicalDirectQuestions": 0,
     "canonicalAxes": [
       {
         "id": "3d5cf5a2-6731-81c6-b990-f9689a9f4b36",
@@ -895,7 +959,8 @@
         "layer": "Edital histórico",
         "level": "Específico",
         "sourceUrl": "https://conhecimento.fgv.br/sites/default/files/concursos/tjdft_-_edital_24-01-2022_0.pdf",
-        "sourceLastEditedAt": "2026-09-09T14:16:00.000Z"
+        "sourceLastEditedAt": "2026-09-09T14:16:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d5cf5a2-6731-8127-a8cc-e793fcd432fe",
@@ -909,7 +974,8 @@
         "layer": "Edital histórico",
         "level": "Núcleo comum",
         "sourceUrl": "https://conhecimento.fgv.br/sites/default/files/concursos/tjdft_-_edital_24-01-2022_0.pdf",
-        "sourceLastEditedAt": "2026-09-09T14:16:00.000Z"
+        "sourceLastEditedAt": "2026-09-09T14:16:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d5cf5a2-6731-81ba-9cf4-d74d29444460",
@@ -923,7 +989,8 @@
         "layer": "Edital histórico",
         "level": "Legislação interna",
         "sourceUrl": "https://conhecimento.fgv.br/sites/default/files/concursos/tjdft_-_edital_24-01-2022_0.pdf",
-        "sourceLastEditedAt": "2026-09-09T14:16:00.000Z"
+        "sourceLastEditedAt": "2026-09-09T14:16:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d5cf5a2-6731-81d0-b051-c363f8321b90",
@@ -937,7 +1004,8 @@
         "layer": "Edital histórico",
         "level": "Específico",
         "sourceUrl": "https://conhecimento.fgv.br/sites/default/files/concursos/tjdft_-_edital_24-01-2022_0.pdf",
-        "sourceLastEditedAt": "2026-09-09T14:16:00.000Z"
+        "sourceLastEditedAt": "2026-09-09T14:16:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d5cf5a2-6731-8161-9507-cdc4c6d141b8",
@@ -951,7 +1019,8 @@
         "layer": "Edital histórico",
         "level": "Específico",
         "sourceUrl": "https://conhecimento.fgv.br/sites/default/files/concursos/tjdft_-_edital_24-01-2022_0.pdf",
-        "sourceLastEditedAt": "2026-09-09T14:16:00.000Z"
+        "sourceLastEditedAt": "2026-09-09T14:16:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d5cf5a2-6731-813e-9b78-f5901bedfdb7",
@@ -965,7 +1034,8 @@
         "layer": "Edital histórico",
         "level": "Específico",
         "sourceUrl": "https://conhecimento.fgv.br/sites/default/files/concursos/tjdft_-_edital_24-01-2022_0.pdf",
-        "sourceLastEditedAt": "2026-09-09T14:16:00.000Z"
+        "sourceLastEditedAt": "2026-09-09T14:16:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d5cf5a2-6731-81cc-93e6-cfefcadee490",
@@ -979,7 +1049,8 @@
         "layer": "Edital histórico",
         "level": "Núcleo comum",
         "sourceUrl": "https://conhecimento.fgv.br/sites/default/files/concursos/tjdft_-_edital_24-01-2022_0.pdf",
-        "sourceLastEditedAt": "2026-09-09T14:16:00.000Z"
+        "sourceLastEditedAt": "2026-09-09T14:16:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d5cf5a2-6731-815b-9750-e549dbff453f",
@@ -993,7 +1064,8 @@
         "layer": "Edital histórico",
         "level": "Específico",
         "sourceUrl": "https://conhecimento.fgv.br/sites/default/files/concursos/tjdft_-_edital_24-01-2022_0.pdf",
-        "sourceLastEditedAt": "2026-09-09T14:16:00.000Z"
+        "sourceLastEditedAt": "2026-09-09T14:16:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d5cf5a2-6731-815e-a36e-ed3549f9d9ab",
@@ -1007,7 +1079,8 @@
         "layer": "Edital histórico",
         "level": "Específico",
         "sourceUrl": "https://conhecimento.fgv.br/sites/default/files/concursos/tjdft_-_edital_24-01-2022_0.pdf",
-        "sourceLastEditedAt": "2026-09-09T14:16:00.000Z"
+        "sourceLastEditedAt": "2026-09-09T14:16:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d5cf5a2-6731-8168-8086-dbafe0424087",
@@ -1021,7 +1094,8 @@
         "layer": "Edital histórico",
         "level": "Discursiva",
         "sourceUrl": "https://conhecimento.fgv.br/sites/default/files/concursos/tjdft_-_edital_24-01-2022_0.pdf",
-        "sourceLastEditedAt": "2026-09-09T14:16:00.000Z"
+        "sourceLastEditedAt": "2026-09-09T14:16:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d5cf5a2-6731-8165-ad5e-e812d70dea26",
@@ -1035,7 +1109,8 @@
         "layer": "Edital histórico",
         "level": "Específico",
         "sourceUrl": "https://conhecimento.fgv.br/sites/default/files/concursos/tjdft_-_edital_24-01-2022_0.pdf",
-        "sourceLastEditedAt": "2026-09-09T14:16:00.000Z"
+        "sourceLastEditedAt": "2026-09-09T14:16:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d5cf5a2-6731-81e8-a06b-d1195a3b67b8",
@@ -1049,7 +1124,8 @@
         "layer": "Edital histórico",
         "level": "Específico",
         "sourceUrl": "https://conhecimento.fgv.br/sites/default/files/concursos/tjdft_-_edital_24-01-2022_0.pdf",
-        "sourceLastEditedAt": "2026-09-09T04:55:00.000Z"
+        "sourceLastEditedAt": "2026-09-09T04:55:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d5cf5a2-6731-81f0-a1ba-dad07b645464",
@@ -1063,7 +1139,8 @@
         "layer": "Edital histórico",
         "level": "Específico",
         "sourceUrl": "https://conhecimento.fgv.br/sites/default/files/concursos/tjdft_-_edital_24-01-2022_0.pdf",
-        "sourceLastEditedAt": "2026-09-09T04:55:00.000Z"
+        "sourceLastEditedAt": "2026-09-09T04:55:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d5cf5a2-6731-8143-930a-c165c0cc25c7",
@@ -1077,7 +1154,8 @@
         "layer": "Edital histórico",
         "level": "Específico",
         "sourceUrl": "https://conhecimento.fgv.br/sites/default/files/concursos/tjdft_-_edital_24-01-2022_0.pdf",
-        "sourceLastEditedAt": "2026-09-09T04:55:00.000Z"
+        "sourceLastEditedAt": "2026-09-09T04:55:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d5cf5a2-6731-813e-8a7e-ea172225aa47",
@@ -1091,7 +1169,8 @@
         "layer": "Edital histórico",
         "level": "Específico",
         "sourceUrl": "https://conhecimento.fgv.br/sites/default/files/concursos/tjdft_-_edital_24-01-2022_0.pdf",
-        "sourceLastEditedAt": "2026-09-09T04:55:00.000Z"
+        "sourceLastEditedAt": "2026-09-09T04:55:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d5cf5a2-6731-81de-a4fb-d4d8d414d064",
@@ -1105,7 +1184,8 @@
         "layer": "Edital histórico",
         "level": "Específico",
         "sourceUrl": "https://conhecimento.fgv.br/sites/default/files/concursos/tjdft_-_edital_24-01-2022_0.pdf",
-        "sourceLastEditedAt": "2026-09-09T04:55:00.000Z"
+        "sourceLastEditedAt": "2026-09-09T04:55:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d5cf5a2-6731-8168-901f-d3176338cec6",
@@ -1119,7 +1199,8 @@
         "layer": "Edital histórico",
         "level": "Específico",
         "sourceUrl": "https://conhecimento.fgv.br/sites/default/files/concursos/tjdft_-_edital_24-01-2022_0.pdf",
-        "sourceLastEditedAt": "2026-09-09T04:55:00.000Z"
+        "sourceLastEditedAt": "2026-09-09T04:55:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d5cf5a2-6731-81fb-b3e2-c1ff86da1dee",
@@ -1133,7 +1214,8 @@
         "layer": "Edital histórico",
         "level": "Legislação interna",
         "sourceUrl": "https://conhecimento.fgv.br/sites/default/files/concursos/tjdft_-_edital_24-01-2022_0.pdf",
-        "sourceLastEditedAt": "2026-09-09T14:16:00.000Z"
+        "sourceLastEditedAt": "2026-09-09T14:16:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d5cf5a2-6731-81d7-aa10-d78c065b2adf",
@@ -1147,7 +1229,8 @@
         "layer": "Edital histórico",
         "level": "Específico",
         "sourceUrl": "https://conhecimento.fgv.br/sites/default/files/concursos/tjdft_-_edital_24-01-2022_0.pdf",
-        "sourceLastEditedAt": "2026-09-09T14:16:00.000Z"
+        "sourceLastEditedAt": "2026-09-09T14:16:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d5cf5a2-6731-8143-8781-cd99249a33b3",
@@ -1161,7 +1244,8 @@
         "layer": "Edital histórico",
         "level": "Núcleo comum",
         "sourceUrl": "https://conhecimento.fgv.br/sites/default/files/concursos/tjdft_-_edital_24-01-2022_0.pdf",
-        "sourceLastEditedAt": "2026-09-09T14:16:00.000Z"
+        "sourceLastEditedAt": "2026-09-09T14:16:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d5cf5a2-6731-815f-9561-fd79464335c3",
@@ -1175,7 +1259,8 @@
         "layer": "Edital histórico",
         "level": "Legislação interna",
         "sourceUrl": "https://conhecimento.fgv.br/sites/default/files/concursos/tjdft_-_edital_24-01-2022_0.pdf",
-        "sourceLastEditedAt": "2026-09-09T14:16:00.000Z"
+        "sourceLastEditedAt": "2026-09-09T14:16:00.000Z",
+        "directQuestionCount": 0
       },
       {
         "id": "3d5cf5a2-6731-81d2-8e3c-c3894d434ef3",
@@ -1189,7 +1274,8 @@
         "layer": "Edital histórico",
         "level": "Discursiva",
         "sourceUrl": "https://conhecimento.fgv.br/sites/default/files/concursos/tjdft_-_edital_24-01-2022_0.pdf",
-        "sourceLastEditedAt": "2026-09-09T14:16:00.000Z"
+        "sourceLastEditedAt": "2026-09-09T14:16:00.000Z",
+        "directQuestionCount": 0
       }
     ]
   },
@@ -1207,6 +1293,8 @@
       "note": "Concurso realizado; mantido somente como histórico e pós-prova."
     },
     "canonicalAxisCount": 0,
+    "canonicalLinkedAxes": 0,
+    "canonicalDirectQuestions": 0,
     "canonicalAxes": []
   }
 ]
