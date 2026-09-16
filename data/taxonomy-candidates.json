@@ -1,7 +1,7 @@
 {
   "schemaVersion": 3,
-  "generatedAt": "2026-09-16T20:33:43.316Z",
-  "sourceReleaseSnapshotId": "25dac0518a4bb2e729fb8cd0cbd26460d768376e69ad6f702abc1b2ad6508661",
+  "generatedAt": "2026-09-16T20:40:38.069Z",
+  "sourceReleaseSnapshotId": "97781d2a0069b56d289344f503810179bea06acfd145e258e33f695cac736130",
   "sourceQuestionCount": 3697,
   "policy": {
     "writeback": false,
@@ -11,16 +11,16 @@
     "note": "Relatório de triagem. Candidato forte ainda exige revisão editorial; questões fora dos cargos-alvo ficam fora da fila; nenhuma sugestão altera o Banco Mestre automaticamente."
   },
   "totals": {
-    "reviewQueue": 120,
+    "reviewQueue": 110,
     "incomplete": 0,
-    "filledNoncanonical": 120,
-    "canonicalMatched": 119,
+    "filledNoncanonical": 110,
+    "canonicalMatched": 129,
     "outOfScope": 818,
-    "strong": 73,
+    "strong": 63,
     "ambiguous": 25,
     "none": 22,
     "strongExactTopic": 0,
-    "strongWithTextEvidence": 73
+    "strongWithTextEvidence": 63
   },
   "byCompetition": {
     "seedf": {
@@ -36,16 +36,16 @@
       "strongWithTextEvidence": 0
     },
     "tjdft": {
-      "reviewQueue": 120,
+      "reviewQueue": 110,
       "incomplete": 0,
-      "filledNoncanonical": 120,
-      "canonicalMatched": 0,
+      "filledNoncanonical": 110,
+      "canonicalMatched": 10,
       "outOfScope": 112,
-      "strong": 73,
+      "strong": 63,
       "ambiguous": 25,
       "none": 22,
       "strongExactTopic": 0,
-      "strongWithTextEvidence": 73
+      "strongWithTextEvidence": 63
     }
   },
   "outsideScopeByCargo": {
@@ -2495,346 +2495,6 @@
           "subjectRelation": "none",
           "cargoRelation": "family",
           "tokenCoverage": 1,
-          "phraseMatch": false,
-          "exactTopic": false
-        }
-      ]
-    },
-    {
-      "questionId": "FGV-TJDFT-2022-AADM-T1-Q09",
-      "competitionId": "tjdft",
-      "issue": "filled-noncanonical",
-      "current": {
-        "concurso": "TJDFT 2022",
-        "edital": "Edital nº 01/2022",
-        "topicoEdital": "Língua Portuguesa — interpretação e gramática",
-        "cargo": "Analista Judiciário — Administração",
-        "disciplina": "Língua Portuguesa",
-        "assunto": "Coesão e relações semânticas",
-        "subassunto": ""
-      },
-      "classification": "strong",
-      "reason": "Há um único eixo compatível por matéria/cargo e evidência textual relevante; ainda exige revisão editorial.",
-      "suggestions": [
-        {
-          "axisId": "3d5cf5a2-6731-81cc-93e6-cfefcadee490",
-          "topic": "TJ2022-A — Língua Portuguesa",
-          "subject": "Língua Portuguesa",
-          "cargos": [
-            "Analista Judiciário — Apoio Especializado — Administração"
-          ],
-          "layer": "Edital histórico",
-          "sourceBase": "Edital 2022",
-          "score": 71,
-          "subjectRelation": "exact",
-          "cargoRelation": "family",
-          "tokenCoverage": 0.75,
-          "phraseMatch": false,
-          "exactTopic": false
-        }
-      ]
-    },
-    {
-      "questionId": "FGV-TJDFT-2022-AADM-T1-Q03",
-      "competitionId": "tjdft",
-      "issue": "filled-noncanonical",
-      "current": {
-        "concurso": "TJDFT 2022",
-        "edital": "Edital nº 01/2022",
-        "topicoEdital": "Língua Portuguesa — interpretação e gramática",
-        "cargo": "Analista Judiciário — Administração",
-        "disciplina": "Língua Portuguesa",
-        "assunto": "Interpretação de texto — inferência",
-        "subassunto": ""
-      },
-      "classification": "strong",
-      "reason": "Há um único eixo compatível por matéria/cargo e evidência textual relevante; ainda exige revisão editorial.",
-      "suggestions": [
-        {
-          "axisId": "3d5cf5a2-6731-81cc-93e6-cfefcadee490",
-          "topic": "TJ2022-A — Língua Portuguesa",
-          "subject": "Língua Portuguesa",
-          "cargos": [
-            "Analista Judiciário — Apoio Especializado — Administração"
-          ],
-          "layer": "Edital histórico",
-          "sourceBase": "Edital 2022",
-          "score": 71,
-          "subjectRelation": "exact",
-          "cargoRelation": "family",
-          "tokenCoverage": 0.75,
-          "phraseMatch": false,
-          "exactTopic": false
-        }
-      ]
-    },
-    {
-      "questionId": "FGV-TJDFT-2022-AADM-T1-Q07",
-      "competitionId": "tjdft",
-      "issue": "filled-noncanonical",
-      "current": {
-        "concurso": "TJDFT 2022",
-        "edital": "Edital nº 01/2022",
-        "topicoEdital": "Língua Portuguesa — interpretação e gramática",
-        "cargo": "Analista Judiciário — Administração",
-        "disciplina": "Língua Portuguesa",
-        "assunto": "Paralelismo sintático",
-        "subassunto": ""
-      },
-      "classification": "strong",
-      "reason": "Há um único eixo compatível por matéria/cargo e evidência textual relevante; ainda exige revisão editorial.",
-      "suggestions": [
-        {
-          "axisId": "3d5cf5a2-6731-81cc-93e6-cfefcadee490",
-          "topic": "TJ2022-A — Língua Portuguesa",
-          "subject": "Língua Portuguesa",
-          "cargos": [
-            "Analista Judiciário — Apoio Especializado — Administração"
-          ],
-          "layer": "Edital histórico",
-          "sourceBase": "Edital 2022",
-          "score": 71,
-          "subjectRelation": "exact",
-          "cargoRelation": "family",
-          "tokenCoverage": 0.75,
-          "phraseMatch": false,
-          "exactTopic": false
-        }
-      ]
-    },
-    {
-      "questionId": "FGV-TJDFT-2022-AADM-T1-Q06",
-      "competitionId": "tjdft",
-      "issue": "filled-noncanonical",
-      "current": {
-        "concurso": "TJDFT 2022",
-        "edital": "Edital nº 01/2022",
-        "topicoEdital": "Língua Portuguesa — interpretação e gramática",
-        "cargo": "Analista Judiciário — Administração",
-        "disciplina": "Língua Portuguesa",
-        "assunto": "Formação de substantivos",
-        "subassunto": ""
-      },
-      "classification": "strong",
-      "reason": "Há um único eixo compatível por matéria/cargo e evidência textual relevante; ainda exige revisão editorial.",
-      "suggestions": [
-        {
-          "axisId": "3d5cf5a2-6731-81cc-93e6-cfefcadee490",
-          "topic": "TJ2022-A — Língua Portuguesa",
-          "subject": "Língua Portuguesa",
-          "cargos": [
-            "Analista Judiciário — Apoio Especializado — Administração"
-          ],
-          "layer": "Edital histórico",
-          "sourceBase": "Edital 2022",
-          "score": 71,
-          "subjectRelation": "exact",
-          "cargoRelation": "family",
-          "tokenCoverage": 0.75,
-          "phraseMatch": false,
-          "exactTopic": false
-        }
-      ]
-    },
-    {
-      "questionId": "FGV-TJDFT-2022-AADM-T1-Q01",
-      "competitionId": "tjdft",
-      "issue": "filled-noncanonical",
-      "current": {
-        "concurso": "TJDFT 2022",
-        "edital": "Edital nº 01/2022",
-        "topicoEdital": "Língua Portuguesa — interpretação e gramática",
-        "cargo": "Analista Judiciário — Administração",
-        "disciplina": "Língua Portuguesa",
-        "assunto": "Interpretação de texto — tese e sentido",
-        "subassunto": ""
-      },
-      "classification": "strong",
-      "reason": "Há um único eixo compatível por matéria/cargo e evidência textual relevante; ainda exige revisão editorial.",
-      "suggestions": [
-        {
-          "axisId": "3d5cf5a2-6731-81cc-93e6-cfefcadee490",
-          "topic": "TJ2022-A — Língua Portuguesa",
-          "subject": "Língua Portuguesa",
-          "cargos": [
-            "Analista Judiciário — Apoio Especializado — Administração"
-          ],
-          "layer": "Edital histórico",
-          "sourceBase": "Edital 2022",
-          "score": 71,
-          "subjectRelation": "exact",
-          "cargoRelation": "family",
-          "tokenCoverage": 0.75,
-          "phraseMatch": false,
-          "exactTopic": false
-        }
-      ]
-    },
-    {
-      "questionId": "FGV-TJDFT-2022-AADM-T1-Q08",
-      "competitionId": "tjdft",
-      "issue": "filled-noncanonical",
-      "current": {
-        "concurso": "TJDFT 2022",
-        "edital": "Edital nº 01/2022",
-        "topicoEdital": "Língua Portuguesa — interpretação e gramática",
-        "cargo": "Analista Judiciário — Administração",
-        "disciplina": "Língua Portuguesa",
-        "assunto": "Figuras de linguagem",
-        "subassunto": ""
-      },
-      "classification": "strong",
-      "reason": "Há um único eixo compatível por matéria/cargo e evidência textual relevante; ainda exige revisão editorial.",
-      "suggestions": [
-        {
-          "axisId": "3d5cf5a2-6731-81cc-93e6-cfefcadee490",
-          "topic": "TJ2022-A — Língua Portuguesa",
-          "subject": "Língua Portuguesa",
-          "cargos": [
-            "Analista Judiciário — Apoio Especializado — Administração"
-          ],
-          "layer": "Edital histórico",
-          "sourceBase": "Edital 2022",
-          "score": 71,
-          "subjectRelation": "exact",
-          "cargoRelation": "family",
-          "tokenCoverage": 0.75,
-          "phraseMatch": false,
-          "exactTopic": false
-        }
-      ]
-    },
-    {
-      "questionId": "FGV-TJDFT-2022-AADM-T1-Q10",
-      "competitionId": "tjdft",
-      "issue": "filled-noncanonical",
-      "current": {
-        "concurso": "TJDFT 2022",
-        "edital": "Edital nº 01/2022",
-        "topicoEdital": "Língua Portuguesa — interpretação e gramática",
-        "cargo": "Analista Judiciário — Administração",
-        "disciplina": "Língua Portuguesa",
-        "assunto": "Interpretação de texto — inferência",
-        "subassunto": ""
-      },
-      "classification": "strong",
-      "reason": "Há um único eixo compatível por matéria/cargo e evidência textual relevante; ainda exige revisão editorial.",
-      "suggestions": [
-        {
-          "axisId": "3d5cf5a2-6731-81cc-93e6-cfefcadee490",
-          "topic": "TJ2022-A — Língua Portuguesa",
-          "subject": "Língua Portuguesa",
-          "cargos": [
-            "Analista Judiciário — Apoio Especializado — Administração"
-          ],
-          "layer": "Edital histórico",
-          "sourceBase": "Edital 2022",
-          "score": 71,
-          "subjectRelation": "exact",
-          "cargoRelation": "family",
-          "tokenCoverage": 0.75,
-          "phraseMatch": false,
-          "exactTopic": false
-        }
-      ]
-    },
-    {
-      "questionId": "FGV-TJDFT-2022-AADM-T1-Q05",
-      "competitionId": "tjdft",
-      "issue": "filled-noncanonical",
-      "current": {
-        "concurso": "TJDFT 2022",
-        "edital": "Edital nº 01/2022",
-        "topicoEdital": "Língua Portuguesa — interpretação e gramática",
-        "cargo": "Analista Judiciário — Administração",
-        "disciplina": "Língua Portuguesa",
-        "assunto": "Orações interrogativas indiretas",
-        "subassunto": ""
-      },
-      "classification": "strong",
-      "reason": "Há um único eixo compatível por matéria/cargo e evidência textual relevante; ainda exige revisão editorial.",
-      "suggestions": [
-        {
-          "axisId": "3d5cf5a2-6731-81cc-93e6-cfefcadee490",
-          "topic": "TJ2022-A — Língua Portuguesa",
-          "subject": "Língua Portuguesa",
-          "cargos": [
-            "Analista Judiciário — Apoio Especializado — Administração"
-          ],
-          "layer": "Edital histórico",
-          "sourceBase": "Edital 2022",
-          "score": 71,
-          "subjectRelation": "exact",
-          "cargoRelation": "family",
-          "tokenCoverage": 0.75,
-          "phraseMatch": false,
-          "exactTopic": false
-        }
-      ]
-    },
-    {
-      "questionId": "FGV-TJDFT-2022-AADM-T1-Q02",
-      "competitionId": "tjdft",
-      "issue": "filled-noncanonical",
-      "current": {
-        "concurso": "TJDFT 2022",
-        "edital": "Edital nº 01/2022",
-        "topicoEdital": "Língua Portuguesa — interpretação e gramática",
-        "cargo": "Analista Judiciário — Administração",
-        "disciplina": "Língua Portuguesa",
-        "assunto": "Raciocínio indutivo",
-        "subassunto": ""
-      },
-      "classification": "strong",
-      "reason": "Há um único eixo compatível por matéria/cargo e evidência textual relevante; ainda exige revisão editorial.",
-      "suggestions": [
-        {
-          "axisId": "3d5cf5a2-6731-81cc-93e6-cfefcadee490",
-          "topic": "TJ2022-A — Língua Portuguesa",
-          "subject": "Língua Portuguesa",
-          "cargos": [
-            "Analista Judiciário — Apoio Especializado — Administração"
-          ],
-          "layer": "Edital histórico",
-          "sourceBase": "Edital 2022",
-          "score": 71,
-          "subjectRelation": "exact",
-          "cargoRelation": "family",
-          "tokenCoverage": 0.75,
-          "phraseMatch": false,
-          "exactTopic": false
-        }
-      ]
-    },
-    {
-      "questionId": "FGV-TJDFT-2022-AADM-T1-Q04",
-      "competitionId": "tjdft",
-      "issue": "filled-noncanonical",
-      "current": {
-        "concurso": "TJDFT 2022",
-        "edital": "Edital nº 01/2022",
-        "topicoEdital": "Língua Portuguesa — interpretação e gramática",
-        "cargo": "Analista Judiciário — Administração",
-        "disciplina": "Língua Portuguesa",
-        "assunto": "Conectores — valor semântico",
-        "subassunto": ""
-      },
-      "classification": "strong",
-      "reason": "Há um único eixo compatível por matéria/cargo e evidência textual relevante; ainda exige revisão editorial.",
-      "suggestions": [
-        {
-          "axisId": "3d5cf5a2-6731-81cc-93e6-cfefcadee490",
-          "topic": "TJ2022-A — Língua Portuguesa",
-          "subject": "Língua Portuguesa",
-          "cargos": [
-            "Analista Judiciário — Apoio Especializado — Administração"
-          ],
-          "layer": "Edital histórico",
-          "sourceBase": "Edital 2022",
-          "score": 71,
-          "subjectRelation": "exact",
-          "cargoRelation": "family",
-          "tokenCoverage": 0.75,
           "phraseMatch": false,
           "exactTopic": false
         }

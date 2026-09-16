@@ -1005,8 +1005,8 @@
       "note": "Pré-edital. O Edital 2022 é base histórica; alterações legais e eventual edital futuro prevalecem quando publicados."
     },
     "canonicalAxisCount": 22,
-    "canonicalLinkedAxes": 0,
-    "canonicalDirectQuestions": 0,
+    "canonicalLinkedAxes": 1,
+    "canonicalDirectQuestions": 10,
     "canonicalAmbiguousAxes": 0,
     "canonicalAxes": [
       {
@@ -1119,7 +1119,7 @@
         "sourceUrl": "https://conhecimento.fgv.br/sites/default/files/concursos/tjdft_-_edital_24-01-2022_0.pdf",
         "sourceLastEditedAt": "2026-09-09T14:16:00.000Z",
         "directLinkAmbiguous": false,
-        "directQuestionCount": 0
+        "directQuestionCount": 10
       },
       {
         "id": "3d5cf5a2-6731-815b-9750-e549dbff453f",

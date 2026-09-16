@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-16T20:33:43.387Z",
+  "generatedAt": "2026-09-16T20:40:38.116Z",
   "sourceCandidateSchemaVersion": 3,
-  "sourceReleaseSnapshotId": "25dac0518a4bb2e729fb8cd0cbd26460d768376e69ad6f702abc1b2ad6508661",
+  "sourceReleaseSnapshotId": "97781d2a0069b56d289344f503810179bea06acfd145e258e33f695cac736130",
   "sourceQuestionCount": 3697,
   "policy": {
     "writeback": false,
@@ -11,9 +11,9 @@
     "note": "Lotes coesos reduzem a fila de revisão, mas ainda não autorizam alteração automática do Banco Mestre."
   },
   "totals": {
-    "groups": 52,
-    "cohesiveStrongGroups": 24,
-    "questionsInCohesiveStrongGroups": 73,
+    "groups": 51,
+    "cohesiveStrongGroups": 23,
+    "questionsInCohesiveStrongGroups": 63,
     "unresolvedGroups": 28
   },
   "byCompetition": {
@@ -24,51 +24,13 @@
       "unresolvedGroups": 0
     },
     "tjdft": {
-      "groups": 52,
-      "cohesiveStrongGroups": 24,
-      "questionsInCohesiveStrongGroups": 73,
+      "groups": 51,
+      "cohesiveStrongGroups": 23,
+      "questionsInCohesiveStrongGroups": 63,
       "unresolvedGroups": 28
     }
   },
   "cohesiveStrongGroups": [
-    {
-      "competitionId": "tjdft",
-      "issue": "filled-noncanonical",
-      "cargo": "Analista Judiciário — Administração",
-      "disciplina": "Língua Portuguesa",
-      "currentLabel": "Língua Portuguesa — interpretação e gramática",
-      "count": 10,
-      "classificationCounts": {
-        "strong": 10
-      },
-      "uniqueBestAxes": 1,
-      "cohesiveStrong": true,
-      "proposedAxis": {
-        "axisId": "3d5cf5a2-6731-81cc-93e6-cfefcadee490",
-        "topic": "TJ2022-A — Língua Portuguesa",
-        "subject": "Língua Portuguesa",
-        "cargos": [
-          "Analista Judiciário — Apoio Especializado — Administração"
-        ],
-        "layer": "Edital histórico",
-        "sourceBase": "Edital 2022"
-      },
-      "evidence": {
-        "minTokenCoverage": 0.75,
-        "exactTopicCount": 0,
-        "phraseMatchCount": 0
-      },
-      "sampleQuestionIds": [
-        "FGV-TJDFT-2022-AADM-T1-Q09",
-        "FGV-TJDFT-2022-AADM-T1-Q03",
-        "FGV-TJDFT-2022-AADM-T1-Q07",
-        "FGV-TJDFT-2022-AADM-T1-Q06",
-        "FGV-TJDFT-2022-AADM-T1-Q01",
-        "FGV-TJDFT-2022-AADM-T1-Q08",
-        "FGV-TJDFT-2022-AADM-T1-Q10",
-        "FGV-TJDFT-2022-AADM-T1-Q05"
-      ]
-    },
     {
       "competitionId": "tjdft",
       "issue": "filled-noncanonical",
@@ -822,44 +784,6 @@
     }
   ],
   "groups": [
-    {
-      "competitionId": "tjdft",
-      "issue": "filled-noncanonical",
-      "cargo": "Analista Judiciário — Administração",
-      "disciplina": "Língua Portuguesa",
-      "currentLabel": "Língua Portuguesa — interpretação e gramática",
-      "count": 10,
-      "classificationCounts": {
-        "strong": 10
-      },
-      "uniqueBestAxes": 1,
-      "cohesiveStrong": true,
-      "proposedAxis": {
-        "axisId": "3d5cf5a2-6731-81cc-93e6-cfefcadee490",
-        "topic": "TJ2022-A — Língua Portuguesa",
-        "subject": "Língua Portuguesa",
-        "cargos": [
-          "Analista Judiciário — Apoio Especializado — Administração"
-        ],
-        "layer": "Edital histórico",
-        "sourceBase": "Edital 2022"
-      },
-      "evidence": {
-        "minTokenCoverage": 0.75,
-        "exactTopicCount": 0,
-        "phraseMatchCount": 0
-      },
-      "sampleQuestionIds": [
-        "FGV-TJDFT-2022-AADM-T1-Q09",
-        "FGV-TJDFT-2022-AADM-T1-Q03",
-        "FGV-TJDFT-2022-AADM-T1-Q07",
-        "FGV-TJDFT-2022-AADM-T1-Q06",
-        "FGV-TJDFT-2022-AADM-T1-Q01",
-        "FGV-TJDFT-2022-AADM-T1-Q08",
-        "FGV-TJDFT-2022-AADM-T1-Q10",
-        "FGV-TJDFT-2022-AADM-T1-Q05"
-      ]
-    },
     {
       "competitionId": "tjdft",
       "issue": "filled-noncanonical",
