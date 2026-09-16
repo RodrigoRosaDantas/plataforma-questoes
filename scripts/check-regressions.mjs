@@ -100,6 +100,13 @@ for(const marker of [
   'return [...mergedCanonical,...missingFallback];',
   'a cópia completa posterior cura apenas questionIds ausentes'
 ]) requireMarker(cloud,marker,'Cura de upload parcial multi-lote ausente');
+for(const marker of [
+  'const correct=answers.filter(answer=>answer?.isCorrect===true).length;',
+  'const blank=answers.filter(answer=>answer?.blank===true).length;',
+  'const wrong=Math.max(0,answers.length-correct-blank);',
+  'total:answers.length,correct,wrong,blank',
+  'Métricas derivadas acompanham o array final'
+]) requireMarker(cloud,marker,'Reconciliação das métricas do histórico após merge ausente');
 
 // Paginação da nuvem: nunca aceitar histórico parcialmente carregado como se estivesse completo.
 for(const marker of [
@@ -280,7 +287,7 @@ requireMarker(v2,'.scorecard-grid { grid-template-columns: repeat(2, minmax(0, 1
 
 // PWA: qualquer alteração crítica no shell precisa chegar sem depender do cache anterior.
 const cacheVersion=Number(sw.match(/plataforma-questoes-v(\d+)/)?.[1]||0);
-if(cacheVersion<67)throw new Error('Cache PWA regrediu para uma versão anterior à cura do histórico cloud.');
+if(cacheVersion<69)throw new Error('Cache PWA regrediu para uma versão anterior à reconciliação das métricas cloud.');
 for(const marker of ["'./assets/cloud-progress.js'","'./assets/study-plan.js'","'./assets/ux-enhancements.js'","'./assets/canonical-editais.js'"]) requireMarker(sw,marker,'Módulo crítico ausente do shell PWA');
 
 // Triagem editorial: nunca transforma heurística em writeback automático.

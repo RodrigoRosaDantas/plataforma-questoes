@@ -361,7 +361,11 @@ function mergeHistory(localHistory,remoteHistory){
     const canonical=remoteTime<localTime?remote:local;
     const fallback=canonical===local?remote:local;
     const answers=mergeCanonicalAnswers(canonical.answers,fallback.answers);
-    merged.set(id,Object.assign({},fallback,canonical,{answers}));
+    const correct=answers.filter(answer=>answer?.isCorrect===true).length;
+    const blank=answers.filter(answer=>answer?.blank===true).length;
+    const wrong=Math.max(0,answers.length-correct-blank);
+    // Métricas derivadas acompanham o array final, inclusive após cura de upload parcial.
+    merged.set(id,Object.assign({},fallback,canonical,{answers,total:answers.length,correct,wrong,blank}));
   });
   return [...merged.values()].sort((a,b)=>(Number(b.finishedAt)||0)-(Number(a.finishedAt)||0));
 }
