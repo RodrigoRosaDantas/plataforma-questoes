@@ -21,30 +21,47 @@ function competitionFor(question){
   for(const id of TARGETS)if(belongsToCompetition(question,id))return id;
   return '';
 }
-function cargoFamily(value){
+function cargoFamily(value,competitionId){
   const v=normalize(value);
   if(!v)return '';
   if(v.includes('nucleo comum'))return 'common';
+  if(competitionId==='tjdft'){
+    if(v.includes('tecnico judiciario')&&v.includes('administr'))return 'tecnico-admin';
+    if(v.includes('analista judiciario')&&v.includes('administracao'))return 'analista-admin';
+    if(v.includes('analista judiciario'))return 'analista-outro';
+    if(v.includes('tecnico judiciario'))return 'tecnico-outro';
+    return v;
+  }
   if(v.includes('gestor'))return 'gestor';
   if(v.includes('monitor'))return 'monitor';
-  if(v.includes('tecnico judiciario')||(/^tecnico\b/.test(v)&&v.includes('administr')))return 'tecnico';
-  if(v.includes('analista judiciario'))return 'analista-tjdft';
   if(v.includes('analista'))return 'analista';
   return v;
 }
-function cargoCompatibility(questionCargo,axisCargos=[]){
+function targetFamilies(axes,competitionId){
+  const families=new Set();
+  for(const axis of axes)for(const cargo of axis.cargos||[]){
+    const family=cargoFamily(cargo,competitionId);
+    if(family&&family!=='common')families.add(family);
+  }
+  return families;
+}
+function questionInScope(questionCargo,axes,competitionId){
+  const q=normalize(questionCargo),family=cargoFamily(questionCargo,competitionId);
+  if(!q||!family)return false;
+  const families=targetFamilies(axes,competitionId);
+  if(families.has(family))return true;
+  return axes.some(axis=>(axis.cargos||[]).some(cargo=>normalize(cargo)===q));
+}
+function cargoCompatibility(questionCargo,axisCargos=[],competitionId,targetFamilySet=new Set()){
   if(!axisCargos.length)return {compatible:true,kind:'unspecified'};
-  const q=normalize(questionCargo),qFamily=cargoFamily(questionCargo);
-  let fallback=false;
+  const q=normalize(questionCargo),qFamily=cargoFamily(questionCargo,competitionId);
   for(const cargo of axisCargos){
-    const a=normalize(cargo),aFamily=cargoFamily(cargo);
-    if(aFamily==='common')return {compatible:true,kind:'common'};
+    const a=normalize(cargo),aFamily=cargoFamily(cargo,competitionId);
+    if(aFamily==='common')return {compatible:targetFamilySet.has(qFamily),kind:targetFamilySet.has(qFamily)?'common':'none'};
     if(q&&a&&q===a)return {compatible:true,kind:'exact'};
     if(qFamily&&aFamily&&qFamily===aFamily)return {compatible:true,kind:'family'};
-    if(qFamily==='analista'&&aFamily==='analista-tjdft')fallback=true;
-    if(qFamily==='analista-tjdft'&&aFamily==='analista')fallback=true;
   }
-  return {compatible:fallback,kind:fallback?'broad-family':'none'};
+  return {compatible:false,kind:'none'};
 }
 function subjectRelation(discipline,subject){
   const d=normalize(discipline),s=normalize(subject);
@@ -68,11 +85,12 @@ function canonicalTopicMatch(question,axes){
   if(!current)return null;
   return axes.find(axis=>normalize(axis.topic)===current)||null;
 }
-function classify(question,axes,queryText){
+function classify(question,axes,queryText,competitionId){
   const query=normalize(queryText);
   const scored=[];
+  const familySet=targetFamilies(axes,competitionId);
   for(const axis of axes){
-    const cargo=cargoCompatibility(question.cargo,axis.cargos||[]);
+    const cargo=cargoCompatibility(question.cargo,axis.cargos||[],competitionId,familySet);
     if(!cargo.compatible)continue;
     const subject=subjectRelation(question.disciplina,axis.subject);
     const exactTopic=Boolean(query&&query===normalize(axis.topic));
@@ -89,7 +107,6 @@ function classify(question,axes,queryText){
     if(cargo.kind==='exact')score+=15;
     else if(cargo.kind==='family')score+=12;
     else if(cargo.kind==='common')score+=8;
-    else if(cargo.kind==='broad-family')score+=5;
     score+=Math.round(coverage*25);
     if(score>0)scored.push({axis,score,subject,cargo:cargo.kind,coverage,exactTopic,phraseMatch});
   }
@@ -129,17 +146,22 @@ function classify(question,axes,queryText){
 
 const axisByCompetition=new Map(editais.filter(edital=>TARGETS.has(edital.competitionId)).map(edital=>[edital.competitionId,edital.canonicalAxes||[]]));
 const entries=[];
+const outsideScope=[];
 const canonicalMatched={seedf:0,tjdft:0};
 for(const question of questions){
   const competitionId=competitionFor(question);
   if(!competitionId)continue;
   const axes=axisByCompetition.get(competitionId)||[];
+  if(!questionInScope(question.cargo,axes,competitionId)){
+    outsideScope.push({questionId:String(question.id),competitionId,cargo:text(question.cargo),disciplina:text(question.disciplina)});
+    continue;
+  }
   const complete=canonicalComplete(question);
   const exactCanonical=complete?canonicalTopicMatch(question,axes):null;
   if(exactCanonical){canonicalMatched[competitionId]+=1;continue;}
   const issue=complete?'filled-noncanonical':'incomplete';
   const queryText=complete?question.topicoEdital:question.assunto;
-  const candidate=classify(question,axes,queryText);
+  const candidate=classify(question,axes,queryText,competitionId);
   entries.push({
     questionId:String(question.id),
     competitionId,
@@ -159,12 +181,13 @@ for(const question of questions){
   });
 }
 
-function summarize(rows,matched=0){
+function summarize(rows,matched=0,outOfScope=0){
   const summary={
     reviewQueue:rows.length,
     incomplete:rows.filter(row=>row.issue==='incomplete').length,
     filledNoncanonical:rows.filter(row=>row.issue==='filled-noncanonical').length,
     canonicalMatched:matched,
+    outOfScope,
     strong:0,
     ambiguous:0,
     none:0,
@@ -184,21 +207,28 @@ function summarize(rows,matched=0){
 const byCompetition={};
 for(const competitionId of TARGETS){
   const rows=entries.filter(entry=>entry.competitionId===competitionId);
-  byCompetition[competitionId]=summarize(rows,canonicalMatched[competitionId]||0);
+  byCompetition[competitionId]=summarize(rows,canonicalMatched[competitionId]||0,outsideScope.filter(item=>item.competitionId===competitionId).length);
 }
-const totals=summarize(entries,Object.values(canonicalMatched).reduce((sum,value)=>sum+value,0));
+const totals=summarize(entries,Object.values(canonicalMatched).reduce((sum,value)=>sum+value,0),outsideScope.length);
+const outsideScopeByCargo=Object.fromEntries([...outsideScope.reduce((map,item)=>{
+  const key=`${item.competitionId} · ${item.cargo||'Sem cargo'}`;
+  map.set(key,(map.get(key)||0)+1);
+  return map;
+},new Map())].sort((a,b)=>b[1]-a[1]));
 const output={
-  schemaVersion:2,
+  schemaVersion:3,
   generatedAt:new Date().toISOString(),
   policy:{
     writeback:false,
     automaticApplication:false,
     strongRequiresTextEvidence:true,
-    note:'Relatório de triagem. Candidato forte ainda exige revisão editorial; nenhuma sugestão altera o Banco Mestre automaticamente.'
+    outOfScopeExcludedFromReviewQueue:true,
+    note:'Relatório de triagem. Candidato forte ainda exige revisão editorial; questões fora dos cargos-alvo ficam fora da fila; nenhuma sugestão altera o Banco Mestre automaticamente.'
   },
   totals,
   byCompetition,
+  outsideScopeByCargo,
   entries
 };
 await fs.writeFile('data/taxonomy-candidates.json',JSON.stringify(output,null,2)+'\n');
-console.log(`Triagem canônica: ${totals.reviewQueue} na fila · ${totals.incomplete} incompletas · ${totals.filledNoncanonical} preenchidas não canônicas · ${totals.strong} fortes · ${totals.ambiguous} ambíguas · ${totals.none} sem candidato · ${totals.canonicalMatched} já canônicas.`);
+console.log(`Triagem canônica: ${totals.reviewQueue} na fila · ${totals.outOfScope} fora do escopo · ${totals.incomplete} incompletas · ${totals.filledNoncanonical} preenchidas não canônicas · ${totals.strong} fortes · ${totals.ambiguous} ambíguas · ${totals.none} sem candidato · ${totals.canonicalMatched} já canônicas.`);
