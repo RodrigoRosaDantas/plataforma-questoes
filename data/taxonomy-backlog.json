@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-17T11:49:47.702Z",
+  "generatedAt": "2026-09-17T21:27:57.072Z",
   "releaseSnapshotId": "9c5e4b860940a77d41a04c077b4076a7639d3b34d0ff9fc57fb5913cd853e19a",
   "scope": "published-questions-without-complete-canonical-link",
   "definition": "Questões publicadas em que Concurso, Edital e Tópico do edital não estão simultaneamente preenchidos.",
