@@ -2,6 +2,8 @@
 
 Nova base GitHub da plataforma de resolução de questões. O produto é **genérico para concursos**: concursos mudam; a arquitetura da plataforma não.
 
+O índice versionado de fontes, bases e acessos técnicos está em [docs/PROJECT-SOURCES.md](docs/PROJECT-SOURCES.md). Ele usa o repositório atual `plataforma-questoes` e não expõe credenciais.
+
 ## Arquitetura
 
 ```text
