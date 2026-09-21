@@ -245,6 +245,12 @@ for(const marker of [
 ]) requireMarker(app,marker,'Contrato de precisão sem brancos ausente');
 if(app.includes("['Erradas',wrong]"))throw new Error('Resultado voltou a misturar brancos com respostas erradas.');
 
+// Modo prova: uma questão em branco também precisa poder encerrar a bateria.
+for(const marker of [
+  "const canFinish=s.index===total-1&&(s.mode==='exam'||confirmed);",
+  "$('#finishSession').classList.toggle('hidden',!canFinish);"
+]) requireMarker(app,marker,'Finalização da última questão em branco ausente.');
+
 // Edital canônico: módulo ativo, associação estável e ambiguidade explícita.
 requireMarker(studyPlan,"import './canonical-editais.js';",'Taxonomia canônica deixou de ser carregada pela aplicação');
 for(const marker of [

@@ -826,7 +826,8 @@ function renderResolver(){
   const noteStatus=$('#questionNoteStatus');if(noteStatus)noteStatus.textContent=hasDraft&&noteText!==savedNote?'Edição não salva':noteText?'Salva neste aparelho':'Ainda não salva';
   const confirm=$('#confirmAnswer');confirm.classList.toggle('hidden',confirmed);confirm.disabled=!chosen&&!confirmed;
   $('#nextQuestion').classList.toggle('hidden',!confirmed||s.index===total-1);
-  $('#finishSession').classList.toggle('hidden',!confirmed||s.index!==total-1);
+  const canFinish=s.index===total-1&&(s.mode==='exam'||confirmed);
+  $('#finishSession').classList.toggle('hidden',!canFinish);
   $('#prevQuestion').disabled=s.index===0;
   const marked=Boolean(p.marked[q.id])&&!p.marked[q.id].removed,markButton=$('#markQuestion');
   markButton.textContent=marked?'★ Marcada':'☆ Marcar';markButton.setAttribute('aria-pressed',String(marked));

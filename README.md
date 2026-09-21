@@ -47,12 +47,12 @@ A `main` do repositório já contém a release completa derivada do Banco Mestre
 - responsividade mobile/tablet/desktop;
 - workflows de validação, sync do Notion e GitHub Pages.
 
-## Release auditada em 15/09/2026
+## Release auditada em 21/09/2026
 
-- 3.765 registros na fonte editorial;
-- 3.696 questões objetivas publicadas;
+- 3.766 registros na fonte editorial;
+- 3.697 questões objetivas publicadas;
 - 69 registros excluídos pelos gates editoriais;
-- 2.528 questões de Certo / Errado;
+- 2.529 questões de Certo / Errado;
 - 1.168 questões de múltipla escolha A–E;
 - 38 cadernos oficiais TJDFT catalogados, correspondentes a 17 provas canônicas Tipo 1, com 232 questões interativas revisadas;
 - 0 questões publicadas sem enunciado, gabarito ou campos essenciais.
