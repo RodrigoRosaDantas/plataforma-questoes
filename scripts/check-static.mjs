@@ -42,10 +42,10 @@ if(!html.includes('id="cloudEmail"')||!html.includes('id="performanceCharts"')) 
 if(/service_role|sb_secret_/i.test(html+'\n'+js+'\n'+cloud+'\n'+studyPlan+'\n'+ux+'\n'+canonical+'\n'+sw)) throw new Error('Segredo do Supabase não pode existir no frontend.');
 
 for(const marker of ['assets/v2.css','id="sidebarBackdrop"','id="editalSearch"','id="filterToggle"','id="resolverProgress"','id="performanceInsights"','id="installApp"']) if(!html.includes(marker)) throw new Error(`Contrato V2 ausente: ${marker}`);
-for(const marker of ['id="filterConcurso"','id="filterSubassunto"','app.js?v=platform-v2-4']) if(!html.includes(marker)) throw new Error(`Filtro nativo ausente: ${marker}`);
+for(const marker of ['id="filterConcurso"','id="filterSubassunto"','app.js?v=platform-v2-5']) if(!html.includes(marker)) throw new Error(`Filtro nativo ausente: ${marker}`);
 for(const marker of ["concurso:'filterConcurso'","subassunto:'filterSubassunto'","populateSelect('filterConcurso'","populateSelect('filterSubassunto'","if(f.concurso && q.concurso!==f.concurso)","if(f.subassunto && q.subassunto!==f.subassunto)","concurso:q?.concurso||''","subassunto:q?.subassunto||''"]) if(!js.includes(marker)) throw new Error(`Contrato de filtro nativo ausente: ${marker}`);
 for(const marker of ["{id:'filterConcurso',key:'concurso'","{id:'filterSubassunto',key:'subassunto'"]) if(!ux.includes(marker)) throw new Error(`Faceta nativa ausente: ${marker}`);
-if(!sw.includes('./assets/app.js?v=platform-v2-4')) throw new Error('PWA não referencia o app com filtros nativos de Concurso/Subassunto.');
+if(!sw.includes('./assets/app.js?v=platform-v2-5')) throw new Error('PWA não referencia o app com filtros nativos de Concurso/Subassunto.');
 for(const marker of ['setSidebarOpen','renderActiveFilters','shuffleItems','aria-pressed','renderInstallState','renderProgressSurface']) if(!js.includes(marker)) throw new Error(`Comportamento V2 ausente: ${marker}`);
 if(js.includes("progress:changed',()=>renderAll")) throw new Error('Persistência ainda dispara renderização integral.');
 if(js.includes('sort(()=>Math.random()-.5)')) throw new Error('Embaralhamento enviesado ainda presente.');
