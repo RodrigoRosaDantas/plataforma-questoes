@@ -16,7 +16,8 @@ const state = {
   session: null, timer: null, startedAt: null, currentView: 'home', hiddenAt: null, syncLabel: 'Release publicada',
   cloudSyncTimer: null, noteDrafts: {}, searchTimer: null, editalTimer: null,
   installPrompt: null, swRegistration: null, editalQuery: '', filtersOpen: false, competitionScope: '',
-  cloud: {status:'loading',email:'',profileId:'',message:''}
+  cloud: {status:'loading',email:'',profileId:'',message:''},
+  externalContext: ''
 };
 
 const $ = (s, root=document) => root.querySelector(s);
@@ -33,6 +34,26 @@ const FILTER_LABELS = {trilha:'Trilha',concurso:'Concurso',orgao:'Órgão',cargo
 function routeFromUrl(){
   const route=new URL(window.location.href).searchParams.get('view')||'home';
   return VIEW_IDS.has(route)?route:'home';
+}
+function applyQuestionDeepLinkFromUrl(){
+  const params=new URL(window.location.href).searchParams;
+  const keys={disciplina:'filterDisciplina',assunto:'filterAssunto',subassunto:'filterSubassunto',orgao:'filterOrgao',cargo:'filterCargo',concurso:'filterConcurso',banca:'filterBanca',ano:'filterAno',formato:'filterFormato'};
+  const requested=routeFromUrl()==='questions';
+  if(!requested)return {active:false,autostart:false};
+  resetQuestionFilters();
+  let matched=0,missed=0;
+  Object.entries(keys).forEach(([param,id])=>{
+    const value=params.get(param);
+    if(!value)return;
+    const el=$('#'+id);
+    if(el&&[...el.options].some(option=>option.value===value)){el.value=value;matched++;}
+    else missed++;
+  });
+  const dxx=String(params.get('dxx')||'').toUpperCase(),sxx=String(params.get('sxx')||'').toUpperCase();
+  state.externalContext=/^D\d{3}$/.test(dxx)?['TCE',dxx,/^S\d{2}$/.test(sxx)?sxx:''].filter(Boolean).join(' · '):'';
+  const size=Math.max(0,Number(params.get('size'))||0);
+  if(size&&$('#sessionSize'))$('#sessionSize').value=String(size);
+  return {active:matched>0,autostart:params.get('autostart')==='1'&&matched>0&&missed===0,missed};
 }
 function syncViewUrl(view,replace=false){
   const url=new URL(window.location.href);
@@ -252,10 +273,15 @@ async function boot(){
     const [q,m,c,e,p]=await loadRelease();
     state.questions=q; state.meta=m; state.competitions=c; state.editais=e; state.officialExams=p; state.filtered=[...q];
     state.syncLabel=state.meta.sampleMode?'Amostra local':'Release publicada';
-    renderNav(); bindGlobal(); populateFilters(); window.dispatchEvent(new CustomEvent('questions:loaded',{detail:{questions:q}})); applyFilters(); renderAll();
-    const progress=store.load(); if(progress.activeSession) hydrateSession(progress.activeSession);
+    renderNav(); bindGlobal(); populateFilters(); window.dispatchEvent(new CustomEvent('questions:loaded',{detail:{questions:q}}));
     const requested=routeFromUrl();
+    const deepLink=applyQuestionDeepLinkFromUrl();
+    applyFilters(); renderAll();
+    const progress=store.load(); if(progress.activeSession) hydrateSession(progress.activeSession);
     navigate(requested==='resolver'&&!state.session?'home':requested,{history:false});
+    if(deepLink.missed) toast('O link externo contém filtro que não existe nesta release.');
+    else if(deepLink.autostart&&state.filtered.length) startSessionFromFilters();
+    else if(deepLink.active) toast(fmt(state.filtered.length)+' questões encontradas pelo link externo.');
     void initCloudProgress();
     if('serviceWorker' in navigator) navigator.serviceWorker.register('./service-worker.js').then(registration=>{state.swRegistration=registration;return registration.update();}).catch(()=>{});
     completeLoading();
@@ -601,7 +627,9 @@ function applyFilters(){
     return true;
   });
   const n=state.filtered.length; $('#availableCount').textContent=`${fmt(n)} ${n===1?'questão disponível':'questões disponíveis'}`; $('#sessionSize').max=Math.max(1,n); if(+$('#sessionSize').value>n) $('#sessionSize').value=Math.max(1,n);
-  const active=Object.entries(f).filter(([,v])=>v).map(([k,v])=>`${FILTER_LABELS[k]||k}: ${v}`);$('#filterSummary').textContent=active.length?active.join(' · '):'Sem filtros adicionais.';
+  const active=Object.entries(f).filter(([,v])=>v).map(([k,v])=>`${FILTER_LABELS[k]||k}: ${v}`);
+  const parts=[state.externalContext,active.length?active.join(' · '):''].filter(Boolean);
+  $('#filterSummary').textContent=parts.length?parts.join(' · '):'Sem filtros adicionais.';
   renderActiveFilters(f);renderQuestionPreview();
 }
 
