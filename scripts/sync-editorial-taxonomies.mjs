@@ -13,6 +13,7 @@ const sources=[
   }
 ];
 
+const supportedSchemaVersions={seedf:[1,3],tjdft:[1]};
 const normalize=value=>String(value??'').trim().normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('pt-BR');
 function belongsToCompetition(question,competitionId){
   const hay=[question.concurso,question.orgao,question.cargo,question.nomeMaterial].filter(Boolean).join(' ');
@@ -26,9 +27,10 @@ async function fetchJson(source){
   const response=await fetch(source.url,{headers:{Accept:'application/json'}});
   if(!response.ok)throw new Error(`${source.competitionId}: fonte editorial respondeu ${response.status}.`);
   const payload=await response.json();
-  if(payload?.schemaVersion!==1)throw new Error(`${source.competitionId}: schema editorial incompatível.`);
+  if(!supportedSchemaVersions[source.competitionId]?.includes(payload?.schemaVersion))throw new Error(`${source.competitionId}: schema editorial incompatível (v${payload?.schemaVersion??'ausente'}).`);
   if(payload?.competitionId!==source.competitionId)throw new Error(`${source.competitionId}: competitionId divergente na fonte.`);
   if(!Array.isArray(payload.axes)||!payload.axes.length)throw new Error(`${source.competitionId}: fonte sem eixos editoriais.`);
+  if(!payload.axes.every(axis=>axis&&String(axis.topic||'').trim()&&String(axis.subject||'').trim()))throw new Error(`${source.competitionId}: eixo editorial sem topic/subject.`);
   if(Number(payload.axisCount)!==payload.axes.length)throw new Error(`${source.competitionId}: axisCount não fecha com os eixos exportados.`);
   if(payload.editorialPolicy?.official!==false)throw new Error(`${source.competitionId}: fonte pré-edital deve declarar official=false.`);
   return payload;
