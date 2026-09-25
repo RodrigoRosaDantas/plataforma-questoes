@@ -693,6 +693,23 @@ function metricHtml([label,value], index=0){
 
 function renderCompetitions(){
   $('#competitionCards').innerHTML=state.competitions.map(c=>{
+    const externalHref=value=>{
+      const candidate=String(value||'').trim();
+      if(!candidate)return '';
+      try{
+        const url=new URL(candidate);
+        return url.protocol==='https:'?url.href:'';
+      }catch{return '';}
+    };
+    const dashboardHref=externalHref(c.dashboardUrl);
+    const officialExamHref=externalHref(c.officialExamUrl);
+    if(dashboardHref||officialExamHref){
+      const externalLinks=[
+        [dashboardHref,c.dashboardLabel||'Abrir painel →'],
+        [officialExamHref,c.officialExamLabel||'Abrir prova oficial →']
+      ].filter(([href])=>href).map(([href,label])=>`<a class='text-button' href='${escapeHtml(href)}' target='_blank' rel='noopener noreferrer'>${escapeHtml(String(label))}</a>`).join('<br>');
+      return `<article class='competition-card'><span class='status'>${escapeHtml(String(c.status||'ativo').toUpperCase())}</span><h3>${escapeHtml(c.name)}</h3><p>${escapeHtml(c.description)}</p><div class='competition-count'><strong>↗</strong><span>painel de estudos próprio</span></div><small>${escapeHtml(String(c.mappingStatus||'Acesse o dashboard do concurso.'))}</small>${externalLinks}</article>`;
+    }
     const count=state.questions.filter(q=>questionBelongsTo(q,c.id)).length;
     const status=count?fmt(count)+' questões no acervo':String(c.mappingStatus||'Sem questões carregadas');
     const action=count?`<button type='button' class='text-button' data-edital-filter='${escapeHtml(c.id)}'>Abrir questões →</button>`:c.id==='tjdft'?`<button type='button' class='text-button' data-go='proofs'>Ver provas oficiais →</button>`:`<button type='button' class='text-button' data-go='edits'>Ver verticalizado →</button>`;

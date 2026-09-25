@@ -15,6 +15,11 @@ const taxonomySync=await fs.readFile('scripts/sync-editorial-taxonomies.mjs','ut
 const metadata=JSON.parse(await fs.readFile('data/metadata.json','utf8'));
 const taxonomyBacklog=JSON.parse(await fs.readFile('data/taxonomy-backlog.json','utf8'));
 const editais=JSON.parse(await fs.readFile('data/editais.json','utf8'));
+const competitions=JSON.parse(await fs.readFile('data/competitions.json','utf8'));
+const tceCompetition=competitions.find(item=>item.id==='tce-go');
+if(!tceCompetition||tceCompetition.status!=='ativo'||tceCompetition.dashboardUrl!=='https://rodrigorosadantas.github.io/tce-go-dashboard/'||tceCompetition.officialExamUrl!=='https://www.concursosfcc.com.br/concursos/tcego122/index.html') throw new Error('Atalhos do dashboard e da prova oficial FCC TCE-GO ausentes ou inválidos.');
+if(!js.includes('c.dashboardUrl')||!js.includes('c.officialExamUrl')||!js.includes("url.protocol==='https:'")||!js.includes("rel='noopener noreferrer'")||!js.includes('painel de estudos próprio')) throw new Error('Cartão externo seguro do TCE-GO ausente.');
+
 const manifest=JSON.parse(await fs.readFile('manifest.webmanifest','utf8'));
 const v2=await fs.readFile('assets/v2.css','utf8');
 const shell=html+'\n'+js;

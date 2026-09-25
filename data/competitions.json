@@ -22,5 +22,17 @@
     "description": "Acervo histórico preservado como fonte de questões; não define a identidade da plataforma.",
     "mappingStatus": "histórico",
     "axes": []
+  },
+  {
+    "id": "tce-go",
+    "name": "TCE-GO 2026/2027",
+    "status": "ativo",
+    "description": "Trilha de estudo para Técnico de Controle Externo, com cronograma, materiais e questões no painel próprio.",
+    "mappingStatus": "Questões FCC de provas aplicadas acessíveis por fonte e localizador.",
+    "dashboardUrl": "https://rodrigorosadantas.github.io/tce-go-dashboard/",
+    "dashboardLabel": "Abrir painel TCE-GO →",
+    "officialExamUrl": "https://www.concursosfcc.com.br/concursos/tcego122/index.html",
+    "officialExamLabel": "Provas FCC TCE-GO 2022 ↗",
+    "axes": []
   }
 ]
