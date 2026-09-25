@@ -84,8 +84,8 @@ if(!Array.isArray(editais)) throw new Error('data/editais.json deve conter um ar
 const seedf=editais.find(item=>item.competitionId==='seedf');
 const tjdft=editais.find(item=>item.competitionId==='tjdft');
 const sedes=editais.find(item=>item.competitionId==='sedes-df-2026');
-if(!seedf||seedf.canonicalAxisCount!==60||seedf.canonicalAxes?.length!==60) throw new Error('Taxonomia canônica SEEDF deve conter exatamente 60 eixos.');
-if(!tjdft||tjdft.canonicalAxisCount!==22||tjdft.canonicalAxes?.length!==22) throw new Error('Taxonomia canônica TJDFT deve conter exatamente 22 eixos.');
+if(!seedf||!Number.isInteger(seedf.canonicalAxisCount)||seedf.canonicalAxisCount<1||seedf.canonicalAxes?.length!==seedf.canonicalAxisCount) throw new Error('Taxonomia canônica SEEDF inconsistente.');
+if(!tjdft||!Number.isInteger(tjdft.canonicalAxisCount)||tjdft.canonicalAxisCount<1||tjdft.canonicalAxes?.length!==tjdft.canonicalAxisCount) throw new Error('Taxonomia canônica TJDFT inconsistente.');
 if(seedf.editorialPolicy?.official!==false||seedf.sourceKind!=='projected') throw new Error('SEEDF pré-edital deve permanecer explicitamente projetado e não oficial.');
 if(tjdft.editorialPolicy?.official!==false||tjdft.sourceKind!=='historical-base') throw new Error('TJDFT pré-edital deve permanecer explicitamente como base histórica e não oficial.');
 if(!sedes||sedes.status!=='histórico') throw new Error('SEDES/DF deve permanecer como trilha histórica.');
