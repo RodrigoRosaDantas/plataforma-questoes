@@ -11,6 +11,8 @@ on:
       - "scripts/sync-editorial-taxonomies.mjs"
       - "scripts/build-taxonomy-candidates.mjs"
       - "scripts/build-taxonomy-review-groups.mjs"
+      - "scripts/check-static.mjs"
+      - "scripts/check-regressions.mjs"
       - ".github/workflows/sync-taxonomies.yml"
   schedule:
     - cron: "23 * * * *"
