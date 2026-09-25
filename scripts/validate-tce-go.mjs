@@ -7,9 +7,10 @@ const materials=[
   ['tce-go-fcc-tcego-2014-administrativa.json','tcego-fcc-2014-admin'],
   ['tce-go-fcc-tcece-2015-tecnico-administrativo.json','tcece-fcc-2015-tecnico-admin']
 ];
-const [edital,competitions]=await Promise.all([
+const [edital,competitions,app]=await Promise.all([
   fs.readFile('data/tce-go-edital.json','utf8').then(JSON.parse),
-  fs.readFile('data/competitions.json','utf8').then(JSON.parse)
+  fs.readFile('data/competitions.json','utf8').then(JSON.parse),
+  fs.readFile('assets/app.js','utf8')
 ]);
 const sectionById=new Map(edital.sections.map(section=>[section.id,section]));
 const questions=[];
@@ -28,6 +29,7 @@ const primaryBySection={...bySection};
 const sourceCounts=new Map();
 for(const question of questions){
   assert.ok(question.id&&question.enunciado&&question.gabarito,`missing question content: ${question.id}`);
+  assert.ok(question.sourceRole||question.cargoFonte,`${question.id}: source exam role missing`);
   assert.equal(question.banca,'FCC',`${question.id}: banca`);
   assert.equal(question.concurso,'TCE-GO 2026/2027',`${question.id}: target contest`);
   assert.equal(question.formato,'Múltipla escolha A–E',`${question.id}: format`);
@@ -68,6 +70,7 @@ for(const axis of edital.canonicalAxes){
 assert.equal([...sourceCounts.entries()].filter(([id])=>id.startsWith('tcego-')).reduce((sum,[,count])=>sum+count,0),280,'TCE-GO source questions');
 assert.equal([...sourceCounts.entries()].filter(([id])=>id.startsWith('tcece-')).reduce((sum,[,count])=>sum+count,0),60,'other Tribunal de Contas source questions');
 assert.deepEqual([...sourceCounts.keys()],materials.map(([,id])=>id),'source priority: 2022 TCE-GO, 2014 TCE-GO, then TCE-CE');
+assert.equal((app.match(/questionSourceDescription\(q\)/g)||[]).length,3,'source role is displayed in preview and question resolver');
 const tce=competitions.find(item=>item.id==='tce-go');
 assert.equal(tce?.topicCount,448,'TCE-GO competition topic metadata');
 assert.equal(tce?.questionCount,340,'TCE-GO competition question metadata');
