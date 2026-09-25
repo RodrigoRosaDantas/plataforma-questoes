@@ -6,6 +6,7 @@ const cloud=await fs.readFile('assets/cloud-progress.js','utf8');
 const studyPlan=await fs.readFile('assets/study-plan.js','utf8');
 const canonical=await fs.readFile('assets/canonical-editais.js','utf8');
 const taxonomySync=await fs.readFile('scripts/sync-editorial-taxonomies.mjs','utf8');
+const staticCheck=await fs.readFile('scripts/check-static.mjs','utf8');
 const casMigration=await fs.readFile('supabase/migrations/20260916141000_fix_progress_state_compare_and_swap_column_ambiguity.sql','utf8');
 const attemptIdempotencyMigration=await fs.readFile('supabase/migrations/20260916142500_harden_question_attempt_idempotency.sql','utf8');
 const profilePrivilegeMigration=await fs.readFile('supabase/migrations/20260916181501_restore_column_scoped_student_profile_write.sql','utf8');
@@ -274,6 +275,11 @@ for(const marker of [
   'supportedSchemaVersions[source.competitionId]?.includes(payload?.schemaVersion)',
   'eixo editorial sem topic/subject.'
 ]) requireMarker(taxonomySync,marker,'Sincronizador rejeitou o schema vigente ou perdeu a validação dos eixos.');
+for(const marker of [
+  'seedf.canonicalAxes?.length!==seedf.canonicalAxisCount',
+  'tjdft.canonicalAxes?.length!==tjdft.canonicalAxisCount'
+]) requireMarker(staticCheck,marker,'Validador canônico perdeu a consistência estrutural dos eixos.');
+if(staticCheck.includes('canonicalAxisCount!==60')||staticCheck.includes('canonicalAxisCount!==22'))throw new Error('Validação editorial voltou a bloquear contagens atualizadas.');
 
 if(!Array.isArray(editais)||!editais.length)throw new Error('data/editais.json precisa conter os editais canônicos.');
 const ids=editais.map(item=>String(item.competitionId||''));
