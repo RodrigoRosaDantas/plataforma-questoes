@@ -6,14 +6,14 @@
     "source": "RodrigoRosaDantas/seedf-ppge-dashboard · SEEDF — Edital Projetado + Cargos-meta",
     "sourceRepository": "RodrigoRosaDantas/seedf-ppge-dashboard",
     "sourceKind": "projected",
-    "sourceVersion": "v0.2",
-    "sourceGeneratedAt": "2026-09-24T01:40:57.248Z",
+    "sourceVersion": "v0.3",
+    "sourceGeneratedAt": "2026-09-24T18:09:31.723Z",
     "sourcePageUrl": "https://app.notion.com/p/3d4cf5a2673181ccb624e95c0759c02d",
     "editorialPolicy": {
       "official": false,
-      "note": "Edital projetado pré-edital. Base histórica, atualização obrigatória e radar provável permanecem identificados separadamente."
+      "note": "Edital projetado pré-edital. A força documental do TR atual, a base histórica, os radares e o conteúdo suspenso permanecem identificados separadamente."
     },
-    "canonicalAxisCount": 60,
+    "canonicalAxisCount": 64,
     "canonicalLinkedAxes": 28,
     "canonicalDirectQuestions": 119,
     "canonicalAmbiguousAxes": 0,
@@ -30,7 +30,7 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://economia.df.gov.br/documents/d/seec/dodf-122-01-07-2022-integra",
-        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T11:58:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 7
       },
@@ -46,7 +46,7 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://economia.df.gov.br/documents/d/seec/dodf-122-01-07-2022-integra",
-        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T11:59:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 2
       },
@@ -62,7 +62,7 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://economia.df.gov.br/documents/d/seec/dodf-122-01-07-2022-integra",
-        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T11:59:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 2
       },
@@ -78,7 +78,7 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:51:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T11:59:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 2
       },
@@ -94,7 +94,7 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://economia.df.gov.br/documents/d/seec/dodf-122-01-07-2022-integra",
-        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T11:59:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 0
       },
@@ -110,7 +110,7 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://economia.df.gov.br/documents/d/seec/dodf-122-01-07-2022-integra",
-        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T11:59:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 3
       },
@@ -126,7 +126,7 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://economia.df.gov.br/documents/d/seec/dodf-122-01-07-2022-integra",
-        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T11:59:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 5
       },
@@ -142,7 +142,7 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:51:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T12:01:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 3
       },
@@ -158,7 +158,7 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://economia.df.gov.br/documents/d/seec/dodf-122-01-07-2022-integra",
-        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T12:01:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 3
       },
@@ -174,7 +174,7 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://economia.df.gov.br/documents/d/seec/dodf-122-01-07-2022-integra",
-        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T11:59:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 6
       },
@@ -190,7 +190,7 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:51:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T11:58:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 0
       },
@@ -206,7 +206,7 @@
         "layer": "Atualização obrigatória",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T11:57:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 0
       },
@@ -222,7 +222,7 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T11:58:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 0
       },
@@ -238,7 +238,7 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T11:58:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 1
       },
@@ -254,7 +254,7 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T11:58:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 0
       },
@@ -270,7 +270,7 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T11:58:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 0
       },
@@ -286,7 +286,7 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T11:58:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 1
       },
@@ -302,7 +302,7 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T11:58:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 0
       },
@@ -318,7 +318,7 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://economia.df.gov.br/documents/d/seec/dodf-122-01-07-2022-integra",
-        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T11:58:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 5
       },
@@ -328,13 +328,14 @@
         "subtopic": "CF/88: arts. 1º a 13; 37 a 43; 205 a 217; 226 a 230, conforme edital-base.",
         "subject": "Direito Constitucional",
         "cargos": [
-          "Analista — Monitor"
+          "Analista — Monitor",
+          "Núcleo comum"
         ],
         "sourceBase": "Edital 2016 — Monitor",
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T11:58:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 0
       },
@@ -351,7 +352,7 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://app.notion.com/p/3a6cf5a26731812d92f1e1a33e258eda",
-        "sourceLastEditedAt": "2026-09-07T13:42:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T11:58:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 10
       },
@@ -363,11 +364,11 @@
         "cargos": [
           "Núcleo comum"
         ],
-        "sourceBase": "Edital 2016 — Apoio",
+        "sourceBase": "Ato oficial concurso atual",
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T11:59:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 0
       },
@@ -379,11 +380,11 @@
         "cargos": [
           "Núcleo comum"
         ],
-        "sourceBase": "Edital 2016 — Apoio",
+        "sourceBase": "Ato oficial concurso atual",
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T11:59:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 0
       },
@@ -395,11 +396,11 @@
         "cargos": [
           "Núcleo comum"
         ],
-        "sourceBase": "Edital 2016 — Apoio",
+        "sourceBase": "Ato oficial concurso atual",
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T11:59:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 0
       },
@@ -415,7 +416,7 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:51:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T11:58:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 0
       },
@@ -431,7 +432,23 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T11:59:00.000Z",
+        "directLinkAmbiguous": false,
+        "directQuestionCount": 0
+      },
+      {
+        "id": "3e5cf5a2-6731-8154-80df-fbfdba9cbbaf",
+        "topic": "Lei Maria da Penha — Lei nº 11.340/2006",
+        "subtopic": "Disposições da Lei nº 11.340/2006 conforme recorte do concurso; priorizar conceitos, formas de violência, medidas protetivas e rede de proteção quando compatíveis com o edital.",
+        "subject": "ECA e Direitos",
+        "cargos": [
+          "Núcleo comum"
+        ],
+        "sourceBase": "Ato oficial concurso atual",
+        "layer": "Atualização obrigatória",
+        "level": "",
+        "sourceUrl": "https://www.planalto.gov.br/ccivil_03/_ato2004-2006/2006/lei/l11340.htm",
+        "sourceLastEditedAt": "2026-09-24T12:01:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 0
       },
@@ -447,7 +464,7 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T12:01:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 0
       },
@@ -463,7 +480,7 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://economia.df.gov.br/documents/d/seec/dodf-122-01-07-2022-integra",
-        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T11:59:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 5
       },
@@ -479,7 +496,7 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T11:59:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 1
       },
@@ -495,7 +512,7 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T12:01:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 0
       },
@@ -512,7 +529,7 @@
         "layer": "Atualização obrigatória",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T11:57:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 0
       },
@@ -528,7 +545,7 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T11:58:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 0
       },
@@ -545,7 +562,7 @@
         "layer": "Atualização obrigatória",
         "level": "",
         "sourceUrl": "https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2015/lei/l13146.htm",
-        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T11:59:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 0
       },
@@ -562,7 +579,7 @@
         "layer": "Atualização obrigatória",
         "level": "",
         "sourceUrl": "https://app.notion.com/p/3a6cf5a2673181148accc8d3b59f3606",
-        "sourceLastEditedAt": "2026-09-07T13:42:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T11:59:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 9
       },
@@ -578,7 +595,7 @@
         "layer": "Atualização obrigatória",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:51:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T11:59:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 0
       },
@@ -590,11 +607,11 @@
         "cargos": [
           "Núcleo comum"
         ],
-        "sourceBase": "Edital 2016 — Apoio",
+        "sourceBase": "Ato oficial concurso atual",
         "layer": "Atualização obrigatória",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T11:59:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 4
       },
@@ -610,7 +627,7 @@
         "layer": "Atualização obrigatória",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T11:58:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 0
       },
@@ -627,7 +644,7 @@
         "layer": "Atualização obrigatória",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T11:59:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 10
       },
@@ -645,7 +662,7 @@
         "layer": "Atualização obrigatória",
         "level": "",
         "sourceUrl": "https://www.sinj.df.gov.br/sinj/Norma/177e453f9f784e1fbecce53d12c966a7/Lei_7142_19_05_2022.html",
-        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T11:59:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 0
       },
@@ -661,7 +678,7 @@
         "layer": "Atualização obrigatória",
         "level": "",
         "sourceUrl": "https://www.educacao.df.gov.br/pde-2/",
-        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T11:59:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 0
       },
@@ -677,7 +694,7 @@
         "layer": "Atualização obrigatória",
         "level": "",
         "sourceUrl": "https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2026/lei/l15388.htm",
-        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T11:59:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 0
       },
@@ -694,7 +711,7 @@
         "layer": "Radar provável",
         "level": "",
         "sourceUrl": "https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2023/lei/l14533.htm",
-        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T12:00:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 0
       },
@@ -711,7 +728,7 @@
         "layer": "Atualização obrigatória",
         "level": "",
         "sourceUrl": "https://app.notion.com/p/3a6cf5a26731812d92f1e1a33e258eda",
-        "sourceLastEditedAt": "2026-09-07T13:42:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T12:01:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 10
       },
@@ -727,7 +744,7 @@
         "layer": "Atualização obrigatória",
         "level": "",
         "sourceUrl": "https://economia.df.gov.br/documents/d/seec/dodf-122-01-07-2022-integra",
-        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T11:59:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 6
       },
@@ -743,7 +760,7 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T11:58:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 0
       },
@@ -759,7 +776,7 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T11:59:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 0
       },
@@ -775,14 +792,46 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://app.notion.com/p/3a6cf5a26731816d80a3f8794e083a47",
-        "sourceLastEditedAt": "2026-09-07T13:42:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T11:58:00.000Z",
+        "directLinkAmbiguous": false,
+        "directQuestionCount": 0
+      },
+      {
+        "id": "3e5cf5a2-6731-810c-b00d-cd23ac305f62",
+        "topic": "Lei DF nº 6.805/2021 — governança procedimental do concurso",
+        "subtopic": "Altera a Lei DF nº 4.949/2012 em regras procedimentais do concurso, como critérios de correção/pontuação, fundamentação de anulações e recursos. Sua citação no TR não a transforma, por si só, em conteúdo programático para o candidato.",
+        "subject": "Outras",
+        "cargos": [
+          "Núcleo comum"
+        ],
+        "sourceBase": "Ato oficial concurso atual",
+        "layer": "Fora do escopo atual",
+        "level": "",
+        "sourceUrl": "https://www.sinj.df.gov.br/sinj/Norma/1f6d15e63b3a4c669755b05d2e6b320e/Lei_6805_25_01_2021.html",
+        "sourceLastEditedAt": "2026-09-24T12:57:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-8188-97f7-d54ecba709d2",
-        "topic": "Segurança, ergonomia e primeiros socorros no ambiente escolar",
-        "subtopic": "Segurança do trabalho; ergonomia; primeiros socorros no ambiente escolar.",
+        "topic": "Primeiros socorros no ambiente escolar",
+        "subtopic": "Noções e procedimentos de primeiros socorros aplicáveis ao contexto escolar, conforme recorte a ser definido pelo edital.",
+        "subject": "Outras",
+        "cargos": [
+          "Núcleo comum"
+        ],
+        "sourceBase": "Ato oficial concurso atual",
+        "layer": "Atualização obrigatória",
+        "level": "",
+        "sourceUrl": "https://www.educacao.df.gov.br/documents/d/seedf/termo_de_referencia_3-2026_23set26-pdf",
+        "sourceLastEditedAt": "2026-09-24T12:57:00.000Z",
+        "directLinkAmbiguous": false,
+        "directQuestionCount": 0
+      },
+      {
+        "id": "3e5cf5a2-6731-8126-9369-d0e412ec2ff8",
+        "topic": "Segurança do trabalho e ergonomia no ambiente escolar",
+        "subtopic": "Segurança do trabalho e ergonomia no contexto escolar — conteúdo histórico do edital de Monitor, sem confirmação no TR nº 3/2026.",
         "subject": "Outras",
         "cargos": [
           "Analista — Monitor"
@@ -791,7 +840,7 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T12:57:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 0
       },
@@ -807,7 +856,7 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:25:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T11:58:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 0
       },
@@ -820,13 +869,29 @@
           "Gestor — Administração",
           "Núcleo comum"
         ],
-        "sourceBase": "Edital 2022 — Gestor",
+        "sourceBase": "Ato oficial concurso atual",
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://app.notion.com/p/3a6cf5a2673181148accc8d3b59f3606",
-        "sourceLastEditedAt": "2026-09-07T13:42:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T11:59:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 9
+      },
+      {
+        "id": "3e5cf5a2-6731-811c-bad2-cd2fc444b089",
+        "topic": "Plano Distrital de Políticas para as Mulheres — PDPM | transição II → III",
+        "subtopic": "Conhecimento do Plano Distrital de Política para Mulheres, exigido pela Portaria SEEC nº 271/2021 e expressamente sinalizado no TR nº 3/2026. O II PDPM 2020–2023 é referência histórica aprovada pelo Decreto nº 42.590/2021; monitorar a instituição do III PDPM e usar a versão que o edital/ato vigente determinar.",
+        "subject": "Políticas Públicas",
+        "cargos": [
+          "Núcleo comum"
+        ],
+        "sourceBase": "Ato oficial concurso atual",
+        "layer": "Atualização obrigatória",
+        "level": "",
+        "sourceUrl": "https://www.sinj.df.gov.br/sinj/Norma/c594b64d12d0467ab61cd421022e712d/Portaria_271_07_10_2021",
+        "sourceLastEditedAt": "2026-09-24T12:34:00.000Z",
+        "directLinkAmbiguous": false,
+        "directQuestionCount": 0
       },
       {
         "id": "3d4cf5a2-6731-81ed-a527-f60c9c5bb69b",
@@ -840,7 +905,7 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T12:00:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 0
       },
@@ -856,7 +921,7 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T12:00:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 0
       },
@@ -872,7 +937,7 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T12:00:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 2
       },
@@ -888,7 +953,7 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T12:00:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 2
       },
@@ -904,7 +969,7 @@
         "layer": "Atualização obrigatória",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T12:00:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 0
       },
@@ -920,7 +985,7 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T12:00:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 4
       },
@@ -936,7 +1001,7 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T12:00:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 1
       },
@@ -952,7 +1017,7 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T12:00:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 1
       },
@@ -968,7 +1033,7 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T12:00:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 4
       },
@@ -984,7 +1049,7 @@
         "layer": "Base histórica",
         "level": "",
         "sourceUrl": "https://cdn.cebraspe.org.br/concursos/SEE_16_DF/arquivos/ED_1_SEE_DF_2016___ABERTURA.PDF",
-        "sourceLastEditedAt": "2026-09-07T13:38:00.000Z",
+        "sourceLastEditedAt": "2026-09-24T12:01:00.000Z",
         "directLinkAmbiguous": false,
         "directQuestionCount": 1
       }
