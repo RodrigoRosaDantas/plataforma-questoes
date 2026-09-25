@@ -269,6 +269,11 @@ for(const marker of [
   'directQuestionCount:directLinkAmbiguous?0:',
   'canonicalAmbiguousAxes'
 ]) requireMarker(taxonomySync,marker,'Gerador canônico perdeu a proteção contra ambiguidade');
+for(const marker of [
+  'const supportedSchemaVersions={seedf:[1,3],tjdft:[1]}',
+  'supportedSchemaVersions[source.competitionId]?.includes(payload?.schemaVersion)',
+  'eixo editorial sem topic/subject.'
+]) requireMarker(taxonomySync,marker,'Sincronizador rejeitou o schema vigente ou perdeu a validação dos eixos.');
 
 if(!Array.isArray(editais)||!editais.length)throw new Error('data/editais.json precisa conter os editais canônicos.');
 const ids=editais.map(item=>String(item.competitionId||''));
