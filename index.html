@@ -14,7 +14,7 @@
   <link rel="icon" type="image/png" sizes="192x192" href="./assets/icon-192.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="./assets/icon-180.png" />
   <link rel="stylesheet" href="./assets/styles.css?v=tjdft-provas11" />
-  <link rel="stylesheet" href="./assets/v2.css?v=platform-v2-1" />
+  <link rel="stylesheet" href="./assets/v2.css?v=platform-v2-2" />
   <title>Plataforma de Questões</title>
 </head>
 <body aria-busy="true">
@@ -79,6 +79,7 @@
               <p class="lede">Escolha uma trilha, resolva uma bateria e transforme erros em um plano claro de revisão — em qualquer aparelho.</p>
               <div class="hero-actions">
                 <button class="primary" type="button" data-quick-filter="seedf">Praticar SEEDF</button>
+                <button class="secondary" type="button" data-quick-filter="tce-go">Praticar TCE-GO</button>
                 <button class="secondary" type="button" data-quick-filter="tjdft">Praticar TJDFT</button>
                 <button class="secondary" type="button" data-go="edits">Escolher pelo edital</button>
               </div>
@@ -97,7 +98,7 @@
                 <div class="scorecard-grid">
                   <div><strong id="heroReleaseCount">—</strong><span>questões</span></div>
                   <div><strong id="heroSeedfCount">—</strong><span>SEEDF</span></div>
-                  <div><strong id="heroTjdftCount">—</strong><span>TJDFT</span></div>
+                  <div><strong id="heroTceGoCount">—</strong><span>TCE-GO</span></div>
                   <div><strong id="heroPrecision">0%</strong><span>precisão</span></div>
                 </div>
               </div>
@@ -129,6 +130,7 @@
               <div class="library-breakdown">
                 <div><span>SEEDF</span><strong id="homeSeedfCount">—</strong><small>questões atuais</small></div>
                 <div><span>TJDFT</span><strong id="homeTjdftCount">—</strong><small>questões publicadas</small></div>
+                <div><span>TCE-GO</span><strong id="homeTceGoCount">—</strong><small>FCC correlatas</small></div>
                 <div><span>SEDES/DF</span><strong id="homeSedesCount">—</strong><small>acervo histórico</small></div>
               </div>
               <button type="button" class="text-button" data-go="questions">Ver banco completo →</button>
@@ -161,7 +163,7 @@
 
         <section class="view hidden" data-view="edits">
           <div class="page-head">
-            <div><p class="eyebrow">BANCO E EDITAIS</p><h1>Editais verticalizados</h1><p>Pesquise um conteúdo e inicie uma bateria somente com as questões daquele tópico.</p></div>
+            <div><p class="eyebrow">BANCO E EDITAIS</p><h1>Editais verticalizados</h1><p>Pesquise o edital por conteúdo e abra baterias com as questões disponíveis para a matéria.</p></div>
             <div class="page-head-actions">
               <label class="edital-search-wrap"><span class="sr-only">Buscar tópico no edital</span><input id="editalSearch" type="search" placeholder="Buscar disciplina ou tópico…" autocomplete="off" /></label>
               <span class="page-status" id="editalStatus">Carregando mapeamento…</span>
@@ -211,7 +213,7 @@
         </section>
 
         <section class="view hidden" data-view="proofs">
-          <div class="page-head"><div><p class="eyebrow">PROVAS APLICADAS</p><h1>Provas oficiais e materiais</h1><p>Abra os cadernos oficiais do TJDFT e consulte os materiais já disponíveis no banco interativo.</p></div><div class="page-head-actions"><span class="page-status">TJDFT · concurso 2022</span><button type="button" class="secondary" data-go="edits">Verticalizado →</button></div></div>
+          <div class="page-head"><div><p class="eyebrow">PROVAS APLICADAS</p><h1>Provas e questões no banco</h1><p>Resolva questões FCC de provas anteriores do TCE-GO organizadas para estudo por matéria; consulte também os materiais oficiais do TJDFT.</p></div><div class="page-head-actions"><span class="page-status">FCC · TCE-GO</span><button type="button" class="primary" data-edital-filter="tce-go">Abrir banco TCE-GO →</button><button type="button" class="secondary" data-go="edits">Verticalizado →</button></div></div>
           <div id="proofList" class="grid"></div>
         </section>
 
@@ -233,6 +235,8 @@
                 <button id="markQuestion" class="text-button" type="button">☆ Marcar</button>
               </div>
               <div id="questionMeta" class="chips"></div>
+              <small id="questionSource" class="question-source hidden"></small>
+              <div id="questionBaseText" class="question-base-text hidden"></div>
               <div id="questionText" class="question-text"></div>
               <div id="answers" class="answers"></div>
               <div id="feedback" class="feedback hidden" role="status" aria-live="polite" tabindex="-1"></div>
@@ -320,7 +324,8 @@
     </div>
   </div>
 
+  <nav id="mobileBottomNav" class="mobile-bottom-nav" aria-label="Navegação móvel"></nav>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
-  <script type="module" src="./assets/app.js?v=platform-v2-5"></script>
+  <script type="module" src="./assets/app.js?v=platform-v2-6"></script>
 </body>
 </html>

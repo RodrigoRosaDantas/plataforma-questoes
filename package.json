@@ -6,7 +6,7 @@
   "scripts": {
     "test": "npm run validate",
     "sync:notion": "node scripts/sync-notion.mjs",
-    "validate": "node scripts/validate-data.mjs && node scripts/check-static.mjs && node scripts/check-governance.mjs && node scripts/check-regressions.mjs",
+    "validate": "node scripts/validate-data.mjs && node scripts/validate-tce-go.mjs && node scripts/check-static.mjs && node scripts/check-governance.mjs && node scripts/check-regressions.mjs",
     "build": "node scripts/build.mjs",
     "smoke:published": "node scripts/smoke-published.mjs"
   }

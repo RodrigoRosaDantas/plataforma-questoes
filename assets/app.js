@@ -10,12 +10,19 @@ const ROUTES = [
   ['import','<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 16V4M8 8l4-4 4 4M5 14v5h14v-5"/></svg>','Importar provas'],
   ['settings','<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 6h16M4 12h16M4 18h16M9 4v4M15 10v4M11 16v4"/></svg>','Ajustes e dados']
 ];
+const MOBILE_ROUTES = [['home','Início'],['questions','Questões'],['review','Revisar'],['performance','Desempenho']];
+const TCE_SOURCE_PRIORITY = new Map([
+  ['tcego-fcc-2022-controle-externo-selecao',1],
+  ['tcego-fcc-2022-contabilidade-selecao',2],
+  ['tcego-fcc-2014-admin',3],
+  ['tcece-fcc-2015-tecnico-admin',4]
+]);
 
 const state = {
-  questions: [], meta: {}, competitions: [], editais: [], officialExams: [], filtered: [],
+  questions: [], meta: {}, competitions: [], editais: [], officialExams: [], tceGoEdict: null, filtered: [],
   session: null, timer: null, startedAt: null, currentView: 'home', hiddenAt: null, syncLabel: 'Release publicada',
   cloudSyncTimer: null, noteDrafts: {}, searchTimer: null, editalTimer: null,
-  installPrompt: null, swRegistration: null, editalQuery: '', filtersOpen: false, competitionScope: '',
+  installPrompt: null, swRegistration: null, editalQuery: '', filtersOpen: false, competitionScope: '', tceSectionScope: '', tceMaterialScope: '',
   cloud: {status:'loading',email:'',profileId:'',message:''},
   externalContext: ''
 };
@@ -260,18 +267,38 @@ const store = new ProgressStore();
 
 async function loadRelease(){
   const stamp=Date.now();
-  const names=['questions','metadata','competitions','editais','tjdft-provas'];
+  const supplementalNames=[
+    'tce-go-fcc-tcego-2022-controle-externo',
+    'tce-go-fcc-tcego-2022-contabilidade',
+    'tce-go-fcc-tcego-2014-administrativa',
+    'tce-go-fcc-tcece-2015-tecnico-administrativo',
+    'tce-go-edital'
+  ];
+  const names=['questions','metadata','competitions','editais','tjdft-provas',...supplementalNames];
   const payloads=await Promise.all(names.map(name=>fetch('./data/'+name+'.json?refresh='+stamp,{cache:'no-store'}).then(response=>{
     if(!response.ok) throw new Error('Falha ao carregar '+name+'.json');
     return response.json();
   })));
-  return payloads;
+  const [questions,metadata,competitions,editais,officialExams,...supplemental]=payloads;
+  const tceGoEdict=supplemental[4];
+  const tceQuestions=supplemental.slice(0,4).flatMap(file=>Array.isArray(file?.questions)?file.questions:[]);
+  const tceConfig={
+    competitionId:'tce-go',
+    title:tceGoEdict?.title||'TCE-GO 2026 · Técnico de Controle Externo — Técnico Administrativo',
+    source:tceGoEdict?.source||'Anexo II do Edital nº 01/2026 consolidado com a Retificação nº 02/2026',
+    mappingNote:tceGoEdict?.mappingNote||'Questões FCC correlacionadas por matéria; sem vínculo confirmado com subitem específico do edital.',
+    mappingGranularity:tceGoEdict?.mappingGranularity||'subject',
+    questionPoolCount:tceQuestions.length,
+    exactTopicMappings:Number(tceGoEdict?.exactTopicMappings)||0,
+    topicCount:Number(tceGoEdict?.canonicalAxisCount)||0
+  };
+  return [questions.concat(tceQuestions),metadata,competitions,[...editais,tceConfig],officialExams,tceGoEdict];
 }
 
 async function boot(){
   try{
-    const [q,m,c,e,p]=await loadRelease();
-    state.questions=q; state.meta=m; state.competitions=c; state.editais=e; state.officialExams=p; state.filtered=[...q];
+    const [q,m,c,e,p,tceGoEdict]=await loadRelease();
+    state.questions=q; state.meta=m; state.competitions=c; state.editais=e; state.officialExams=p; state.tceGoEdict=tceGoEdict; state.filtered=[...q];
     state.syncLabel=state.meta.sampleMode?'Amostra local':'Release publicada';
     renderNav(); bindGlobal(); populateFilters(); window.dispatchEvent(new CustomEvent('questions:loaded',{detail:{questions:q}}));
     const requested=routeFromUrl();
@@ -297,8 +324,8 @@ async function refreshRelease(){
   state.syncLabel='Consultando release…';
   const status=$('#syncStatus'); if(status) status.textContent=state.syncLabel;
   try{
-    const [q,m,c,e,p]=await loadRelease();
-    state.questions=q; state.meta=m; state.competitions=c; state.editais=e; state.officialExams=p; state.filtered=[...q];
+    const [q,m,c,e,p,tceGoEdict]=await loadRelease();
+    state.questions=q; state.meta=m; state.competitions=c; state.editais=e; state.officialExams=p; state.tceGoEdict=tceGoEdict; state.filtered=[...q];
     state.syncLabel='Atualizada · '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
     populateFilters(); window.dispatchEvent(new CustomEvent('questions:loaded',{detail:{questions:q}})); applyFilters(); renderAll();
     state.swRegistration?.update().catch(()=>{});
@@ -409,22 +436,34 @@ function trendChart(points){
 
 function renderNav(){
   $('#nav').innerHTML=ROUTES.map(([id,icon,label])=>`<button type="button" data-go="${id}" class="${id==='home'?'active':''}"><span class="nav-icon" aria-hidden="true">${icon}</span><span>${label}</span></button>`).join('');
+  const icons=new Map(ROUTES.map(([id,icon])=>[id,icon]));
+  const mobile=$('#mobileBottomNav');
+  if(mobile)mobile.innerHTML=MOBILE_ROUTES.map(([id,label])=>`<button type="button" data-go="${id}" class="${id==='home'?'active':''}" aria-label="${label}" ${id==='home'?'aria-current="page"':''}><span class="mobile-nav-icon" aria-hidden="true">${icons.get(id)||''}</span><span class="mobile-nav-label">${label}</span></button>`).join('');
 }
 
 function questionBelongsTo(q,competitionId){
   const hay=[q.concurso,q.orgao,q.cargo,q.nomeMaterial].filter(Boolean).join(' ');
-  if(competitionId==='seedf') return /SEEDF/i.test(hay);
+  if(competitionId==='seedf'){
+    if(!/SEEDF/i.test(hay))return false;
+    const config=state.competitions.find(item=>item.id==='seedf')||{};
+    const roleText=normalizeSearch([q.cargo,q.cargoFonte,q.sourceRole].filter(Boolean).join(' '));
+    const excluded=(config.excludedRoles||['Analista — Monitor']).map(normalizeSearch);
+    const included=[...(config.focusRoles||[]),...(config.sharedRoles||[])].map(normalizeSearch);
+    return !excluded.some(role=>role&&roleText.includes(role))||included.some(role=>role&&roleText.includes(role));
+  }
   if(competitionId==='tjdft') return /TJDFT|Tribunal de Justiça do Distrito Federal/i.test(hay);
   if(competitionId==='sedes-df-2026') return /SEDES/i.test(hay);
+  if(competitionId==='tce-go') return /TCE-GO/i.test(hay);
   return false;
 }
 function competitionLabel(competitionId){
-  return ({seedf:'SEEDF',tjdft:'TJDFT','sedes-df-2026':'SEDES/DF 2026'})[competitionId]||String(competitionId||'');
+  return ({seedf:'SEEDF',tjdft:'TJDFT','sedes-df-2026':'SEDES/DF 2026','tce-go':'TCE-GO'})[competitionId]||String(competitionId||'');
 }
 function setCompetitionScope(competitionId=''){
-  const next=['seedf','tjdft','sedes-df-2026'].includes(competitionId)?competitionId:'';
+  const next=['seedf','tjdft','sedes-df-2026','tce-go'].includes(competitionId)?competitionId:'';
   if(state.competitionScope===next)return;
   state.competitionScope=next;
+  if(next!=='tce-go'){state.tceSectionScope='';state.tceMaterialScope='';}
   if(next)document.documentElement.dataset.competitionScope=next;else delete document.documentElement.dataset.competitionScope;
   window.dispatchEvent(new CustomEvent('competition-scope:changed',{detail:{competitionId:next}}));
 }
@@ -453,13 +492,15 @@ function buildVerticalizedEditais(){
       topics:[...axis.topics.values()].sort((a,b)=>a.label.localeCompare(b.label,'pt-BR',{numeric:true})).map(topic=>({...topic,subassuntos:[...topic.subassuntos].sort((a,b)=>a.localeCompare(b,'pt-BR',{numeric:true}))}))
     }));
     const mappedQuestionCount=axes.reduce((sum,axis)=>sum+axis.topics.reduce((inner,topic)=>inner+topic.questionCount,0),0);
-    return {...config,questionCount:pool.length,mappedQuestionCount,unmappedQuestionCount:pool.length-mappedQuestionCount,axisCount:axes.length,axes,questionFilter:{orgao:pool[0]?.orgao||''},mappingNote:pool.length?'Tópicos derivados da taxonomia publicada de disciplina e assunto'+(splitByCargo?' e separados por cargo.':'.'):'Ainda não há questões desta trilha na release publicada.'};
+    return {...config,questionCount:pool.length,mappedQuestionCount,unmappedQuestionCount:pool.length-mappedQuestionCount,axisCount:axes.length,axes,questionFilter:{orgao:pool[0]?.orgao||''},mappingNote:config.mappingNote||(pool.length?'Tópicos derivados da taxonomia publicada de disciplina e assunto'+(splitByCargo?' e separados por cargo.':'.'):'Ainda não há questões desta trilha na release publicada.')};
   });
 }
 
 function bindGlobal(){
   document.addEventListener('click',e=>{
-    const topic=e.target.closest('[data-topic-orgao]');if(topic){openTopic(topic.dataset.topicOrgao,topic.dataset.topicDisciplina,topic.dataset.topicAssunto,topic.dataset.topicCargo);return;}
+    const tceMaterial=e.target.closest('[data-tce-material]');if(tceMaterial){openTceMaterial(tceMaterial.dataset.tceMaterial);return;}
+    const tceSection=e.target.closest('[data-tce-section]');if(tceSection){openTceSection(tceSection.dataset.tceSection);return;}
+    const topic=e.target.closest('[data-topic-orgao]');if(topic){openTopic(topic.dataset.topicOrgao,topic.dataset.topicDisciplina,topic.dataset.topicAssunto,topic.dataset.topicCargo,topic.dataset.topicCompetition);return;}
     const proof=e.target.closest('[data-proof-cargo]');if(proof){openOfficialProof(proof.dataset.proofCargo);return;}
     const edital=e.target.closest('[data-edital-filter]');if(edital){openCompetition(edital.dataset.editalFilter);return;}
     const quick=e.target.closest('[data-quick-filter]');if(quick){openQuickFilter(quick.dataset.quickFilter);return;}
@@ -534,8 +575,10 @@ function navigate(view,options={}){
   if(!VIEW_IDS.has(view))view='home';
   if(view==='resolver'&&!state.session)return;
   state.currentView=view;
+  document.body.classList.toggle('resolver-active',view==='resolver');
   $$('.view').forEach(element=>element.classList.toggle('hidden',element.dataset.view!==view));
-  $$('#nav [data-go]').forEach(button=>{const active=button.dataset.go===view;button.classList.toggle('active',active);if(active)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current');});
+  $$('#nav [data-go], #mobileBottomNav [data-go]').forEach(button=>{const active=button.dataset.go===view;button.classList.toggle('active',active);if(active)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current');});
+  const mobileNav=$('#mobileBottomNav');if(mobileNav)mobileNav.hidden=view==='resolver';
   setSidebarOpen(false);
   if(options.history!==false)syncViewUrl(view,Boolean(options.replace));
   const routeLabel=ROUTES.find(route=>route[0]===view)?.[2]||({resolver:'Resolver',result:'Resultado'}[view]||'Plataforma');
@@ -548,14 +591,15 @@ function navigate(view,options={}){
 
 function resetQuestionFilters(){
   ['filterConcurso','filterOrgao','filterCargo','filterBanca','filterAno','filterDisciplina','filterAssunto','filterSubassunto','filterFormato'].forEach(id=>{const el=$('#'+id);if(el)el.value='';});
-  $('#filterText').value=''; $('#globalSearch').value=''; setCompetitionScope('');
+  $('#filterText').value=''; $('#globalSearch').value=''; setCompetitionScope(''); state.tceSectionScope=''; state.tceMaterialScope='';
 }
 function setQuestionFilter(id,value){
   const el=$('#'+id); if(!el)return;
   el.value=[...el.options].some(option=>option.value===value)?value:'';
 }
-function openTopic(orgao,disciplina,assunto,cargo){
+function openTopic(orgao,disciplina,assunto,cargo,competitionId=''){
   navigate('questions'); resetQuestionFilters();
+  if(competitionId)setCompetitionScope(competitionId);
   setQuestionFilter('filterOrgao',orgao); setQuestionFilter('filterCargo',cargo); setQuestionFilter('filterDisciplina',disciplina); setQuestionFilter('filterAssunto',assunto);
   applyFilters();
   if(state.filtered.length){ startSessionFromFilters(); }
@@ -566,6 +610,19 @@ function openCompetition(competitionId){
   navigate('questions'); resetQuestionFilters(); setCompetitionScope(competitionId);
   applyFilters();
   toast(hasQuestions?fmt(state.filtered.length)+' questões na trilha '+competitionLabel(competitionId)+'.':'Ainda não há questões publicadas nesta trilha.');
+}
+function openTceSection(sectionId){
+  const section=state.tceGoEdict?.sections?.find(item=>item.id===sectionId);
+  if(!section)return;
+  navigate('questions');resetQuestionFilters();setCompetitionScope('tce-go');state.tceSectionScope=sectionId;applyFilters();
+  if(state.filtered.length)startSessionFromFilters();
+  else toast('Ainda não há questões FCC correlatas para esta matéria.');
+}
+function openTceMaterial(materialId){
+  const source=state.tceGoEdict?.sourceMaterials?.find(item=>item.materialId===materialId);
+  if(!source)return;
+  navigate('questions');resetQuestionFilters();setCompetitionScope('tce-go');state.tceMaterialScope=materialId;applyFilters();
+  toast(fmt(state.filtered.length)+' questões de '+source.sourceLabel+'. Escolha o tamanho da bateria.');
 }
 function officialProofQuestions(career){
   return state.questions
@@ -582,7 +639,7 @@ function openOfficialProof(career){
   toast(fmt(items.length)+' questões desta prova prontas para montar a bateria.');
 }
 function openQuickFilter(quickFilter){
-  if(quickFilter==='seedf'||quickFilter==='tjdft'){openCompetition(quickFilter);return;}
+  if(quickFilter==='seedf'||quickFilter==='tjdft'||quickFilter==='tce-go'){openCompetition(quickFilter);return;}
   navigate('questions');resetQuestionFilters();applyFilters();
 }
 function openDiscipline(discipline){
@@ -619,24 +676,36 @@ function renderActiveFilters(filters){
 }
 function applyFilters(){
   const f={trilha:state.competitionScope?competitionLabel(state.competitionScope):'',concurso:$('#filterConcurso').value,orgao:$('#filterOrgao').value,cargo:$('#filterCargo').value,banca:$('#filterBanca').value,ano:$('#filterAno').value,disciplina:$('#filterDisciplina').value,assunto:$('#filterAssunto').value,subassunto:$('#filterSubassunto').value,formato:$('#filterFormato').value,text:$('#filterText').value.trim().toLowerCase()};
-  state.filtered=state.questions.filter(q=>{
+  const filtered=state.questions.filter(q=>{
     if(state.competitionScope&&!questionBelongsTo(q,state.competitionScope)) return false;
+    if(state.tceSectionScope&&q.editalSectionId!==state.tceSectionScope&&!(q.editalAdditionalSectionIds||[]).includes(state.tceSectionScope))return false;
+    if(state.tceMaterialScope&&q.sourceMaterialId!==state.tceMaterialScope)return false;
     if(f.concurso && q.concurso!==f.concurso) return false; if(f.orgao && q.orgao!==f.orgao) return false; if(f.cargo && q.cargo!==f.cargo) return false; if(f.banca && q.banca!==f.banca) return false;
     if(f.ano && String(q.ano)!==f.ano) return false; if(f.disciplina && q.disciplina!==f.disciplina) return false; if(f.assunto && q.assunto!==f.assunto) return false; if(f.subassunto && q.subassunto!==f.subassunto) return false; if(f.formato && q.formato!==f.formato) return false;
     if(f.text){ const hay=[q.enunciado,q.concurso,q.edital,q.topicoEdital,q.disciplina,q.assunto,q.subassunto,q.cargo,q.banca,q.nomeMaterial].join(' ').toLowerCase(); if(!hay.includes(f.text)) return false; }
     return true;
   });
+  state.filtered=state.competitionScope==='tce-go'?filtered.sort(compareTceSources):filtered;
   const n=state.filtered.length; $('#availableCount').textContent=`${fmt(n)} ${n===1?'questão disponível':'questões disponíveis'}`; $('#sessionSize').max=Math.max(1,n); if(+$('#sessionSize').value>n) $('#sessionSize').value=Math.max(1,n);
   const active=Object.entries(f).filter(([,v])=>v).map(([k,v])=>`${FILTER_LABELS[k]||k}: ${v}`);
-  const parts=[state.externalContext,active.length?active.join(' · '):''].filter(Boolean);
+  const sectionTitle=state.tceGoEdict?.sections?.find(section=>section.id===state.tceSectionScope)?.title;
+  const materialLabel=state.tceGoEdict?.sourceMaterials?.find(material=>material.materialId===state.tceMaterialScope)?.sourceLabel;
+  const parts=[state.externalContext,sectionTitle?'Matéria TCE-GO: '+sectionTitle:'',materialLabel?'Caderno: '+materialLabel:'',active.length?active.join(' · '):''].filter(Boolean);
   $('#filterSummary').textContent=parts.length?parts.join(' · '):'Sem filtros adicionais.';
   renderActiveFilters(f);renderQuestionPreview();
+}
+function tceSourceRank(question){return TCE_SOURCE_PRIORITY.get(question.sourceMaterialId)||99;}
+function compareTceSources(a,b){return tceSourceRank(a)-tceSourceRank(b)||(Number(a.numeroOriginal)||9999)-(Number(b.numeroOriginal)||9999);}
+function shuffleTceSources(items){
+  const groups=new Map();
+  items.forEach(item=>{const rank=tceSourceRank(item);if(!groups.has(rank))groups.set(rank,[]);groups.get(rank).push(item);});
+  return [...groups.entries()].sort(([a],[b])=>a-b).flatMap(([,group])=>shuffleItems(group));
 }
 
 function renderQuestionPreview(){
   const list=state.filtered.slice(0,40); const root=$('#questionPreview');
   if(!list.length){root.innerHTML='<div class="card empty-state">Nenhuma questão encontrada com estes filtros. Limpe ou altere o recorte.</div>';return;}
-  root.innerHTML=list.map(q=>`<article class="question-row"><div class="chips">${chip(q.formato)}${chip(q.disciplina)}${chip(q.assunto)}${chip(q.subassunto)}${chip(q.banca)}</div><p>${escapeHtml(q.enunciado)}</p><small>${escapeHtml(q.concurso||'')} · ${escapeHtml(q.cargo||'')} · ${escapeHtml(q.ano||'')}</small></article>`).join('')+(state.filtered.length>40?`<div class="empty-state">Exibindo prévia das primeiras 40 de ${fmt(state.filtered.length)} questões.</div>`:'');
+  root.innerHTML=list.map(q=>`<article class="question-row"><div class="chips">${chip(q.formato)}${chip(q.disciplina)}${chip(q.assunto)}${chip(q.subassunto)}${chip(q.banca)}</div><p>${escapeHtml(q.enunciado)}</p><small>${escapeHtml(q.concurso||'')} · ${escapeHtml(q.cargo||'')} · ${escapeHtml(q.ano||'')}</small>${q.sourceLabel?`<small class="question-source">Fonte: ${escapeHtml(q.sourceLabel)} · questão ${fmt(q.numeroOriginal)}${q.paginaOriginal?` · p. ${escapeHtml(q.paginaOriginal)}`:''}</small>`:''}</article>`).join('')+(state.filtered.length>40?`<div class="empty-state">Exibindo prévia das primeiras 40 de ${fmt(state.filtered.length)} questões.</div>`:'');
 }
 const chip = v => v?`<span class="chip">${escapeHtml(v)}</span>`:'';
 
@@ -648,14 +717,14 @@ function renderHome(){
   const p=store.load(), hist=p.history, all=hist.flatMap(record=>record.answers||[]);
   const answered=all.filter(answer=>!answer.blank).length, correct=all.filter(answer=>answer.isCorrect).length;
   const precision=answered?Math.round(correct/answered*100):0;
-  $('#homeMetrics').innerHTML=[['Questões na release',state.questions.length],['Sessões concluídas',hist.length],['Respondidas',answered],['Precisão',`${precision}%`]].map(metricHtml).join('');
-  const focusCounts=[['homeSeedfCount','seedf'],['homeTjdftCount','tjdft'],['homeSedesCount','sedes-df-2026']];
+  $('#homeMetrics').innerHTML=[['Questões no banco',state.questions.length],['Sessões concluídas',hist.length],['Respondidas',answered],['Precisão',`${precision}%`]].map(metricHtml).join('');
+  const focusCounts=[['homeSeedfCount','seedf'],['homeTjdftCount','tjdft'],['homeSedesCount','sedes-df-2026'],['homeTceGoCount','tce-go']];
   focusCounts.forEach(([id,competitionId])=>{const el=$('#'+id);if(el)el.textContent=fmt(state.questions.filter(q=>questionBelongsTo(q,competitionId)).length);});
   const syncStatus=$('#syncStatus'); if(syncStatus) syncStatus.textContent=state.syncLabel;
   const heroReleaseCount=$('#heroReleaseCount');
   if(heroReleaseCount)heroReleaseCount.textContent=fmt(state.questions.length);
   const heroSeedf=$('#heroSeedfCount');if(heroSeedf)heroSeedf.textContent=fmt(state.questions.filter(q=>questionBelongsTo(q,'seedf')).length);
-  const heroTjdft=$('#heroTjdftCount');if(heroTjdft)heroTjdft.textContent=fmt(state.questions.filter(q=>questionBelongsTo(q,'tjdft')).length);
+  const heroTceGo=$('#heroTceGoCount');if(heroTceGo)heroTceGo.textContent=fmt(state.questions.filter(q=>questionBelongsTo(q,'tce-go')).length);
   const heroPrecision=$('#heroPrecision');if(heroPrecision)heroPrecision.textContent=precision+'%';
   $('#datasetStamp').textContent=`${state.meta.sampleMode?'Amostra local':'Release'} · ${state.meta.generatedAt?new Date(state.meta.generatedAt).toLocaleString('pt-BR'):''}`;
   $('#connectionBadge').textContent=state.meta.sampleMode?'Amostra — sincronize Notion':'Release publicada';
@@ -667,7 +736,7 @@ function renderHome(){
 }
 const metricGlyphs = ['✦','◒','✓','◔'];
 const metricHints = {
-  'Questões na release':'Acervo pronto para prática',
+  'Questões no banco':'Release Notion + questões FCC TCE-GO correlatas',
   'Sessões concluídas':'Sessões salvas neste navegador',
   'Respondidas':'Respostas registradas',
   'Precisão':'Aproveitamento acumulado',
@@ -693,6 +762,7 @@ function metricHtml([label,value], index=0){
 
 function renderCompetitions(){
   $('#competitionCards').innerHTML=state.competitions.map(c=>{
+    const count=state.questions.filter(q=>questionBelongsTo(q,c.id)).length;
     const externalHref=value=>{
       const candidate=String(value||'').trim();
       if(!candidate)return '';
@@ -706,11 +776,11 @@ function renderCompetitions(){
     if(dashboardHref||officialExamHref){
       const externalLinks=[
         [dashboardHref,c.dashboardLabel||'Abrir painel →'],
-        [officialExamHref,c.officialExamLabel||'Abrir prova oficial →']
+        [c.id==='tce-go'?'':officialExamHref,c.officialExamLabel||'Abrir prova oficial →']
       ].filter(([href])=>href).map(([href,label])=>`<a class='text-button' href='${escapeHtml(href)}' target='_blank' rel='noopener noreferrer'>${escapeHtml(String(label))}</a>`).join('<br>');
+      if(c.id==='tce-go')return `<article class='competition-card'><span class='status'>${escapeHtml(String(c.status||'ativo').toUpperCase())}</span><h3>${escapeHtml(c.name)}</h3><p>${escapeHtml(c.description)}</p><div class='competition-count'><strong>${fmt(count)}</strong><span>questões FCC no banco</span></div><small>${escapeHtml(String(c.mappingStatus||'Questões correlatas por matéria.'))}</small><button type='button' class='text-button' data-edital-filter='tce-go'>Abrir banco · ${fmt(count)} questões →</button><button type='button' class='text-button' data-go='edits'>Ver edital verticalizado · ${fmt(Number(c.topicCount)||448)} tópicos →</button>${externalLinks}</article>`;
       return `<article class='competition-card'><span class='status'>${escapeHtml(String(c.status||'ativo').toUpperCase())}</span><h3>${escapeHtml(c.name)}</h3><p>${escapeHtml(c.description)}</p><div class='competition-count'><strong>↗</strong><span>painel de estudos próprio</span></div><small>${escapeHtml(String(c.mappingStatus||'Acesse o dashboard do concurso.'))}</small>${externalLinks}</article>`;
     }
-    const count=state.questions.filter(q=>questionBelongsTo(q,c.id)).length;
     const status=count?fmt(count)+' questões no acervo':String(c.mappingStatus||'Sem questões carregadas');
     const action=count?`<button type='button' class='text-button' data-edital-filter='${escapeHtml(c.id)}'>Abrir questões →</button>`:c.id==='tjdft'?`<button type='button' class='text-button' data-go='proofs'>Ver provas oficiais →</button>`:`<button type='button' class='text-button' data-go='edits'>Ver verticalizado →</button>`;
     return `<article class='competition-card'><span class='status'>${escapeHtml(String(c.status||'ativo').toUpperCase())}</span><h3>${escapeHtml(c.name)}</h3><p>${escapeHtml(c.description)}</p><div class='competition-count'><strong>${fmt(count)}</strong><span>questões associadas</span></div><small>${escapeHtml(status)}</small>${action}</article>`;
@@ -731,7 +801,7 @@ function renderEditais(){
   }).filter(edital=>!query||edital.searchMatch||edital.axes.length);
   const visibleTopics=visible.reduce((sum,edital)=>sum+edital.axes.reduce((inner,axis)=>inner+axis.topics.length,0),0);
   const editalStatus=$('#editalStatus');
-  if(editalStatus)editalStatus.textContent=query?fmt(visibleTopics)+(visibleTopics===1?' tópico encontrado':' tópicos encontrados'):fmt(totalQuestions)+' questões mapeadas na release';
+  if(editalStatus)editalStatus.textContent=query?fmt(visibleTopics)+(visibleTopics===1?' tópico encontrado':' tópicos encontrados'):fmt(totalQuestions)+' questões agrupadas na release';
   const root=$('#editalList');
   if(!visible.length){root.innerHTML='<article class="card edital-no-results"><span class="kicker">SEM RESULTADOS</span><h2>Nenhum tópico corresponde à busca</h2><p>Tente outro termo ou limpe a pesquisa para ver o edital completo.</p></article>';return;}
   root.innerHTML=visible.map(edital=>{
@@ -744,8 +814,11 @@ function renderEditais(){
       }).join('')}</div>`:'<div class="topic-empty">Ainda não há assuntos cadastrados nesta disciplina.</div>';
       return `<details class="edital-axis" ${query||axisIndex===0?'open':''}><summary class="edital-axis-head"><div><span class="kicker">${fmt(axis.topics.length)} TÓPICOS</span><h3>${escapeHtml(axis.label)}</h3></div><span class="axis-count">${fmt(axis.questionCount)} questões</span></summary>${topics}${axis.unmappedCount?`<p class="axis-note">${fmt(axis.unmappedCount)} questões desta disciplina ainda sem assunto cadastrado.</p>`:''}</details>`;
     }).join('')}</div>`:`<div class="edital-empty"><strong>Este verticalizado ainda não tem questões mapeadas.</strong><span>Quando a trilha entrar na release do Notion, os tópicos aparecerão aqui automaticamente.</span><button type="button" class="secondary" data-edital-filter="${escapeHtml(edital.competitionId)}">Abrir banco da trilha</button></div>`;
-    const status=edital.questionCount?'<span class="status-badge status-live">Mapeamento disponível</span>':'<span class="status-badge status-empty">Aguardando questões</span>';
-    return `<article class="card edital-card"><div class="edital-card-head"><div><span class="kicker">${escapeHtml(String(edital.competitionId||'').toUpperCase())}</span><h2>${escapeHtml(edital.title)}</h2><p>${escapeHtml(edital.mappingNote)}</p></div><div class="edital-count"><strong>${fmt(edital.questionCount)}</strong><span>questões no recorte</span></div></div><div class="edital-summary">${status}<span>${fmt(edital.mappedQuestionCount)} em tópicos · ${fmt(edital.axisCount)} disciplinas</span></div><p class="edital-note">Abra uma disciplina e escolha o tópico. A bateria será criada somente com aquele conteúdo.</p>${axisMarkup}<div class="edital-footer"><small>Fonte: ${escapeHtml(edital.source||'Release publicada')}</small>${edital.questionCount?`<button type="button" class="secondary" data-edital-filter="${escapeHtml(edital.competitionId)}">Abrir todas as questões</button>`:''}</div></article>`;
+    const isTceGo=edital.competitionId==='tce-go';
+    const status=isTceGo?'<span class="status-badge status-live">Questões por matéria</span>':edital.questionCount?'<span class="status-badge status-live">Mapeamento disponível</span>':'<span class="status-badge status-empty">Aguardando questões</span>';
+    const summaryText=isTceGo?`${fmt(edital.questionCount)} correlatas por matéria · ${fmt(edital.topicCount)} tópicos no edital`:`${fmt(edital.mappedQuestionCount)} em tópicos · ${fmt(edital.axisCount)} disciplinas`;
+    const noteText=isTceGo?'Os grupos por matéria podem se sobrepor. Os 448 itens oficiais aparecem abaixo; ainda não há vínculo direto questão a questão com esses subitens.':'Abra uma disciplina e escolha o tópico. A bateria será criada somente com aquele conteúdo.';
+    return `<article class="card edital-card"><div class="edital-card-head"><div><span class="kicker">${escapeHtml(String(edital.competitionId||'').toUpperCase())}</span><h2>${escapeHtml(edital.title)}</h2><p>${escapeHtml(edital.mappingNote)}</p></div><div class="edital-count"><strong>${fmt(edital.questionCount)}</strong><span>questões no recorte</span></div></div><div class="edital-summary">${status}<span>${summaryText}</span></div><p class="edital-note">${noteText}</p>${axisMarkup}<div class="edital-footer"><small>Fonte: ${escapeHtml(edital.source||'Release publicada')}</small>${edital.questionCount?`<button type="button" class="secondary" data-edital-filter="${escapeHtml(edital.competitionId)}">Abrir todas as questões</button>`:''}</div></article>`;
   }).join('');
 }
 function renderMaterials(){
@@ -758,7 +831,11 @@ function renderMaterials(){
     });
     return [...map.entries()];
   };
-  const cards=entries=>entries.length?entries.map(([name,qs])=>'<article class="card"><span class="kicker">'+fmt(qs.length)+' QUESTÕES</span><h2>'+escapeHtml(name)+'</h2><p>'+escapeHtml(uniq(qs.map(q=>q.banca)).join(' · '))+'</p></article>').join(''):'<div class="card empty-state">Nenhum item deste tipo na release atual.</div>';
+  const cards=entries=>entries.length?entries.map(([name,qs])=>{
+    const materialId=qs.find(question=>question.sourceMaterialId)?.sourceMaterialId;
+    const action=materialId?`<button type="button" class="primary" data-tce-material="${escapeHtml(materialId)}">Fazer questões deste caderno →</button>`:'';
+    return '<article class="card"><span class="kicker">'+fmt(qs.length)+' QUESTÕES</span><h2>'+escapeHtml(name)+'</h2><p>'+escapeHtml(uniq(qs.map(q=>q.banca)).join(' · '))+'</p>'+action+'</article>';
+  }).join(''):'<div class="card empty-state">Nenhum item deste tipo na release atual.</div>';
   const officialGroups=new Map();
   state.officialExams.forEach(exam=>{
     const key=exam.career||'TJDFT';
@@ -785,14 +862,15 @@ function renderRelease(){
   const releaseStatus=$('#releaseStatus'); if(releaseStatus) releaseStatus.textContent=state.syncLabel;
   const m=state.meta;
   const policy=currentScoringPolicy();
-  $('#releaseDetails').innerHTML=[['Schema',m.schemaVersion],['Snapshot',m.releaseSnapshotId?String(m.releaseSnapshotId).slice(0,12)+'…':'—'],['Gerado em',m.generatedAt?new Date(m.generatedAt).toLocaleString('pt-BR'):'—'],['Fonte',m.source],['Data source',m.dataSourceId],['Questões',m.questionCount],['Provas oficiais TJDFT',state.officialExams.length],['Pontuação',policy.negativeMarking?'penalidade configurada':'sem penalidade'],['Modo',m.sampleMode?'amostra':'publicado']].map(([k,v])=>`<dt>${escapeHtml(k)}</dt><dd>${escapeHtml(v??'—')}</dd>`).join('');
+  const tceGoCount=state.questions.filter(question=>questionBelongsTo(question,'tce-go')).length;
+  $('#releaseDetails').innerHTML=[['Schema',m.schemaVersion],['Snapshot',m.releaseSnapshotId?String(m.releaseSnapshotId).slice(0,12)+'…':'—'],['Gerado em',m.generatedAt?new Date(m.generatedAt).toLocaleString('pt-BR'):'—'],['Fonte principal',m.source],['Data source',m.dataSourceId],['Questões na release Notion',m.questionCount],['Questões FCC TCE-GO correlatas',tceGoCount],['Total no banco',state.questions.length],['Provas oficiais TJDFT',state.officialExams.length],['Pontuação',policy.negativeMarking?'penalidade configurada':'sem penalidade'],['Modo',m.sampleMode?'amostra':'publicado']].map(([k,v])=>`<dt>${escapeHtml(k)}</dt><dd>${escapeHtml(v??'—')}</dd>`).join('');
 }
 
 function startSessionFromFilters(){
   const poolSource=state.filtered.filter(q=>answerOptions(q).length); const max=poolSource.length;
   if(!max){toast('Nenhuma questão objetiva disponível neste recorte.');return;}
   if(max!==state.filtered.length) toast('Questões discursivas foram mantidas fora da bateria objetiva.');
-  const size=Math.min(max,Math.max(1,+$('#sessionSize').value||10));let pool=$('#shuffleQuestions').checked?shuffleItems(poolSource):[...poolSource];pool=pool.slice(0,size);
+  const size=Math.min(max,Math.max(1,+$('#sessionSize').value||10));let pool=$('#shuffleQuestions').checked?(state.competitionScope==='tce-go'?shuffleTceSources(poolSource):shuffleItems(poolSource)):[...poolSource];pool=pool.slice(0,size);
   createSession(pool,$('#sessionMode').value);
 }
 function createSession(items,mode='training'){
@@ -848,6 +926,10 @@ function renderResolver(){
   const progressLabel=$('#resolverProgressLabel');if(progressLabel)progressLabel.textContent=`${percent}% concluído`;
   const modeLabel=$('#resolverModeLabel');if(modeLabel)modeLabel.textContent=s.mode==='exam'?'Modo prova':'Treino comentado';
   $('#questionMeta').innerHTML=[q.formato,q.disciplina,q.assunto,q.subassunto,q.banca].map(chip).join('');
+  const questionSource=$('#questionSource');
+  if(questionSource){questionSource.textContent=q.sourceLabel?`Fonte: ${q.sourceLabel} · questão ${q.numeroOriginal}${q.paginaOriginal?` · p. ${q.paginaOriginal}`:''}`:'';questionSource.classList.toggle('hidden',!q.sourceLabel);}
+  const questionBaseText=$('#questionBaseText');
+  if(questionBaseText){questionBaseText.textContent=q.baseText||'';questionBaseText.classList.toggle('hidden',!q.baseText);}
   const questionText=$('#questionText');questionText.textContent=q.enunciado;questionText.setAttribute('role','heading');questionText.setAttribute('aria-level','2');questionText.setAttribute('tabindex','-1');
   const opts=answerOptions(q),chosen=s.answers[q.id],confirmed=Boolean(s.confirmed[q.id]);
   const isBinary=q.formato==='Certo / Errado'||['Certo','Errado'].includes(q.gabarito);
