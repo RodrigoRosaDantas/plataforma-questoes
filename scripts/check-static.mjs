@@ -55,10 +55,10 @@ if(!html.includes('id="cloudEmail"')||!html.includes('id="performanceCharts"')) 
 if(/service_role|sb_secret_/i.test(html+'\n'+js+'\n'+cloud+'\n'+studyPlan+'\n'+ux+'\n'+canonical+'\n'+sw)) throw new Error('Segredo do Supabase não pode existir no frontend.');
 
 for(const marker of ['assets/v2.css','id="sidebarBackdrop"','id="editalSearch"','id="filterToggle"','id="resolverProgress"','id="performanceInsights"','id="installApp"']) if(!html.includes(marker)) throw new Error(`Contrato V2 ausente: ${marker}`);
-for(const marker of ['id="filterConcurso"','id="filterSubassunto"','app.js?v=platform-v2-6']) if(!html.includes(marker)) throw new Error(`Filtro nativo ausente: ${marker}`);
+for(const marker of ['id="filterConcurso"','id="filterSubassunto"','app.js?v=platform-v2-7']) if(!html.includes(marker)) throw new Error(`Filtro nativo ausente: ${marker}`);
 for(const marker of ["concurso:'filterConcurso'","subassunto:'filterSubassunto'","populateSelect('filterConcurso'","populateSelect('filterSubassunto'","if(f.concurso && q.concurso!==f.concurso)","if(f.subassunto && q.subassunto!==f.subassunto)","concurso:q?.concurso||''","subassunto:q?.subassunto||''"]) if(!js.includes(marker)) throw new Error(`Contrato de filtro nativo ausente: ${marker}`);
 for(const marker of ["{id:'filterConcurso',key:'concurso'","{id:'filterSubassunto',key:'subassunto'"]) if(!ux.includes(marker)) throw new Error(`Faceta nativa ausente: ${marker}`);
-if(!sw.includes('./assets/app.js?v=platform-v2-6')) throw new Error('PWA não referencia o app com os filtros nativos atualizados.');
+if(!sw.includes('./assets/app.js?v=platform-v2-7')) throw new Error('PWA não referencia o app com as referências da prova-fonte atualizadas.');
 for(const file of ['tce-go-fcc-tcego-2022-controle-externo.json','tce-go-fcc-tcego-2022-contabilidade.json','tce-go-fcc-tcego-2014-administrativa.json','tce-go-fcc-tcece-2015-tecnico-administrativo.json','tce-go-edital.json']) if(!sw.includes('./data/'+file)) throw new Error(`PWA não armazena o arquivo de estudo TCE-GO: ${file}`);
 for(const marker of ['setSidebarOpen','renderActiveFilters','shuffleItems','aria-pressed','renderInstallState','renderProgressSurface']) if(!js.includes(marker)) throw new Error(`Comportamento V2 ausente: ${marker}`);
 if(js.includes("progress:changed',()=>renderAll")) throw new Error('Persistência ainda dispara renderização integral.');
