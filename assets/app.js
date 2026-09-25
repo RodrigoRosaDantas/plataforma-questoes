@@ -705,7 +705,15 @@ function shuffleTceSources(items){
 function renderQuestionPreview(){
   const list=state.filtered.slice(0,40); const root=$('#questionPreview');
   if(!list.length){root.innerHTML='<div class="card empty-state">Nenhuma questão encontrada com estes filtros. Limpe ou altere o recorte.</div>';return;}
-  root.innerHTML=list.map(q=>`<article class="question-row"><div class="chips">${chip(q.formato)}${chip(q.disciplina)}${chip(q.assunto)}${chip(q.subassunto)}${chip(q.banca)}</div><p>${escapeHtml(q.enunciado)}</p><small>${escapeHtml(q.concurso||'')} · ${escapeHtml(q.cargo||'')} · ${escapeHtml(q.ano||'')}</small>${q.sourceLabel?`<small class="question-source">Fonte: ${escapeHtml(q.sourceLabel)} · questão ${fmt(q.numeroOriginal)}${q.paginaOriginal?` · p. ${escapeHtml(q.paginaOriginal)}`:''}</small>`:''}</article>`).join('')+(state.filtered.length>40?`<div class="empty-state">Exibindo prévia das primeiras 40 de ${fmt(state.filtered.length)} questões.</div>`:'');
+  root.innerHTML=list.map(q=>{
+    const source=questionSourceDescription(q);
+    return `<article class="question-row"><div class="chips">${chip(q.formato)}${chip(q.disciplina)}${chip(q.assunto)}${chip(q.subassunto)}${chip(q.banca)}</div><p>${escapeHtml(q.enunciado)}</p><small>${escapeHtml(q.concurso||'')} · ${escapeHtml(q.cargo||'')} · ${escapeHtml(q.ano||'')}</small>${source?`<small class="question-source">${escapeHtml(source)}</small>`:''}</article>`;
+  }).join('')+(state.filtered.length>40?`<div class="empty-state">Exibindo prévia das primeiras 40 de ${fmt(state.filtered.length)} questões.</div>`:'');
+}
+function questionSourceDescription(q){
+  if(!q.sourceLabel)return '';
+  const sourceRole=q.sourceRole||q.cargoFonte||'';
+  return [`Prova-fonte: ${q.sourceLabel}`,sourceRole?`cargo da prova: ${sourceRole}`:'',`questão ${fmt(q.numeroOriginal)}`,q.paginaOriginal?`p. ${q.paginaOriginal}`:''].filter(Boolean).join(' · ');
 }
 const chip = v => v?`<span class="chip">${escapeHtml(v)}</span>`:'';
 
@@ -927,7 +935,7 @@ function renderResolver(){
   const modeLabel=$('#resolverModeLabel');if(modeLabel)modeLabel.textContent=s.mode==='exam'?'Modo prova':'Treino comentado';
   $('#questionMeta').innerHTML=[q.formato,q.disciplina,q.assunto,q.subassunto,q.banca].map(chip).join('');
   const questionSource=$('#questionSource');
-  if(questionSource){questionSource.textContent=q.sourceLabel?`Fonte: ${q.sourceLabel} · questão ${q.numeroOriginal}${q.paginaOriginal?` · p. ${q.paginaOriginal}`:''}`:'';questionSource.classList.toggle('hidden',!q.sourceLabel);}
+  if(questionSource){questionSource.textContent=questionSourceDescription(q);questionSource.classList.toggle('hidden',!q.sourceLabel);}
   const questionBaseText=$('#questionBaseText');
   if(questionBaseText){questionBaseText.textContent=q.baseText||'';questionBaseText.classList.toggle('hidden',!q.baseText);}
   const questionText=$('#questionText');questionText.textContent=q.enunciado;questionText.setAttribute('role','heading');questionText.setAttribute('aria-level','2');questionText.setAttribute('tabindex','-1');
