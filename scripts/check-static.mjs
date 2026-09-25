@@ -19,9 +19,17 @@ const competitions=JSON.parse(await fs.readFile('data/competitions.json','utf8')
 const tceCompetition=competitions.find(item=>item.id==='tce-go');
 if(!tceCompetition||tceCompetition.status!=='ativo'||tceCompetition.dashboardUrl!=='https://rodrigorosadantas.github.io/tce-go-dashboard/'||tceCompetition.officialExamUrl!=='https://www.concursosfcc.com.br/concursos/tcego122/index.html') throw new Error('Atalhos do dashboard e da prova oficial FCC TCE-GO ausentes ou inválidos.');
 if(!js.includes('c.dashboardUrl')||!js.includes('c.officialExamUrl')||!js.includes("url.protocol==='https:'")||!js.includes("rel='noopener noreferrer'")||!js.includes('painel de estudos próprio')) throw new Error('Cartão externo seguro do TCE-GO ausente.');
+const tceGoEdict=JSON.parse(await fs.readFile('data/tce-go-edital.json','utf8'));
+if(tceCompetition.questionCount!==340||tceCompetition.topicCount!==448||tceGoEdict.canonicalAxisCount!==448||tceGoEdict.canonicalDirectQuestions!==0) throw new Error('Trilha TCE-GO precisa expor as contagens e o limite de vínculo exato.');
+if(!js.includes('tce-go-fcc-tcego-2022-controle-externo')||!js.includes('tce-go-edital')||!js.includes('data-tce-material')||!js.includes('data-tce-section')) throw new Error('Banco FCC TCE-GO, provas ou filtros por matéria ausentes.');
+if(!canonical.includes("const TCE_GO_CANONICAL_DATA='./data/tce-go-edital.json'")||!canonical.includes('subjectQuestionCounts')) throw new Error('Verticalizado oficial TCE-GO não está integrado à página de editais.');
+const seedfCompetition=competitions.find(item=>item.id==='seedf');
+if(!/nenhuma/i.test(tceGoEdict.mappingNote)||!seedfCompetition?.excludedRoles?.includes('Analista — Monitor')) throw new Error('Nota de granularidade TCE-GO ou foco de cargo SEEDF ausente.');
 
 const manifest=JSON.parse(await fs.readFile('manifest.webmanifest','utf8'));
 const v2=await fs.readFile('assets/v2.css','utf8');
+if(!html.includes('id="mobileBottomNav"')||!js.includes('MOBILE_ROUTES')||!js.includes('#mobileBottomNav [data-go]')||!v2.includes('.mobile-bottom-nav button.active')||!v2.includes('env(safe-area-inset-bottom)')) throw new Error('Navegação inferior móvel acessível ou segura não foi incluída.');
+if(!html.includes('id="questionBaseText"')||!js.includes('q.baseText||')) throw new Error('Texto-base das questões FCC não é exibido no resolvedor.');
 const shell=html+'\n'+js;
 const migrationNames=(await fs.readdir('supabase/migrations')).filter(name=>name.endsWith('.sql')).sort();
 const migrations=await Promise.all(migrationNames.map(async name=>({name,sql:await fs.readFile(`supabase/migrations/${name}`,'utf8')})));
@@ -41,20 +49,21 @@ if(!js.includes('data-topic-cargo')||!js.includes("setQuestionFilter('filterCarg
 if(!js.includes('data-proof-cargo')||!js.includes("setQuestionFilter('filterCargo',career)")) throw new Error('Prova oficial não abre o recorte interativo do cargo.');
 if(!js.includes('tjdft-provas')) throw new Error('Catálogo TJDFT não é carregado pelo frontend.');
 if(!sw.includes('./data/tjdft-provas.json')) throw new Error('Catálogo TJDFT não está no cache de dados do PWA.');
-if(!html.includes('Provas oficiais e materiais')) throw new Error('Tela de provas oficiais ausente.');
+if(!html.includes('Provas e questões no banco')) throw new Error('Tela de provas aplicadas ausente.');
 if(!js.includes("cloud-progress.js")||!js.includes("syncCloudProgress")) throw new Error('Sincronização de progresso ausente.');
 if(!html.includes('id="cloudEmail"')||!html.includes('id="performanceCharts"')) throw new Error('Controles de conta/desempenho ausentes.');
 if(/service_role|sb_secret_/i.test(html+'\n'+js+'\n'+cloud+'\n'+studyPlan+'\n'+ux+'\n'+canonical+'\n'+sw)) throw new Error('Segredo do Supabase não pode existir no frontend.');
 
 for(const marker of ['assets/v2.css','id="sidebarBackdrop"','id="editalSearch"','id="filterToggle"','id="resolverProgress"','id="performanceInsights"','id="installApp"']) if(!html.includes(marker)) throw new Error(`Contrato V2 ausente: ${marker}`);
-for(const marker of ['id="filterConcurso"','id="filterSubassunto"','app.js?v=platform-v2-5']) if(!html.includes(marker)) throw new Error(`Filtro nativo ausente: ${marker}`);
+for(const marker of ['id="filterConcurso"','id="filterSubassunto"','app.js?v=platform-v2-6']) if(!html.includes(marker)) throw new Error(`Filtro nativo ausente: ${marker}`);
 for(const marker of ["concurso:'filterConcurso'","subassunto:'filterSubassunto'","populateSelect('filterConcurso'","populateSelect('filterSubassunto'","if(f.concurso && q.concurso!==f.concurso)","if(f.subassunto && q.subassunto!==f.subassunto)","concurso:q?.concurso||''","subassunto:q?.subassunto||''"]) if(!js.includes(marker)) throw new Error(`Contrato de filtro nativo ausente: ${marker}`);
 for(const marker of ["{id:'filterConcurso',key:'concurso'","{id:'filterSubassunto',key:'subassunto'"]) if(!ux.includes(marker)) throw new Error(`Faceta nativa ausente: ${marker}`);
-if(!sw.includes('./assets/app.js?v=platform-v2-5')) throw new Error('PWA não referencia o app com filtros nativos de Concurso/Subassunto.');
+if(!sw.includes('./assets/app.js?v=platform-v2-6')) throw new Error('PWA não referencia o app com os filtros nativos atualizados.');
+for(const file of ['tce-go-fcc-tcego-2022-controle-externo.json','tce-go-fcc-tcego-2022-contabilidade.json','tce-go-fcc-tcego-2014-administrativa.json','tce-go-fcc-tcece-2015-tecnico-administrativo.json','tce-go-edital.json']) if(!sw.includes('./data/'+file)) throw new Error(`PWA não armazena o arquivo de estudo TCE-GO: ${file}`);
 for(const marker of ['setSidebarOpen','renderActiveFilters','shuffleItems','aria-pressed','renderInstallState','renderProgressSurface']) if(!js.includes(marker)) throw new Error(`Comportamento V2 ausente: ${marker}`);
 if(js.includes("progress:changed',()=>renderAll")) throw new Error('Persistência ainda dispara renderização integral.');
 if(js.includes('sort(()=>Math.random()-.5)')) throw new Error('Embaralhamento enviesado ainda presente.');
-for(const marker of ["$$('.view').forEach","$$('#nav [data-go]').forEach","$$('#questionMap [data-map]').forEach"]) if(!js.includes(marker)) throw new Error('Consulta de lista não usa querySelectorAll: '+marker);
+for(const marker of ["$$('.view').forEach","$$('#nav [data-go], #mobileBottomNav [data-go]').forEach","$$('#questionMap [data-map]').forEach"]) if(!js.includes(marker)) throw new Error('Consulta de lista não usa querySelectorAll: '+marker);
 if(!sw.includes('DATA_CACHE')||!sw.includes('canonicalDataRequest')) throw new Error('Cache canônico de dados ausente.');
 const shellDefinition=sw.match(/const SHELL=\[([\s\S]*?)\];/)?.[1]||'';
 if(shellDefinition.includes('data/questions.json')) throw new Error('Arquivo de questões não deve ser pré-carregado no shell.');
@@ -122,7 +131,7 @@ const allMigrations=migrations.map(item=>item.sql).join('\n');
 if(/grant\s+[^;]*\bon\s+(?:table\s+)?public\.student_progress_states\s+to\s+anon\b/i.test(allMigrations)) throw new Error('Progresso não pode conceder acesso ao papel anon.');
 if(/grant\s+all(?:\s+privileges)?\s+on\s+(?:table\s+)?public\.student_progress_states\s+to\s+authenticated\b/i.test(allMigrations)) throw new Error('Progresso não pode conceder privilégios amplos ao papel authenticated.');
 
-for(const file of ['assets/app.js','assets/cloud-progress.js','assets/study-plan.js','assets/ux-enhancements.js','assets/canonical-editais.js','service-worker.js','scripts/build.mjs','scripts/sync-notion.mjs','scripts/build-taxonomy-backlog.mjs','scripts/sync-editorial-taxonomies.mjs','scripts/smoke-published.mjs']){
+for(const file of ['assets/app.js','assets/cloud-progress.js','assets/study-plan.js','assets/ux-enhancements.js','assets/canonical-editais.js','service-worker.js','scripts/build.mjs','scripts/sync-notion.mjs','scripts/build-taxonomy-backlog.mjs','scripts/sync-editorial-taxonomies.mjs','scripts/validate-tce-go.mjs','scripts/smoke-published.mjs']){
   const syntax=spawnSync(process.execPath,['--check',file],{encoding:'utf8'});
   if(syntax.status!==0)throw new Error('JavaScript inválido em '+file+'\n'+(syntax.stderr||syntax.stdout));
 }

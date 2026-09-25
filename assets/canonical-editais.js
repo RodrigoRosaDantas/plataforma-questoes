@@ -1,4 +1,6 @@
 const CANONICAL_DATA='./data/editais.json';
+const TCE_GO_CANONICAL_DATA='./data/tce-go-edital.json';
+const COMPETITIONS_DATA='./data/competitions.json';
 let canonicalState=null;
 let canonicalTimer=null;
 
@@ -9,16 +11,22 @@ const fmt=value=>Number(value||0).toLocaleString('pt-BR');
 
 async function loadCanonicalState(force=false){
   const suffix=force?`?canonical=${Date.now()}`:'';
-  const response=await fetch(CANONICAL_DATA+suffix,{cache:force?'no-store':'force-cache'});
+  const [response,tceResponse,competitionResponse]=await Promise.all([
+    fetch(CANONICAL_DATA+suffix,{cache:force?'no-store':'force-cache'}),
+    fetch(TCE_GO_CANONICAL_DATA+suffix,{cache:force?'no-store':'force-cache'}),
+    fetch(COMPETITIONS_DATA+suffix,{cache:force?'no-store':'force-cache'})
+  ]);
   if(!response.ok)throw new Error('Taxonomia canônica indisponível.');
-  const editais=await response.json();
+  const [editais,tceGo,competitions]=await Promise.all([response.json(),tceResponse.ok?tceResponse.json():null,competitionResponse.ok?competitionResponse.json():[]]);
   if(!Array.isArray(editais))throw new Error('Dados canônicos inválidos.');
-  canonicalState={editais};
+  if(tceGo&&(!Array.isArray(tceGo.canonicalAxes)||Number(tceGo.canonicalAxisCount)!==tceGo.canonicalAxes.length))throw new Error('Taxonomia TCE-GO inválida.');
+  canonicalState={editais:tceGo?[...editais,tceGo]:editais,competitions:Array.isArray(competitions)?competitions:[]};
   return canonicalState;
 }
 
 function layerClass(layer){
   const value=normalize(layer);
+  if(value.includes('edital 2026')||value.includes('vigente'))return 'current';
   if(value.includes('atualizacao')||value.includes('legislacao atual'))return 'current';
   if(value.includes('radar')||value.includes('estrategia'))return 'radar';
   return 'historical';
@@ -41,7 +49,7 @@ function linkedCount(axis){return Math.max(0,Number(axis.directQuestionCount)||0
 function axisMarkup(axis){
   const linked=linkedCount(axis);
   const cargos=(axis.cargos||[]).filter(Boolean);
-  const badges=[axis.layer,axis.sourceBase,...cargos].filter(Boolean);
+  const badges=(axis.sectionId?[axis.layer]:[axis.layer,axis.sourceBase,...cargos]).filter(Boolean);
   const linkState=axis.directLinkAmbiguous
     ?'<span class="canonical-link canonical-link-ambiguous">Tópico repetido · exige revisão editorial</span>'
     :linked
@@ -64,15 +72,52 @@ function canonicalMarkup(edital){
   const ambiguousAxes=Number(edital.canonicalAmbiguousAxes)||axes.filter(axis=>axis.directLinkAmbiguous).length;
   const groups=groupAxes(axes);
   const note=text(edital.editorialPolicy?.note)||'Taxonomia editorial da trilha.';
+  const subjectMapping=edital.mappingGranularity==='subject';
+  const correlated=Object.values(edital.subjectQuestionCounts||{}).reduce((sum,count)=>sum+Math.max(0,Number(count)||0),0);
+  const correlatedSubjects=Object.values(edital.subjectQuestionCounts||{}).filter(count=>Number(count)>0).length;
+  const summaryText=subjectMapping
+    ?`${fmt(linkedAxes)}/${fmt(axes.length)} tópicos com vínculo exato · ${fmt(correlated)} questões correlatas por matéria`
+    :`${fmt(linkedAxes)}/${fmt(axes.length)} eixos com vínculo direto · ${fmt(direct)} questões${ambiguousAxes?` · ${fmt(ambiguousAxes)} eixo(s) ambíguo(s)`:''}`;
+  const heading=subjectMapping?`${fmt(axes.length)} tópicos do edital`:`${fmt(axes.length)} eixos do verticalizado`;
+  const legend=subjectMapping
+    ?'<span><i class="canonical-dot current"></i>Edital 2026</span><span><i class="canonical-dot"></i>Questões FCC correlatas por matéria</span>'
+    :`<span><i class="canonical-dot historical"></i>Base histórica</span><span><i class="canonical-dot current"></i>Atualização/legislação atual</span><span><i class="canonical-dot radar"></i>Radar/projeção</span>${ambiguousAxes?'<span><i class="canonical-dot ambiguous"></i>Revisão editorial necessária</span>':''}`;
+  const footnote=subjectMapping
+    ?`<strong>Vínculo por matéria:</strong> ${fmt(Number(edital.questionPoolCount)||0)} questões FCC únicas cobrem ${fmt(correlatedSubjects)} matérias. Os grupos contêm ${fmt(correlated)} entradas porque algumas questões servem a mais de uma matéria. Nenhuma foi associada a um subitem específico dos ${fmt(axes.length)} tópicos.`
+    :'<strong>Vínculo direto</strong> significa correspondência exata entre o campo “Tópico do edital” da questão e um eixo canônico único. Tópicos repetidos não são vinculados automaticamente; exigem desambiguação editorial.';
   return `<section class="canonical-edital" data-canonical-section="${escapeHtml(edital.competitionId)}">
     <div class="canonical-head">
-      <div><span class="kicker">TAXONOMIA CANÔNICA</span><h3>${fmt(axes.length)} eixos do verticalizado</h3><p>${escapeHtml(note)}</p></div>
-      <div class="canonical-summary"><span>${escapeHtml(policyLabel(edital))}</span><strong>${fmt(linkedAxes)}/${fmt(axes.length)}</strong><small>eixos com vínculo direto · ${fmt(direct)} questões${ambiguousAxes?` · ${fmt(ambiguousAxes)} eixo(s) ambíguo(s)`:''}</small></div>
+      <div><span class="kicker">TAXONOMIA CANÔNICA</span><h3>${heading}</h3><p>${escapeHtml(note)}</p></div>
+      <div class="canonical-summary"><span>${escapeHtml(policyLabel(edital))}</span><strong>${fmt(linkedAxes)}/${fmt(axes.length)}</strong><small>${summaryText}</small></div>
     </div>
-    <div class="canonical-legend"><span><i class="canonical-dot historical"></i>Base histórica</span><span><i class="canonical-dot current"></i>Atualização/legislação atual</span><span><i class="canonical-dot radar"></i>Radar/projeção</span>${ambiguousAxes?'<span><i class="canonical-dot ambiguous"></i>Revisão editorial necessária</span>':''}</div>
-    <div class="canonical-groups">${groups.map(([subject,items],index)=>`<details class="canonical-group" ${index===0?'open':''}><summary><div><strong>${escapeHtml(subject)}</strong><small>${fmt(items.length)} eixo${items.length===1?'':'s'}</small></div><span>${fmt(items.reduce((sum,item)=>sum+linkedCount(item),0))} questões ligadas</span></summary><div class="canonical-topic-list">${items.map(axis=>axisMarkup(axis)).join('')}</div></details>`).join('')}</div>
-    <p class="canonical-footnote"><strong>Vínculo direto</strong> significa correspondência exata entre o campo “Tópico do edital” da questão e um eixo canônico único. Tópicos repetidos não são vinculados automaticamente; exigem desambiguação editorial.</p>
+    <div class="canonical-legend">${legend}</div>
+    <div class="canonical-groups">${groups.map(([subject,items],index)=>{
+      const subjectQuestions=Math.max(0,Number(edital.subjectQuestionCounts?.[subject])||0);
+      const groupStatus=subjectMapping?`${fmt(subjectQuestions)} questões correlatas por matéria`:`${fmt(items.reduce((sum,item)=>sum+linkedCount(item),0))} questões ligadas`;
+      const sectionId=String(edital.subjectSectionIds?.[subject]||'');
+      const groupAction=subjectMapping&&subjectQuestions&&sectionId?`<div class="canonical-group-action"><small>${groupStatus}</small><button type="button" class="secondary" data-tce-section="${escapeHtml(sectionId)}">Fazer ${fmt(subjectQuestions)} questões →</button></div>`:'';
+      return `<details class="canonical-group" ${index===0?'open':''}><summary><div><strong>${escapeHtml(subject)}</strong><small>${fmt(items.length)} tópico${items.length===1?'':'s'}</small></div><span>${groupStatus}</span></summary>${groupAction}<div class="canonical-topic-list">${items.map(axis=>axisMarkup(axis)).join('')}</div></details>`;
+    }).join('')}</div>
+    <p class="canonical-footnote">${footnote}</p>
   </section>`;
+}
+function visibleCanonicalEdital(edital){
+  if(!edital)return null;
+  if(edital.competitionId!=='seedf')return edital;
+  const config=canonicalState?.competitions?.find(item=>item.id==='seedf')||{};
+  const focus=new Set([...(config.focusRoles||[]),...(config.sharedRoles||[])].map(normalize));
+  if(!focus.size)return edital;
+  const canonicalAxes=(edital.canonicalAxes||[]).flatMap(axis=>{
+    const roles=(axis.cargos||[]).filter(Boolean);
+    if(!roles.length)return [axis];
+    const visibleRoles=roles.filter(role=>focus.has(normalize(role)));
+    return visibleRoles.length?[{...axis,cargos:visibleRoles}]:[];
+  });
+  const linkedAxes=canonicalAxes.filter(axis=>linkedCount(axis)>0).length;
+  const direct=canonicalAxes.reduce((sum,axis)=>sum+linkedCount(axis),0);
+  const ambiguous=canonicalAxes.filter(axis=>axis.directLinkAmbiguous).length;
+  const note=text(edital.editorialPolicy?.note);
+  return {...edital,canonicalAxes,canonicalAxisCount:canonicalAxes.length,canonicalLinkedAxes:linkedAxes,canonicalDirectQuestions:direct,canonicalAmbiguousAxes:ambiguous,editorialPolicy:{...edital.editorialPolicy,note:(note?note+' ':'')+'Exibindo o foco atual: Gestor — Administração, Analista — Apoio Administrativo e Núcleo comum. Eixos exclusivos de Analista — Monitor ficam fora desta visualização.'}};
 }
 
 function findEditalForCard(card){
@@ -89,7 +134,7 @@ function renderCanonicalSections(){
   const root=document.querySelector('#editalList');
   if(!root)return;
   for(const card of root.querySelectorAll('.edital-card')){
-    const edital=findEditalForCard(card);
+    const edital=visibleCanonicalEdital(findEditalForCard(card));
     if(!edital||!(edital.canonicalAxes||[]).length)continue;
     const stamp=[edital.competitionId,edital.sourceGeneratedAt,edital.canonicalAxisCount,edital.canonicalDirectQuestions,edital.canonicalAmbiguousAxes].join('|');
     let section=card.querySelector(':scope > .canonical-edital');

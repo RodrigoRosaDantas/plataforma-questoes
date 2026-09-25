@@ -13,6 +13,8 @@ const profilePrivilegeMigration=await fs.readFile('supabase/migrations/202609161
 const v2=await fs.readFile('assets/v2.css','utf8');
 const sw=await fs.readFile('service-worker.js','utf8');
 const editais=JSON.parse(await fs.readFile('data/editais.json','utf8'));
+const tceGoEdict=JSON.parse(await fs.readFile('data/tce-go-edital.json','utf8'));
+const competitions=JSON.parse(await fs.readFile('data/competitions.json','utf8'));
 const candidates=JSON.parse(await fs.readFile('data/taxonomy-candidates.json','utf8'));
 const reviewGroups=JSON.parse(await fs.readFile('data/taxonomy-review-groups.json','utf8'));
 
@@ -29,7 +31,10 @@ for(const marker of [
   "document.documentElement.dataset.competitionScope=next",
   "if(key==='trilha')setCompetitionScope('')",
   'navigate(\'questions\'); resetQuestionFilters(); setCompetitionScope(competitionId);',
-  'if(state.competitionScope&&!questionBelongsTo(q,state.competitionScope)) return false'
+  'if(state.competitionScope&&!questionBelongsTo(q,state.competitionScope)) return false',
+  "if(competitionId==='tce-go') return /TCE-GO/i.test(hay)",
+  "if(state.tceSectionScope&&q.editalSectionId!==state.tceSectionScope",
+  "if(state.tceMaterialScope&&q.sourceMaterialId!==state.tceMaterialScope)"
 ]) requireMarker(app,marker,'Contrato do escopo real de trilha ausente');
 if(app.includes("if(sample) setQuestionFilter('filterOrgao',sample.orgao)"))throw new Error('Atalho de trilha voltou a depender do órgão da primeira questão.');
 for(const marker of [
@@ -310,6 +315,14 @@ for(const edital of editais){
 requireMarker(v2,'.hero-side { width: 100%; grid-template-columns: minmax(0, 1fr); justify-items: stretch; }','Correção mobile do painel de estudo ausente');
 requireMarker(v2,'.hero-scorecard { width: 100%; max-width: none; }','Scorecard mobile não ocupa a largura útil');
 requireMarker(v2,'.scorecard-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }','Grade 2x2 do scorecard no celular ausente');
+for(const marker of ['id="mobileBottomNav"','aria-label="Navegação móvel"'])requireMarker(await fs.readFile('index.html','utf8'),marker,'Barra inferior móvel ausente');
+for(const marker of ['MOBILE_ROUTES','mobileNav.hidden=view===\'resolver\'','compareTceSources','shuffleTceSources'])requireMarker(app,marker,'Navegação móvel ou prioridade das provas TCE-GO regrediu');
+for(const marker of ['.mobile-bottom-nav {','grid-template-columns: repeat(4, minmax(0, 1fr))','background: #111936','env(safe-area-inset-bottom)'])requireMarker(v2,marker,'Contraste, distribuição ou área segura da barra móvel regrediu');
+if(tceGoEdict.canonicalAxisCount!==448||tceGoEdict.questionPoolCount!==340||tceGoEdict.exactTopicMappings!==0)throw new Error('Verticalizado TCE-GO ou granularidade das questões regrediu.');
+for(const marker of ['visibleCanonicalEdital','subjectQuestionCounts','data-tce-section','Analista — Monitor'])requireMarker(canonical,marker,'Verticalizado TCE-GO/recorte SEEDF regrediu');
+requireMarker(app,'q.baseText||','Texto-base da questão deixou de aparecer no resolvedor');
+const seedfFocus=competitions.find(item=>item.id==='seedf');
+if(!seedfFocus?.focusRoles?.includes('Analista — Apoio Administrativo')||!seedfFocus?.focusRoles?.includes('Gestor — Administração')||!seedfFocus?.excludedRoles?.includes('Analista — Monitor'))throw new Error('Foco SEEDF não corresponde aos cargos escolhidos.');
 
 // PWA: qualquer alteração crítica no shell precisa chegar sem depender do cache anterior.
 const cacheVersion=Number(sw.match(/plataforma-questoes-v(\d+)/)?.[1]||0);
