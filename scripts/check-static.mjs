@@ -17,8 +17,9 @@ const taxonomyBacklog=JSON.parse(await fs.readFile('data/taxonomy-backlog.json',
 const editais=JSON.parse(await fs.readFile('data/editais.json','utf8'));
 const competitions=JSON.parse(await fs.readFile('data/competitions.json','utf8'));
 const tceCompetition=competitions.find(item=>item.id==='tce-go');
-if(!tceCompetition||tceCompetition.status!=='ativo'||tceCompetition.dashboardUrl!=='https://rodrigorosadantas.github.io/tce-go-dashboard/'||tceCompetition.officialExamUrl!=='https://www.concursosfcc.com.br/concursos/tcego122/index.html') throw new Error('Atalhos do dashboard e da prova oficial FCC TCE-GO ausentes ou inválidos.');
+if(!tceCompetition||tceCompetition.status!=='ativo'||tceCompetition.portfolioStatus!=='histórico'||tceCompetition.dashboardUrl!=='https://rodrigorosadantas.github.io/tce-go-dashboard/'||tceCompetition.officialExamUrl!=='https://www.concursosfcc.com.br/concursos/tcego122/index.html') throw new Error('Status oficial, arquivo TCE-GO ou atalhos da prova oficial estão ausentes ou inválidos.');
 if(!js.includes('c.dashboardUrl')||!js.includes('c.officialExamUrl')||!js.includes("url.protocol==='https:'")||!js.includes("rel='noopener noreferrer'")||!js.includes('painel de estudos próprio')) throw new Error('Cartão externo seguro do TCE-GO ausente.');
+if(!html.includes('Trilhas e acervos')||!html.includes('Abrir acervo histórico TCE-GO')||html.includes('Praticar TCE-GO')||!js.includes('Abrir acervo histórico')) throw new Error('Acervo TCE-GO aparece como chamada de prática ativa ou perdeu sua identificação histórica.');
 const tceGoEdict=JSON.parse(await fs.readFile('data/tce-go-edital.json','utf8'));
 if(tceCompetition.questionCount!==340||tceCompetition.topicCount!==448||tceGoEdict.canonicalAxisCount!==448||tceGoEdict.canonicalDirectQuestions!==0) throw new Error('Trilha TCE-GO precisa expor as contagens e o limite de vínculo exato.');
 if(!js.includes('tce-go-fcc-tcego-2022-controle-externo')||!js.includes('tce-go-edital')||!js.includes('data-tce-material')||!js.includes('data-tce-section')) throw new Error('Banco FCC TCE-GO, provas ou filtros por matéria ausentes.');
