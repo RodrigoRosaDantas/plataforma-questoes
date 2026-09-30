@@ -5,9 +5,16 @@
     "status": "ativo",
     "description": "Foco atual em Gestor — Administração e Analista — Apoio Administrativo, com o núcleo comum; Analista — Monitor fica fora da trilha ativa.",
     "mappingStatus": "configuração editorial",
-    "focusRoles": ["Gestor — Administração", "Analista — Apoio Administrativo"],
-    "sharedRoles": ["Núcleo comum"],
-    "excludedRoles": ["Analista — Monitor"],
+    "focusRoles": [
+      "Gestor — Administração",
+      "Analista — Apoio Administrativo"
+    ],
+    "sharedRoles": [
+      "Núcleo comum"
+    ],
+    "excludedRoles": [
+      "Analista — Monitor"
+    ],
     "axes": []
   },
   {
@@ -30,14 +37,15 @@
     "id": "tce-go",
     "name": "TCE-GO 2026/2027",
     "status": "ativo",
-    "description": "Trilha para Técnico de Controle Externo — Técnico Administrativo, com o edital de 448 tópicos e 340 questões FCC correlacionadas por matéria.",
+    "description": "Acervo TCE-GO preservado fora do foco ativo de estudos da Central; questões e edital seguem disponíveis para consulta.",
     "mappingStatus": "280 questões de provas TCE-GO e 60 de outro Tribunal de Contas; 0 vínculos exatos com subitens do edital.",
     "questionCount": 340,
     "topicCount": 448,
     "dashboardUrl": "https://rodrigorosadantas.github.io/tce-go-dashboard/",
-    "dashboardLabel": "Abrir painel TCE-GO →",
+    "dashboardLabel": "Abrir painel histórico TCE-GO →",
     "officialExamUrl": "https://www.concursosfcc.com.br/concursos/tcego122/index.html",
     "officialExamLabel": "Provas FCC TCE-GO 2022 ↗",
-    "axes": []
+    "axes": [],
+    "portfolioStatus": "histórico"
   }
 ]
